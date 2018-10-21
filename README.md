@@ -26,11 +26,36 @@ This project was curated by "mycoderocks" team comprising of (alphabetical order
 
 ## Setup/Usage
 
+### Install requirements
+
 Install the requirements with pip:
 
 ```bash
 pip3 install -r requirements.txt
 ```
+
+### Setup MySQL database
+
+The web application uses MySQL as a database for holding data.
+
+1. Setup MySQL
+```bash
+sudo apt-get install mysql libmysqlclient-dev
+```
+2. Login into mysql from the command line and create the database
+```sql
+create database cheapies character set utf8;
+```
+3. Create a `database.cnf` file containing the following information
+```
+[client]
+database = cheapies
+user = user
+password = password
+default-character-set = utf8
+```
+
+### Run the development webserver
 
 Run webserver with:
 
