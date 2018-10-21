@@ -1,0 +1,16 @@
+# Travis CI configuration for Django Project
+
+language: python
+    python:
+      - "3.4"
+      - "3.5"
+    services:
+      - mysql
+    env:
+      -DJANGO=2.1 DB=mysql
+    install:
+      - pip install -r requirements.txt
+    before_script:
+      - mysql -e 'create database bargains;' -u root
+    script:
+      - python manage.py test
