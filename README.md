@@ -1,17 +1,21 @@
-# Software Engineering Assignment for NTUA
+# cheapies.gr
 
-This repository hosts the [Software Engineering](https://courses.softlab.ntua.gr/softeng/2018b/) assignment for NTUA Course "Software Engineering" (Fall 2018). 
+:money_with_wings: Price observatory to find the best bargains!
 
-## Project Description 
+## Project Description
 
-This project aims to provide a web-based "price observatory", which will allow the users to post product prices from different stores. Volunteers will record the prices of various items and share them via the application. 
+This project aims to provide a web-based "price observatory", which will allow the users to post product prices from different stores. Volunteers will record the prices of various items and share them via the application.
 
-Beyond the basic capabilities of product, store, time and space registration footprint and price as well as the facilities for their search, monitoring and opposition data (tables, charts, charts, etc.), special emphasis should be put on the possibility the interconnection of third-party applications with the observatory through appropriate web-based APIs. 
+Beyond the basic capabilities of product, store, time and space registration footprint and price as well as the facilities for their search, monitoring and opposition data (tables, charts, charts, etc.), special emphasis should be put on the possibility the interconnection of third-party applications with the observatory through appropriate web-based APIs.
 
+
+_This repository hosts the [Software Engineering](https://courses.softlab.ntua.gr/softeng/2018b/) assignment for NTUA Course "Software Engineering" (Fall 2018)._
+
+:snake: The application is developed using the Django Web Framework in Python 3.5.
 
 ## Team
 
-This project was curated by "mycoderocks" team comprising of (alphabetical order): 
+This project was curated by "mycoderocks" team comprising of (alphabetical order):
  * Dimitris Christou
  * Ioannis Daras
  * Dimitris Kelesis
@@ -20,3 +24,22 @@ This project was curated by "mycoderocks" team comprising of (alphabetical order
  * Konstantinos Stavropoulos
 
 
+## Setup/Usage
+
+Install the requirements with pip:
+
+```bash
+pip3 install -r requirements.txt
+```
+
+Run webserver with:
+
+```bash
+python3 manage.py runserver
+```
+
+Run tests with:
+
+```bash
+python3 manage.py test
+```
