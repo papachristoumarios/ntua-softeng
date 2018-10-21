@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Mapbox
+MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqbmo4YzZjNTB3dTczcW9qczFneDlxa2kifQ.AhQlVx_dZSOIje7Sp2Qazw'
 
 # Application definition
 
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cheapiesgr'
 ]
 
 MIDDLEWARE = [
