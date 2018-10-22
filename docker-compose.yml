@@ -12,8 +12,10 @@ services:
       - .:/var/www/cheapies
     ports:
       - "8000:8000"
-
-DATABASE_URL=mysql://root:itsasecret@db:3306/cheapies
+    links:
+      - db 
+    environment:
+      - DATABASE_URL=mysql://root:itsasecret@db:3306/cheapies
   db:
     container_name: mysql_database
     image: mysql/mysql-server
