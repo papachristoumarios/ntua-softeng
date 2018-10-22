@@ -68,3 +68,28 @@ Run tests with:
 ```bash
 python3 manage.py test
 ```
+
+### Building a Docker Image
+
+This project can be dockerized. The configuration is located at `Dockerfile` and `docker-compose.yml`
+
+1. Build the docker image using `docker-compose`
+```bash
+export DOCKER_HOST=127.0.0.1
+sudo docker-compose build
+```
+2. Run the image with
+```bash
+sudo docker-compose up
+```
+
+## Technologies Used
+
+ * Development:
+  * Python 3.5
+  * Django Web Framework
+  * MySQL
+  * Mapbox
+ * Deployment & Operations:
+  * Docker
+  * Travis CI
