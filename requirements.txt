@@ -1,2 +1,3 @@
 django
 mysqlclient
+#Case of not wokring i used the following in Ubuntu 16:04 LTS sudo apt-get install libmysqlclient-dev
