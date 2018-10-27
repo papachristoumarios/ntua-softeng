@@ -26,13 +26,7 @@ This project was curated by "mycoderocks" team comprising of (alphabetical order
 
 ## Setup/Usage
 
-### Install requirements
 
-Install the requirements with pip:
-
-```bash
-pip3 install -r requirements.txt
-```
 
 ### Setup MySQL database
 
@@ -53,6 +47,14 @@ database = cheapies
 user = user
 password = password
 default-character-set = utf8
+```
+
+### Install requirements
+
+Install the requirements with pip:
+
+```bash
+pip3 install -r requirements.txt
 ```
 
 ### Run the development webserver
