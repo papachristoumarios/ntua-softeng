@@ -1,0 +1,18 @@
+.fullw {
+  width : 100%;
+}
+
+.padded-card {
+  padding-left: 30%;
+  padding-right: 30%;
+}
+
+.btn-google {
+  color : white;
+  background-color: #B00020 !important;
+}
+
+.btn-facebook {
+  color : white;
+  background-color: #3B5998 !important;
+}
