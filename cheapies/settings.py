@@ -81,6 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': './database.cnf',
+            'unix_socket' : '/var/run/mysqld/mysqld.sock'
         },
 
     }

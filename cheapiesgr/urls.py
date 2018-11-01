@@ -2,5 +2,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'', views.default_map, name="default"),
+    url(r'map', views.default_map, name="map"),
+    url(r'signup', views.signup, name="signup"),
+    url(r'', views.index, name="index"),
 ]
