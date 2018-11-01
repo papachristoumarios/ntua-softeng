@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container h-100 d-flex">
+
+
+  <div class="card my-auto fullw">
+    <div class="card-header my-auto text-center">
+      <h1>Καλώς ήρθες!</h1>
+    </div>
+    <div class="card-body padded-card" style="">
+      <form action="/action_page.php">
+        <div class="form-group">
+          <label for="user"><i class="fas fa-at"></i> &nbsp; Χρήστης</label>
+          <input type="text" placeholder="Εισάγετε το email σας ή το όνομα χρήστη" class="form-control" id="user">
+        </div>
+
+        <div class="form-group">
+          <label for="pwd"><i class="fas fa-unlock"></i> &nbsp; Κωδικός Πρόσβασης</label>
+          <input type="password" placeholder="Πληκτρολογήστε ένα κωδικό" class="form-control" id="pwd">
+        </div>
+
+
+        <div class="form-group text-center fullw">
+          <button type="submit" class="btn btn-default fullw"><i class="far fa-envelope-open"></i> &nbsp; Σύνδεση με email</button>
+        </div>
+
+        <hr>
+
+        <div class="form-group row text-center">
+          <div class="col-6">
+          <button type="submit" class="btn btn-default btn-google"><i class="fab fa-google"></i> &nbsp; Σύνδεση με Google</button>
+          </div>
+
+          <div class="col-6">
+          <button type="submit" class="btn btn-default btn-facebook"><i class="fab fa-facebook-square"></i> &nbsp; Σύνδεση με Facebook</button>
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+
+
+
+  </div>
+</div>
+
+</div>
+
+
+
+{% endblock %}
