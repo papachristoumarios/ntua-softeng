@@ -1,0 +1,237 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid fullscreen-container">
+  <div class="row">
+    <div class="col">
+
+      <div class="container" style="width: 80%; padding-top: 2rem; padding-bottom: 2rem;">
+
+
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              Adidas 6666 GLX
+            </h5>
+
+            <div class="gallery text-center">
+              <img style="width: 50%;" src="https://media.journeys.com/images/products/1_396077_ZM.JPG"></img>
+            </div>
+
+            <div class="text-center">
+              <a href="#" class="card-link"><i class="fas fa-info"></i> &nbsp; Χαρακτηριστικά</a>
+              <a href="#" class="card-link"><i class="fas fa-heart"></i> &nbsp; Προσθήκη στα αγαπημένα</a>
+              <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; Προσθήκη στη wishlist</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+    <div class="col">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+        <div class="card card-body full-card">
+          <div id='map'></div>
+          <script>
+          function toggleAnswers() {
+            var x = document.getElementById("collapse");
+            if (x.style.display === "none") {
+              x.style.display = "block";
+            } else {
+              x.style.display = "none";
+            }
+          }
+
+          mapboxgl.accessToken = "{{ mapbox_access_token }}";
+          var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v9',
+            center: [23.702099, 37.955894], // starting position
+            zoom: 15
+          });
+
+          // zoom controls
+          map.addControl(new mapboxgl.NavigationControl());
+
+          // Add geolocate control to the map.
+          map.addControl(new mapboxgl.GeolocateControl({
+            positionOptions: {
+              enableHighAccuracy: true
+            },
+            trackUserLocation: true
+          }));
+
+          </script>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="container">
+        <h2>Αξιολογήσεις Προϊόντος</h2>
+
+        <blockquote class="blockquote">
+          <p class="mb-0">Δείτε τι έγραψαν άλλοι χρήστες για αυτό το προϊόν</p>
+        </blockquote>
+
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+
+            </h5>
+            <span class="heading">Αξιολόγηση Χρήστη</span>
+            <span class="fas fa-star checked"></span>
+            <span class="fas fa-star checked"></span>
+            <span class="fas fa-star checked"></span>
+            <span class="fas fa-star checked"></span>
+            <span class="far fa-star"></span>
+            <p><strong>Μέση Βαθμολογία</strong> 4.49</p>
+            <h6 class="card-subtitle mb-2 text-muted">από Μάριος Παπαχρήστου</h6>
+            <p class="card-text">Το παπούτσι αν και 46 ήταν πολύ μικρό για το πόδι μου</p>
+            <a href="#" class="card-link"><i class="fas fa-thumbs-up"></i> &nbsp; Η αξιολόγηση ήταν χρήσιμη</a>
+            <a href="#" class="card-link"><i class="fas fa-thumbs-down"></i> &nbsp; Η αξιολόγηση δεν ήταν χρήσιμη</a>
+            <a href="#" class="card-link"><i class="fas fa-flag"></i> &nbsp;Αναφορά</a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col">
+      <div class="container">
+        <h2>Ερωτήσεις για το προϊόν</h2>
+
+        <blockquote class="blockquote">
+          <p class="mb-0">Δείτε τι ρώτησαν άλλοι χρήστες για αυτό το προϊόν</p>
+        </blockquote>
+
+
+        <div class="card">
+          <div class="card-body">
+            <p class="card-text">Προκαλεί καράφλα;</p>
+
+            <div class="container">
+              <div class="row">
+                <div class="col">
+
+
+                </div>
+
+
+              </div>
+            </div>
+
+            <div class="container">
+              <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                <div class="col">
+                  <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις 10 απαντήσεις</a>
+                </div>
+
+                <div class="col text-right">
+                  <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; Θετική Ψήφος</a>
+                  <a href="#" class="card-link"><i class="fas fa-minus"></i> &nbsp; Αρνητική Ψήφος</a>
+                </div>
+              </div>
+            </div>
+            <div class="container" id="collapse" style="display: none;">
+              <div class="row half-pad">
+                <div class="container">
+                  <div class="card card-body card-text text-justify">
+                    <div class="row half-pad">
+                      <div class="col">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec felis venenatis, luctus nulla sed, lobortis purus. Morbi tincidunt feugiat iaculis. Nullam orci velit, feugiat nec mauris eget, ullamcorper molestie velit. Vestibulum auctor ornare porta. Integer quis cursus sem. Quisque venenatis nisi bibendum, porta ipsum aliquet, iaculis neque. Quisque id orci vitae magna ornare tempor. Sed congue augue magna, sit amet suscipit odio euismod vehicula. Integer vehicula leo quis bibendum fermentum.
+
+                      </div>
+                    </div>
+                    <div class="row half-pad">
+                      <div class="col text-left">
+                        <button type="button" class="btn btn-primary">
+                          Ντόναλντ Κνουθ <span class="badge badge-light">17k</span>
+                        </button>
+                      </div>
+
+                      <div class="col text-right">
+                        <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; (123)</a>
+                        <a href="#" class="card-link"><i class="fas fa-minus"></i> &nbsp; (123)</a>
+                        &nbsp; <span class="text-success"><i class="fas fa-check"></i></span> 
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="row half-pad">
+                <div class="container">
+                  <div class="card card-body card-text text-justify">
+                    <div class="row half-pad">
+                      <div class="col">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec felis venenatis, luctus nulla sed, lobortis purus. Morbi tincidunt feugiat iaculis. Nullam orci velit, feugiat nec mauris eget, ullamcorper molestie velit. Vestibulum auctor ornare porta. Integer quis cursus sem. Quisque venenatis nisi bibendum, porta ipsum aliquet, iaculis neque. Quisque id orci vitae magna ornare tempor. Sed congue augue magna, sit amet suscipit odio euismod vehicula. Integer vehicula leo quis bibendum fermentum.
+
+                      </div>
+                    </div>
+                    <div class="row half-pad">
+                      <div class="col text-left">
+                        <button type="button" class="btn btn-primary">
+                          Mr. Bean <span class="badge badge-light">42k</span>
+                        </button>
+                      </div>
+
+                      <div class="col text-right">
+                        <a href="#" class="card-link"><i class="fas fa-plus"></i>&nbsp; (123)</a>
+                        <a href="#" class="card-link"><i class="fas fa-minus"></i>&nbsp; (123)</a>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+          <div class="card-footer text-muted">
+            <div class="container">
+              <div class="row">
+                <div class="col">
+                  <button type="button" class="btn btn-primary">
+                    Άλαν Τούρινγκ <span class="badge badge-light">10.1k</span>
+                    <span class="sr-only"></span>
+                  </button>
+                </div>
+                <div class="col text-center">
+                  2 days ago
+                </div>
+                <div class="col">
+
+                  <div class="col text-right medium-badge">
+                    <a href="#" class="badge badge-primary">Primary</a>
+                    <a href="#" class="badge badge-primary">Primary</a>
+                    <a href="#" class="badge badge-primary">Primary</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
