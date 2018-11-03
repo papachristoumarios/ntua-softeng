@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'signin', views.signin, name='signin'),
     url(r'product', views.product, name='product'),
     url(r'privacy', views.privacy, name='privacy'),
+    url(r'profile', views.profile, name='profile'),
     url(r'', views.index, name='index'),
 ]
