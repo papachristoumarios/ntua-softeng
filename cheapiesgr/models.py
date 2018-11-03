@@ -25,3 +25,6 @@ class Category1(models.Model):
 class Category(models.Model):
 	Category_discription = models.CharField(max_length = 200)
 	Category1_id = models.ForeignKey(Category1, on_delete = models.CASCADE)
+
+class Shop(models.Model):
+	Location = models.CharField(max_length = 200)
