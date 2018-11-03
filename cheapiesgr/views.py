@@ -24,3 +24,6 @@ def index(request):
 def product(request):
     return render(request, 'product.html',
                   { 'mapbox_access_token' : settings.MAPBOX_ACCESS_TOKEN })
+
+def search(request):
+    return render(request, 'search.html', {})

@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'product', views.product, name='product'),
     url(r'privacy', views.privacy, name='privacy'),
     url(r'profile', views.profile, name='profile'),
+    url(r'search', views.search, name='search'),
     url(r'', views.index, name='index'),
 ]
