@@ -16,3 +16,48 @@
   color : white;
   background-color: #3B5998 !important;
 }
+
+.fullscreen-container {
+  width: 100%;
+  height: 100%;
+  padding-right: 0; /*15px in bootstrap.css*/
+  padding-left: 0;  /*idem*/
+  margin-right: auto;
+  margin-left: auto;
+  padding:0;
+  box-sizing: border-box;
+}
+
+#map {
+  width: 100%;
+  height: 50%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.full-card {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.checked {
+  color: orange;
+}
+
+.medium-badge {
+  font-size: 1.3rem !important;
+}
+
+.half-pad {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
