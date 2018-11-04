@@ -1,3 +1,5 @@
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
 .fullw {
   width : 100%;
 }
@@ -129,3 +131,28 @@ footer {
 .top10p {
   margin-top:10%
 }
+
+.starrating > input {display: none;}  /* Remove radio buttons */
+
+.starrating > label:before {
+  content: "\f005"; /* Star */
+  margin: 2px;
+  font-size: 2em;
+  font-family: FontAwesome;
+  display: inline-block;
+}
+
+.starrating > label
+{
+  color: #222222; /* Start color when not clicked */
+}
+
+.starrating > input:checked ~ label
+{
+  color: #f39c12;
+} /* Set yellow color when star checked */
+
+.starrating > input:hover ~ label
+{
+  color: #f39c12;
+} /* Set yellow color when star hover */
