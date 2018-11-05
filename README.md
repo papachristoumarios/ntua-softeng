@@ -1,5 +1,7 @@
 # cheapies.gr
 
+[![Build Status](https://travis-ci.com/papachristoumarios/ntua-softeng.svg?token=DxqFuX4UzFjiGRipqjph&branch=master)](https://travis-ci.com/papachristoumarios/ntua-softeng)
+
 :money_with_wings: Price observatory to find the best bargains!
 
 
