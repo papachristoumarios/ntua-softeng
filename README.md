@@ -122,7 +122,8 @@ sudo docker-compose up
   * Gunicorn
   * nginx
   * Docker
-
+* Continuous Integration
+  * Travis CI
 
 
 ## :newspaper: Guidelines 
@@ -142,7 +143,7 @@ The application language is [Greek](https://en.wikipedia.org/wiki/Greek_language
 
 ### Contributing Workflow
 
-We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow
+We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow. The project status is kept inside [GitHub Projects](https://github.com/papachristoumarios/ntua-softeng/projects) following the [Kanban System](https://en.wikipedia.org/wiki/Kanban)
 
 
 
