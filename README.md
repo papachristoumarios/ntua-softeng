@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.com/papachristoumarios/ntua-softeng.svg?token=DxqFuX4UzFjiGRipqjph&branch=master)](https://travis-ci.com/papachristoumarios/ntua-softeng)
 
+![PyPI - Django Version](https://img.shields.io/pypi/djversions/djangorestframework.svg)  ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg) ![APMLicense](https://img.shields.io/apm/l/:package.svg)
+
+
 :money_with_wings: Price observatory to find the best bargains!
 
 
@@ -113,6 +116,7 @@ sudo docker-compose up
   * Django v2.1
   * MySQL v14.14
   * Django REST Framework
+  * Google Maps Geocoding API
 * Front-end
   * Bootstrap v4.1.3
   * Tachyons v4.1
@@ -124,7 +128,8 @@ sudo docker-compose up
   * Gunicorn
   * nginx
   * Docker
-
+* Continuous Integration & Unit Testing
+  * Travis CI
 
 
 ## :newspaper: Guidelines 
@@ -132,7 +137,6 @@ sudo docker-compose up
 ### Language
 
 The application language is [Greek](https://en.wikipedia.org/wiki/Greek_language). 
-
 
 
 ### Code Formatting
@@ -144,8 +148,9 @@ The application language is [Greek](https://en.wikipedia.org/wiki/Greek_language
 
 ### Contributing Workflow
 
-We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow
+We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow. 
 
+The project tasks are [tracked with GitHub projects](https://github.com/papachristoumarios/ntua-softeng/projects) following the [Kanban Scheduling Methodology](https://en.wikipedia.org/wiki/Kanban).
 
 
 ### Project Structure
