@@ -1,13 +1,32 @@
 from django.db import models
-
+from django.contrib.auth.models import (AbstractBaseUser)
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Create your models here.
 
 
-class Volunteer(models.Model):
-#   check out User Model:
-#       https://wsvincent.com/django-referencing-the-user-model/
-#   check out RegistrationFormUniqueEmail
-    pass
+class Volunteer(AbstractBaseUser):
+	username = models.CharField(max_length = 255, unique = True)
+	email = models.CharField(max_length = 255, unique = True)
+	active = models.BooleanField(default = True)
+	staff = models.BooleanField(default = False)
+	admin = models.BooleanField(default = False)
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email']
+	@property
+	def is_active(self):
+		return self.active
+	@property
+	def is_admin(self):
+		return self.admin
+	@property
+	def is_staff(self):
+		return self.staff
+	@receiver(post_save, sender=AbstractBaseUser)
+	def update_user_profile(sender, instance, created, **kwargs):
+    		if created:
+        		Volunteer.objects.create(user=instance)
+    		instance.profile.save()
 
 
 class Shop(models.Model):
