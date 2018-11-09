@@ -4,7 +4,6 @@
 
 <div class="container h-100 d-flex">
 
-
   <div class="card my-auto fullw">
     <div class="card-header my-auto text-center">
       <h1>Καλώς ήρθες!</h1>
@@ -28,43 +27,14 @@
         <p id="password-strength-text"></p>
 
 
-        <script>
-        var strength = {
-          0: "Απαίσια",
-          1: "Κακή",
-          2: "Αδύναμη",
-          3: "Καλή",
-          4: "Πολύ δυνατή"
-        }
-
-        var password = document.getElementById('pwd');
-        var text = document.getElementById('password-strength-text');
-
-        password.addEventListener('input', function()
-        {
-          var val = password.value;
-          var result = zxcvbn(val);
-
-          if(val !== "") {
-            text.innerHTML = "Δύναμη Κωδικού: " + strength[result.score];
-          }
-          else {
-            text.innerHTML = "";
-          }
-        });
-
-
-
-        </script>
-
         <div class="form-group">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="checkbox" value="">
-            Αποδέχομαι την <a href="/privacy">Πολιτική Απορρήτου</a> και τους <a href="/termsandconditions">Όρους Χρήσης</a>
-        </label>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input class="form-check-input" type="checkbox" value="">
+              Αποδέχομαι την <a href="/privacy">Πολιτική Απορρήτου</a> και τους <a href="/termsandconditions">Όρους Χρήσης</a>
+            </label>
+          </div>
         </div>
-      </div>
 
         <div class="form-group text-center fullw">
           <button type="submit" class="btn btn-default fullw"><i class="far fa-envelope-open"></i> &nbsp; Εγγραφή με email</button>
@@ -74,24 +44,24 @@
 
         <div class="form-group row text-center">
           <div class="col-6">
-          <button type="submit" class="btn btn-default btn-google"><i class="fab fa-google"></i> &nbsp; Εγγραφή με Google</button>
+            <button type="submit" class="btn btn-default btn-google"><i class="fab fa-google"></i> &nbsp; Εγγραφή με Google</button>
           </div>
 
           <div class="col-6">
-          <button type="submit" class="btn btn-default btn-facebook"><i class="fab fa-facebook-square"></i> &nbsp; Εγγραφή με Facebook</button>
+            <button type="submit" class="btn btn-default btn-facebook"><i class="fab fa-facebook-square"></i> &nbsp; Εγγραφή με Facebook</button>
           </div>
         </div>
       </div>
     </form>
-
-
-
 
   </div>
 </div>
 
 </div>
 
+
+{% load static %}
+<script src="{% static 'js/signup.js' %}"></script>
 
 
 {% endblock %}
