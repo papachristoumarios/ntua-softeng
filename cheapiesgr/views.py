@@ -27,3 +27,15 @@ def product(request):
 
 def search(request):
     return render(request, 'search.html', {})
+
+def newproduct1(request):
+    return render(request, 'newproduct1.html', {})
+
+def newproduct2(request):
+    return render(request, 'newproduct2.html', {})
+
+def newproduct3(request):
+    return render(request, 'newproduct3.html', {})
+
+def addproduct(request):
+    return render(request, 'addproduct.html', {})

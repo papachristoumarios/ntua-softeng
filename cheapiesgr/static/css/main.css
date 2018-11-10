@@ -156,3 +156,29 @@ footer {
 {
   color: #f39c12;
 } /* Set yellow color when star hover */
+
+
+
+#inventory .card:hover {
+  transition: all 0.3s ease;
+  box-shadow: 12px 15px 20px 0px rgba(46,61,73,0.15);
+}
+
+
+#inventory .view-btn {
+  background-color: #e6de08;
+  margin: -25px 0 0 0;
+  border-radius: 0 0 0 0;
+  font-size: 14px;
+  border: #e6de08;
+  color: #000;
+}
+
+
+#inventory .btn:hover {
+  background-color: #ff4444;
+  color: #fff;
+  border: 2px solid #ff4444;
+  transition: all 0.3s ease;
+  box-shadow: 12px 15px 20px 0px rgba(46,61,73,0.15);
+}
