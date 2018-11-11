@@ -1,8 +1,6 @@
 # cheapies.gr
 
-[![Build Status](https://travis-ci.com/papachristoumarios/ntua-softeng.svg?token=DxqFuX4UzFjiGRipqjph&branch=master)](https://travis-ci.com/papachristoumarios/ntua-softeng)
-
-![PyPI - Django Version](https://img.shields.io/pypi/djversions/djangorestframework.svg)  ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg) ![APMLicense](https://img.shields.io/badge/license-MIT-green.svg)
+[![Build Status](https://travis-ci.com/papachristoumarios/ntua-softeng.svg?token=DxqFuX4UzFjiGRipqjph&branch=master)](https://travis-ci.com/papachristoumarios/ntua-softeng) ![PyPI - Django Version](https://img.shields.io/pypi/djversions/djangorestframework.svg)  ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/Django.svg) ![APMLicense](https://img.shields.io/badge/license-MIT-green.svg)
 
 
 :money_with_wings: Price observatory to find the best bargains!
@@ -142,8 +140,46 @@ The application language is [Greek](https://en.wikipedia.org/wiki/Greek_language
 ### Code Formatting
 
 * Back-end: [PEP8](https://www.python.org/dev/peps/pep-0008/) and [Django Coding Style](https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/)
-
 * Front-end: [Bootstrap CSS Coding Standards](http://www.w3big.com/bootstrap/bootstrap-css-codeguide-html.html)
+
+### Creating a view
+
+When creating a view, let's say `example` you should notice the following things:
+
+* The view name matches the template name, so you should create `example.html`
+
+* If you use any static JS code, place it into `<app_name>/static/js/example.js` file. 
+
+* The main styling should go into `<app_name>/static/main.css`. Inside the HTML file you should declare
+
+  ```html
+  {% extends layout.html %}
+  {% block content %}
+  <section id="example">
+  	<div class="a">
+          <!-- SOME CODE HERE -->
+      </div>
+      
+  <!-- CODE HERE -->
+      
+  </section>
+           
+  {% endblock %}
+  ```
+
+  and inside `main.css` you should declare 
+
+  ```css
+  section.example {
+      .a {
+          /* CSS Formatting of a inside example */
+      }
+  }
+  ```
+
+  for view-specific CSS. Otherwise, you should put it inside `main.css`
+
+   
 
 
 ### Contributing Workflow
@@ -157,15 +193,18 @@ The project tasks are [tracked with GitHub projects](https://github.com/papachri
 
 * `docs/`  Project-level documentation needs to be stored here and be written in Markdown. Module-specific documentation may be located only in source files.
 * `etc/`  Extra files that accompany the project, such as configuration of external tools etc.
+* `<app_name>/` Django applications that reside inside the project
+    * `<app_name>/urls.py` Application-level urls
+    * `<app_name>/views.py` Application-level views
+    * `<app_name>/models.py` Application-level models
+    * `<app_name>/templates/<template.html>` HTML Templates
+    * `<app_name>/static/{css, js}/{file.css, file.js}` CSS and JavaScript Static files
+        * CSS Static files contain a `main.css` that contains the basic CSS for the web application
+        * JS Static files are organized per view (e.g. `product.js` refers to `product.html`). 
 * `project/`
-    * `settings/`  Settings module that reads from *.env* and exports configuration parameters to Django.
     * `urls.py`  Top-level routing instructions.
 * `manage.py`  Django command-line tool.
-* `env.sample`  Example of a *.env* configuration file.
-* `_version.py` Contains a `__version__` variable to indicate the current version of the website. Calendar versioning is used.
+* `_version.py` Contains a `__version__` variable to indicate the current version of the website. Semantic versioning is used.
 * `setup.py`  Setup script.
 * `requirements.txt`  Pinned production dependencies.
-* `requirements-dev.txt` Pinned development dependencies.
-
-
 
