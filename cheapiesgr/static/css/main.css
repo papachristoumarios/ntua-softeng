@@ -1,4 +1,9 @@
+/* IMPORTS */
+
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+
+/* SIGN-IN PAGE */
 
 .fullw {
   width : 100%;
@@ -8,22 +13,50 @@
   padding-left: 30%;
   padding-right: 30%;
 }
-
 .btn-google {
   color : white;
   background-color: #B00020 !important;
+  width: 100%;
 }
 
 .btn-facebook {
   color : white;
   background-color: #3B5998 !important;
+  width: 100%;
 }
+
+/* MOBILE DEVICES */
+
+@media only screen and (max-width: 768px) {
+  .padded-card {
+    padding-left: 5%;
+    padding-right: 5%;
+
+  }
+
+  .col-12 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .full-copyright {
+    display: none;
+  }
+
+}
+
+.search-button {
+  width: 85%;
+  border-radius: 12px;
+}
+
+/* PRODUCT PAGE */
 
 .fullscreen-container {
   width: 100%;
   height: 100%;
-  padding-right: 0; /*15px in bootstrap.css*/
-  padding-left: 0;  /*idem*/
+  padding-right: 0;
+  padding-left: 0;
   margin-right: auto;
   margin-left: auto;
   padding:0;
@@ -57,6 +90,8 @@
   padding-bottom: 0.5rem;
 }
 
+/* FOOTER PAGE */
+
 footer {
   position: fixed;
   left: 0;
@@ -68,22 +103,9 @@ footer {
   background: #BABABA;
 }
 
-/* Animation */
-.anim-typewriter{
-  animation: typewriter 4s steps(44) 1s 1 normal both,
-  blinkTextCursor 500ms steps(44) infinite normal;
-}
-@keyframes typewriter{
-  from{width: 0;}
-  to{width: 24em;}
-}
-@keyframes blinkTextCursor{
-  from{border-right-color: rgba(255,255,255,.75);}
-  to{border-right-color: transparent;}
-}
 
+/* SEARCH RESULTS */
 
-/* Search Results */
 .grid {
     position: relative;
     width: 100%;
