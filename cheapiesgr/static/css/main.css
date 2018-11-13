@@ -1,7 +1,22 @@
 /* IMPORTS */
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,500,700&subset=greek');
 
-@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+/* BACKGROUND */
 
+
+body  {
+  background: white url("../images/background.png") no-repeat;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.card {
+  background-color: rgba(245, 245, 245, 1);
+  opacity: .95;
+}
+
+.navbar-bg {
+  opacity: 0.95;
+}
 
 /* SIGN-IN PAGE */
 
@@ -105,6 +120,12 @@ footer {
 
 
 /* SEARCH RESULTS */
+
+.intro-text {
+  color: white;
+  font-size: 1.5rem;
+}
+
 
 .grid {
     position: relative;

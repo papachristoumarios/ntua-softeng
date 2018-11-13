@@ -11,7 +11,11 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.2.0/zxcvbn.js"></script>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css' rek='stylesheet'></link>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
 
+    <!-- Web fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700&amp;subset=greek" rel="stylesheet">
 
     {% include 'navbar.html' %}
 
@@ -20,6 +24,12 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 
+
+
+    <!-- Initializations -->
+    
+
+    <script src="{% static 'js/layout.js' %}"></script>
 
 
     {% block content %}
