@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
+{% load static %}
 
 <div class="container h-100 d-flex">
   <div class="container align-self-center">
@@ -9,6 +9,9 @@
     <div class="row justify-content-center">
 
       <div class="wow bounceInLeft col-12 text-center intro-text">
+        <img src="{% static 'images/logo.svg' %}" onerror="this.src='{% static 'images/logo.png' %}'" width="80%">
+        <br/>
+        <br/>
         <p>Βρες τις καλύτερες προσφορές online μόνο στο cheapies.gr!</p>
       </div>
     </div>
