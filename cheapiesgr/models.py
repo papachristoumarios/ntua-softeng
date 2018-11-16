@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser)
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.gis.db import models as gis_models
+from django.contrib.gis import geos
 # Create your models here.
 
 
@@ -62,9 +64,17 @@ class Volunteer(models.Model):
         return self.first_name
 
 
-
 class Shop(models.Model):
-    location = models.CharField(max_length = 200) # check out GeoDjango
+    address = models.CharField(max_length=100)
+    city = models.CharField(max_length=50)
+    location = gis_models.PointField(u"longitude/latitude",
+                                     geography=True, blank=True, null=True)
+
+    gis = gis_models.GeoManager()
+    objects = models.Manager()
+
+    def __shop__(self):
+        return self.name
 
 
 class Category2(models.Model): # Highest level (abstract)
