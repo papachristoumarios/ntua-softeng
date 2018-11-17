@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.gis.db import models as gis_models
 from django.contrib.gis import geos
+from django.db.models import Manager as GeoManager
 # Create your models here.
 
 
@@ -70,8 +71,8 @@ class Shop(models.Model):
     location = gis_models.PointField(u"longitude/latitude",
                                      geography=True, blank=True, null=True)
 
-    gis = gis_models.GeoManager()
-    objects = models.Manager()
+    #gis = gis_models.GeoManager() GeoManager is used as follow since Django 2.0 in order to do spatial lookups
+    objects = GeoManager()
 
     def __shop__(self):
         return self.name
