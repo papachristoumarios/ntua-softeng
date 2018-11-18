@@ -8,7 +8,10 @@ body  {
   background: white url("../images/background.png") no-repeat;
   font-family: 'Ubuntu', sans-serif;
   background-repeat: repeat-y;
+  padding-bottom: 4rem;
 }
+
+
 
 .card {
   background-color: rgba(245, 245, 245, 1);
