@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container h-100 d-flex">
+
+
+  <div class="card my-auto fullw">
+    <div class="card-header my-auto text-center">
+      <h1>Αναφορά Συμβάντος</h1>
+    </div>
+    <div class="card-body padded-card" style="">
+      <form action="/action_page.php">
+        <div class="form-group">
+          <label for="user"><i class="fas fa-flag"></i> &nbsp; Αναγνωριστικό</label>
+          <input type="text" disabled="true" placeholder="Q13092382903" class="form-control" id="user">
+        </div>
+
+        <div class="form-group">
+          <label for="report"><i class="fas fa-pen"></i> &nbsp; Κείμενο</label>
+          <textarea class="form-control" placeholder="Περιγράψτε το συμβάν" id="report" rows="5"></textarea>
+        </div>
+
+
+        <div class="form-group text-center fullw">
+          <button type="submit" class="btn btn-default fullw"><i class="far fa-flag"></i> &nbsp; Αναφορά Συμβάντος</button>
+        </div>
+
+      </div>
+    </form>
+
+
+
+
+  </div>
+</div>
+
+</div>
+
+
+
+{% endblock %}

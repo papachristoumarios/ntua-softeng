@@ -28,6 +28,9 @@ def product(request):
 def search(request):
     return render(request, 'search.html', {})
 
+def report(request):
+    return render(request, 'report.html', {})
+
 def newproduct1(request):
     return render(request, 'newproduct1.html', {})
 

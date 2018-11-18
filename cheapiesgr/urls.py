@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'privacy', views.privacy, name='privacy'),
     url(r'profile', views.profile, name='profile'),
     url(r'search', views.search, name='search'),
+    url(r'report', views.report, name='report'),
     url(r'', views.index, name='index'),
 ]

@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Mapbox
-MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqbmo4YzZjNTB3dTczcW9qczFneDlxa2kifQ.AhQlVx_dZSOIje7Sp2Qazw'
+MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqb2oxOTEwOTAwZXYzcG84bWdnejg4djYifQ.autpt1M6pVeCDOVCdRyz2Q"
 
 # Application definition
 
