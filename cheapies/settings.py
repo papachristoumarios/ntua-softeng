@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cheapiesgr',
     'social_django',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'social_django.middleware.SocialAuthExceptionMiddleware', 
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'cheapies.urls'
@@ -68,7 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-		'social_django.context_processors.backends', 
+		'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
             ],
         },
@@ -83,7 +84,7 @@ WSGI_APPLICATION = 'cheapies.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.contrib.gis.db.backends.mysql',
         'OPTIONS': {
             'read_default_file': './database.cnf',
             'unix_socket' : '/var/run/mysqld/mysqld.sock'
@@ -138,5 +139,3 @@ AUTHENTICATION_BACKENDS = (
 	'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
 	'django.contrib.auth.backends.ModelBackend',
 )
-
-

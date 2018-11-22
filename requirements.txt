@@ -1,3 +1,4 @@
 django
 mysqlclient
 djangorestframework
+social-auth-app-django
