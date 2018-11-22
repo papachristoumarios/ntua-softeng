@@ -118,10 +118,10 @@ sudo docker-compose up
 * Front-end
   * Bootstrap v4.1.3
   * Tachyons v4.1
-  * wow.js 
+  * wow.js
   * Mapbox v0.5
-  * jQuery 
-  * slick.js 
+  * jQuery
+  * slick.js
 * Deployment
   * Gunicorn
   * nginx
@@ -130,11 +130,11 @@ sudo docker-compose up
   * Travis CI
 
 
-## :newspaper: Guidelines 
+## :newspaper: Guidelines
 
 ### Language
 
-The application language is [Greek](https://en.wikipedia.org/wiki/Greek_language). 
+The application language is [Greek](https://en.wikipedia.org/wiki/Greek_language).
 
 
 ### Code Formatting
@@ -148,7 +148,7 @@ When creating a view, let's say `example` you should notice the following things
 
 * The view name matches the template name, so you should create `example.html`
 
-* If you use any static JS code, place it into `<app_name>/static/js/example.js` file. 
+* If you use any static JS code, place it into `<app_name>/static/js/example.js` file.
 
 * The main styling should go into `<app_name>/static/main.css`. Inside the HTML file you should declare
 
@@ -159,15 +159,15 @@ When creating a view, let's say `example` you should notice the following things
   	<div class="a">
           <!-- SOME CODE HERE -->
       </div>
-      
+
   <!-- CODE HERE -->
-      
+
   </section>
-           
+
   {% endblock %}
   ```
 
-  and inside `main.css` you should declare 
+  and inside `main.css` you should declare
 
   ```css
   section.example {
@@ -179,12 +179,12 @@ When creating a view, let's say `example` you should notice the following things
 
   for view-specific CSS. Otherwise, you should put it inside `main.css`
 
-   
+
 
 
 ### Contributing Workflow
 
-We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow. 
+We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow. The project status is kept inside [GitHub Projects](https://github.com/papachristoumarios/ntua-softeng/projects) following the [Kanban System](https://en.wikipedia.org/wiki/Kanban)
 
 The project tasks are [tracked with GitHub projects](https://github.com/papachristoumarios/ntua-softeng/projects) following the [Kanban Scheduling Methodology](https://en.wikipedia.org/wiki/Kanban).
 
@@ -200,11 +200,10 @@ The project tasks are [tracked with GitHub projects](https://github.com/papachri
     * `<app_name>/templates/<template.html>` HTML Templates
     * `<app_name>/static/{css, js}/{file.css, file.js}` CSS and JavaScript Static files
         * CSS Static files contain a `main.css` that contains the basic CSS for the web application
-        * JS Static files are organized per view (e.g. `product.js` refers to `product.html`). 
+        * JS Static files are organized per view (e.g. `product.js` refers to `product.html`).
 * `project/`
     * `urls.py`  Top-level routing instructions.
 * `manage.py`  Django command-line tool.
 * `_version.py` Contains a `__version__` variable to indicate the current version of the website. Semantic versioning is used.
 * `setup.py`  Setup script.
 * `requirements.txt`  Pinned production dependencies.
-
