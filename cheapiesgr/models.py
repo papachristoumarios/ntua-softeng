@@ -51,7 +51,7 @@ class MyUser(AbstractBaseUser):
 
 class Volunteer(models.Model):
 #   Class Volunteer is used to extend MyUser safely
-    user = models.OneToOneField(MyUser)
+    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
@@ -80,7 +80,7 @@ class Shop(models.Model):
 
 class Category2(models.Model): # Highest level (abstract)
     category2_description = models.CharField(max_length = 200)
-    image = models.ImageField() 
+    image = models.ImageField()
 #   Ref for images: https://www.youtube.com/watch?v=-bjsz18pR54
 #                   https://www.youtube.com/watch?v=PIvlcmnayOE
 
@@ -142,7 +142,7 @@ class Rating(models.Model):
 class Question(models.Model):
     question_text = models.CharField(max_length = 2000)
     registration = models.ForeignKey(Registration, on_delete = models.CASCADE)
-    
+
     def __str__(self):
         return self.question_text
 
