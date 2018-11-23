@@ -12,12 +12,7 @@ env:
 install:
   - pip install -r requirements.txt
   - sudo apt-get install -y libgdal-dev python3-gdal
-#  - pip download GDAL
-#  - python setup.py build_ext --include-dirs=/usr/include/gdal/
-#  - sudo python setup.py install --include-dirs=/usr/include/gdal
 before_script:
   - mysql -e 'create database cheapies;' -u root
-  - python3 manage.py makemigrations
-  - python3 manage.py migrate
 script:
   - python manage.py test
