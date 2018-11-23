@@ -1,5 +1,4 @@
 django
 mysqlclient
-GDAL
 djangorestframework
 social-auth-app-django
