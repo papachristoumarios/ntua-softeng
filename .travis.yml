@@ -11,7 +11,13 @@ env:
   -DJANGO=2.1 DB=mysql
 install:
   - pip install -r requirements.txt
-  - sudo apt-get install libgdal-dev python3-gdal
+  - sudo apt-get install libgdal-dev
+  - sudo apt-add-repository ppa:ubuntugis/ubuntugis-unstable
+  - sudo apt-get update
+  - sudo apt-get install python3-gdal
+#  - pip download GDAL
+#  - python setup.py build_ext --include-dirs=/usr/include/gdal/
+#  - sudo python setup.py install --include-dirs=/usr/include/gdal
 before_script:
   - mysql -e 'create database cheapies;' -u root
   - python3 manage.py makemigrations
