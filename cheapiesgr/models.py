@@ -66,8 +66,8 @@ class Volunteer(models.Model):
 
 
 class Shop(models.Model):
-    address = models.CharField(max_length=100)
-    city = models.CharField(max_length=50)
+    address = models.CharField(max_length=400)
+    city = models.CharField(max_length=400)
     location = gis_models.PointField(u"longitude/latitude",
                                      geography=True, blank=True, null=True)
 
@@ -98,7 +98,7 @@ class Category1(models.Model): # Mid level (sparse)
 
 
 class Category(models.Model): # Lowest level (dense)
-    category_description = models.CharField(max_length = 200)
+    category_description = models.CharField(max_length = 400)
     category1 = models.ForeignKey(Category1, on_delete = models.CASCADE)
     image = models.ImageField()
 
