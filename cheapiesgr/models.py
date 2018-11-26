@@ -74,12 +74,12 @@ class Volunteer(models.Model):
 	class Meta:
 		verbose_name = _('volunteer')
 		verbose_name_plural = _('volunteers')
-		
+
 
 class Shop(models.Model):
-	address = models.CharField(max_length=100,
+	address = models.CharField(max_length=500,
 	verbose_name = _('address'))
-	city = models.CharField(max_length=50,
+	city = models.CharField(max_length=500,
 	verbose_name = _('city'))
 	location = gis_models.PointField(
 										geography=True, blank=True, null=True,
@@ -201,4 +201,3 @@ class Answer(models.Model):
 	class Meta:
 		verbose_name = _('answer')
 		verbose_name_plural = _('answers')
-
