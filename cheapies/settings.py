@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Mapbox
-MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqb2oxOTEwOTAwZXYzcG84bWdnejg4djYifQ.autpt1M6pVeCDOVCdRyz2Q"
+#MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqb2oxOTEwOTAwZXYzcG84bWdnejg4djYifQ.autpt1M6pVeCDOVCdRyz2Q"
 
 # Application definition
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cheapiesgr',
     'social_django',
     'django.contrib.gis',
+	'djgeojson',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+	'django.middleware.locale.LocaleMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
@@ -69,7 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-		'social_django.context_processors.backends',
+				'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
             ],
         },
@@ -116,7 +117,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE =  'el'
+
+USE_I18N = True
+
+USE_L10N = True
 
 TIME_ZONE = 'UTC'
 
@@ -139,3 +144,5 @@ AUTHENTICATION_BACKENDS = (
 	'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
 	'django.contrib.auth.backends.ModelBackend',
 )
+
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
