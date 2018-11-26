@@ -1,3 +1,4 @@
+import glob
 import lipsum
 import json
 import osmapi
@@ -10,11 +11,54 @@ import random
 def basename(x):
     return os.path.split(x)[-1]
 
-def generate_product_data(n):
-    pass
+def generate_product_data(n, d):
+    output = []
+
+    categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
+
+    for i, c in enumerate(categories[:n]):
+        
+
 
 def generate_categories_data(n, d):
-    pass
+    output = []
+
+    categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
+
+    for i, c in enumerate(categories[:n]):
+        img_path = glob.glob(os.path.join(c, 'images', '*'))
+        category2 = {
+            'model' : 'cheapiesgr.category2',
+            'pk' : i + 1,
+            'fields' : {
+                'category2_description' : basename(c) + '2',
+                # 'image' : random.choice(img_path)
+            }
+        }
+
+        category1 = {
+            'model' : 'cheapiesgr.category1',
+            'pk' : i + 1,
+            'fields' : {
+                'category1_description' : basename(c) + '1',
+                'category2' : i + 1,
+                # 'image' : random.choice(img_path)
+            }
+        }
+
+        category = {
+            'model' : 'cheapiesgr.category',
+            'pk' : i + 1,
+            'fields' : {
+                'category_description' : basename(c),
+                'category1' : i + 1,
+                # 'image' : random.choice(img_path)
+            }
+        }
+
+        output.extend([category, category1, category2])
+
+    return output
 
 def generate_shop_data(n, d):
     shops = ['Vasilopoulos', 'Sklavenitis', 'Lidl', 'Elomas']
@@ -126,7 +170,7 @@ if __name__ == '__main__':
         'categories': generate_categories_data,
         'products' : generate_product_data,
         'user' : generate_user_data,
-        'qar' : generate_qar_data
+        'qar' : generate_qar_data,
     }
 
 

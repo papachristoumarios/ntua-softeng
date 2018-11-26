@@ -66,8 +66,8 @@ class Volunteer(models.Model):
 
 
 class Shop(models.Model):
-    address = models.CharField(max_length=400)
-    city = models.CharField(max_length=400)
+    address = models.CharField(max_length=1000)
+    city = models.CharField(max_length=1000)
     location = gis_models.PointField(u"longitude/latitude",
                                      geography=True, blank=True, null=True)
 
