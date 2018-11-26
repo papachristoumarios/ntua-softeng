@@ -4,4 +4,4 @@ djangorestframework
 social-auth-app-django
 Pillow
 django-geojson
---upgrade cryptography
+cryptography
