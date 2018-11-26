@@ -1,3 +1,6 @@
+# Generate a fake database for the django application
+# TODO Add images
+import datetime
 import glob
 import lipsum
 import json
@@ -15,10 +18,34 @@ def generate_product_data(n, d):
     output = []
 
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
-
+    pk = 1
     for i, c in enumerate(categories[:n]):
-        
+        with open(os.path.join(c, 'data.csv')) as f:
+            products = f.read().splitlines()
 
+        for j, p in enumerate(products[:n]):
+            q = p.split(', ')
+            try:
+                pr = float(q[1])
+            except:
+                pr = 10 * random.random()
+            registration = {
+                'model' : 'cheapiesgr.registration',
+                'pk' : pk,
+                'fields' : {
+                    'price' : pr,
+                    'product_description' : ', '.join(q[2:-1]),
+                    'shop' : random.randint(1, 5),
+                    'volunteer' : j + 1,
+                    'category' : i + 1,
+                    'date_of_registration' : '2018-11-27'
+                }
+            }
+            pk += 1
+
+        output.extend([registration])
+
+    return output
 
 def generate_categories_data(n, d):
     output = []
@@ -147,11 +174,11 @@ def generate_qar_data(n, d):
             'model' : 'cheapiesgr.rating',
             'pk' : i,
             'fields' : {
-                'rate_explaination' : lipsum.generate_words(20),
+                'rate_explanation' : lipsum.generate_words(20),
                 'registration' : i,
                 'volunteer' : i,
                 'stars' : random.randint(1, 5),
-                'validity_of_this_rating' : random.randint(1, 5)
+                'validity_of_this_rate' : random.randint(1, 5)
             }
         }
 
