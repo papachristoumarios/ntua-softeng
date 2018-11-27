@@ -9,4 +9,4 @@ class PointAdmin(admin.OSMGeoAdmin):	#Class using OSMGeoadmin
     map_height = 400 # map (pixels)
     default_zoom = 11 #Appropriate zoom
 
-admin.site.register(Shop, PointAdmin)
+admin.site.register([Shop, Volunteer, Registration],PointAdmin)

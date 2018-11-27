@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser)
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager)
+from django.contrib.auth.models import PermissionsMixin
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.gis.db import models as gis_models
@@ -8,19 +9,44 @@ from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
+class UserManager(BaseUserManager):
+	def create_user(self,username, email,first_name, last_name, password=None,): 
+    
+		if not email:
+			raise ValueError('The email is required to create this user')
+		email = UserManager.normalize_email(email)
+		cuser = self.model(username=username, email=email,first_name=first_name, last_name=last_name, is_staff=False, is_active=True, is_superuser=False, last_login=None,)
+		cuser.set_password(password)
+		cuser.save(using=self._db)
+		return cuser
+
+	def create_superuser(self,username, email,first_name=None,last_name=None, password=None, 
+                                                           ):
+		u = self.create_user(username,email,first_name,last_name, password, 
+                                                           )
+		u.is_staff = True
+		u.is_active = True
+		u.is_superuser = True
+		u.save(using=self._db)
+		return u
 
 
-class MyUser(AbstractBaseUser):
+class Volunteer(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length = 255, unique = True,
     verbose_name = _('username'))
     email = models.CharField(max_length = 255, unique = True)
-    active = models.BooleanField(default = True,
+    is_active = models.BooleanField(default = True,
     verbose_name = _('active'))
-    staff = models.BooleanField(default = False,
+    is_staff = models.BooleanField(default = False,
     verbose_name = _('staff'))
-    admin = models.BooleanField(default = False,
+    is_superuser = models.BooleanField(default = False,
     verbose_name = _('admin'))
     confirmed_email = models.BooleanField(default=False) # is email confirmed
+    first_name = models.CharField(max_length = 100,blank=True,null=True,
+	verbose_name = _('first_name'))
+    last_name = models.CharField(max_length = 100,blank=True,null=True,
+	verbose_name = _('last_name'))
+    objects = UserManager()
 
     USERNAME_FIELD = 'username'
 #   USERNAME_FIELD and password are required by default
@@ -37,43 +63,33 @@ class MyUser(AbstractBaseUser):
         return self.confirmed_email
 
     @property
-    def is_active(self):
-        return self.active
+    def is_activee(self):
+        return self.is_active
 
     @property
     def is_admin(self):
-        return self.admin
+        return self.is_superuser
 
     @property
-    def is_staff(self):
-        return self.staff
+    def is_stafff(self):
+        return self.is_staff
 
     @receiver(post_save, sender=AbstractBaseUser)
     def update_user_profile(sender, instance, created, **kwargs):
         if created:
             Volunteer.objects.create(user=instance)
         instance.profile.save()
+    def get_last_name(self):
+        return self.last_name
+
+    def get_first_name(self):
+        return self.first_name
+    class Meta:
+        verbose_name = _('Volunteer')
+        verbose_name_plural = _('Volunteers')
+		
 
 
-class Volunteer(models.Model):
-#   Class Volunteer is used to extend MyUser safely
-	user = models.OneToOneField(MyUser, on_delete = models.CASCADE)
-	first_name = models.CharField(max_length = 100,
-	verbose_name = _('first_name'))
-	last_name = models.CharField(max_length = 100,
-	verbose_name = _('last_name'))
-
-	def __str__(self):
-		return self.user
-
-	def get_last_name(self):
-		return self.last_name
-
-	def get_first_name(self):
-		return self.first_name
-	class Meta:
-		verbose_name = _('volunteer')
-		verbose_name_plural = _('volunteers')
 		
 
 class Shop(models.Model):
