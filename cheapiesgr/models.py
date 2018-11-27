@@ -124,7 +124,7 @@ class Category1(models.Model): # Mid level (sparse)
 
 
 class Category(models.Model): # Lowest level (dense)
-	category_description = models.CharField(max_length = 200,
+	category_description = models.CharField(max_length = 400,
 	verbose_name = _('category_description'))
 	category1 = models.ForeignKey(Category1, on_delete = models.CASCADE)
 	image = models.ImageField()

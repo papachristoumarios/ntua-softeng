@@ -5,3 +5,5 @@ social-auth-app-django
 Pillow
 django-geojson
 cryptography
+osmapi
+nominatim
