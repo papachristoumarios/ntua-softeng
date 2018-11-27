@@ -1,5 +1,4 @@
 # Generate a fake database for the django application
-# TODO Add images
 import datetime
 import glob
 import lipsum
@@ -12,9 +11,11 @@ import os
 import random
 
 def basename(x):
-    return os.path.split(x)[-1]
+    # Returns the basename of a file
+    return os.path.split(x)[1]
 
 def generate_product_data(n, d):
+    # Generate product registrations
     output = []
 
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
@@ -48,6 +49,7 @@ def generate_product_data(n, d):
     return output
 
 def generate_categories_data(n, d):
+    # Generate data on categories and (sub)-sub-categories
     output = []
 
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
@@ -88,6 +90,7 @@ def generate_categories_data(n, d):
     return output
 
 def generate_shop_data(n, d):
+    # Generate points on the map for various stores using OSM Nominatim API
     shops = ['Vasilopoulos', 'Sklavenitis', 'Lidl', 'Elomas']
     results = []
     i = 0
@@ -114,6 +117,7 @@ def generate_shop_data(n, d):
     return output
 
 def generate_user_data(n, d):
+    # Generate fake user data
     output = []
     with open('FunnyNames.txt') as f:
         names = f.read().splitlines()
@@ -148,6 +152,7 @@ def generate_user_data(n, d):
     return output
 
 def generate_qar_data(n, d):
+    # Generate questions, answers and ratings
     output = []
 
     for i in range(1, n + 1):
@@ -186,12 +191,17 @@ def generate_qar_data(n, d):
 
     return output
 
+def apply_fixtures(pipeline):
+    os.chdir('../..')
+    for p in pipeline:
+        os.system('python3 manage.py loaddata etc/fixtures/{}.json'.format(p))	
+
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-n', type=int, default=10, help='Number of data')
     argparser.add_argument('-t', type=str, default='')
     argparser.add_argument('-d', type=str, help='Crawled data directory')
-
+    argparser.add_argument('--apply', action='store_true', help='Apply fixtures')
     options = {
         'shop' : generate_shop_data,
         'categories': generate_categories_data,
@@ -206,7 +216,8 @@ if __name__ == '__main__':
     args = argparser.parse_args()
     # Generate desired data
     if args.t == '':
-        pipeline = ['shop', 'user']
+	# Use default pipeline
+        pipeline = ['shop', 'user', 'categories', 'products', 'qar']
     else:
         pipeline = [args.t]
 
@@ -216,3 +227,6 @@ if __name__ == '__main__':
         # Write to file
         with open(p + '.json', 'w+') as f:
             f.write(json.dumps(output, ensure_ascii=False))
+
+        if args.apply_fixtures:
+            apply_fixtures(pipeline)
