@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
-
+from django.views.decorators.csrf import csrf_exempt
+from .models import Registration
 
 def default_map(request):
     return render(request, 'map_default.html',
@@ -25,8 +26,15 @@ def product(request):
     return render(request, 'product.html',
                   { 'mapbox_access_token' : settings.MAPBOX_ACCESS_TOKEN })
 
+@csrf_exempt
 def search(request):
-    return render(request, 'search.html', {})
+    search_text = request.POST.get("search")
+    results = Registration.objects.filter(product_description__contains=search_text)
+
+    return render(request, 'search.html', {
+        'results' : results,
+        'search_text' : search_text,
+    })
 
 def report(request):
     return render(request, 'report.html', {})

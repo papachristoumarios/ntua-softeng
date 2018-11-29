@@ -43,8 +43,8 @@
 
     {% if request.get_full_path != '/' %}
 
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search">
+    <form class="form-inline my-2 my-lg-0" method="POST" action="/search">
+      <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search" name="search">
       <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button> &nbsp;
       <button class="btn btn-primary my-2 my-sm-0" type="submit-camera"><i class="fas fa-camera"></i></button>
     </form>

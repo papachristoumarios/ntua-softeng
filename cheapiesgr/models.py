@@ -6,54 +6,53 @@ from django.contrib.gis.db import models as gis_models
 from django.contrib.gis import geos
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
-from django.contrib.gis.utils import GeoIP
 
 # Create your models here.
 
 
 class MyUser(AbstractBaseUser):
-    username = models.CharField(max_length = 255, unique = True,
-    verbose_name = _('username'))
-    email = models.CharField(max_length = 255, unique = True)
-    active = models.BooleanField(default = True,
-    verbose_name = _('active'))
-    staff = models.BooleanField(default = False,
-    verbose_name = _('staff'))
-    admin = models.BooleanField(default = False,
-    verbose_name = _('admin'))
-    confirmed_email = models.BooleanField(default=False) # is email confirmed
+	username = models.CharField(max_length = 255, unique = True,
+	verbose_name = _('username'))
+	email = models.CharField(max_length = 255, unique = True)
+	active = models.BooleanField(default = True,
+	verbose_name = _('active'))
+	staff = models.BooleanField(default = False,
+	verbose_name = _('staff'))
+	admin = models.BooleanField(default = False,
+	verbose_name = _('admin'))
+	confirmed_email = models.BooleanField(default=False) # is email confirmed
 
-    USERNAME_FIELD = 'username'
+	USERNAME_FIELD = 'username'
 #   USERNAME_FIELD and password are required by default
-    REQUIRED_FIELDS = ['email']
+	REQUIRED_FIELDS = ['email']
 
-    def __str__(self):
-        return self.username
+	def __str__(self):
+		return self.username
 
-    def get_email(self):
-        return self.email
+	def get_email(self):
+		return self.email
 
-    @property
-    def is_email_confirmed(self):
-        return self.confirmed_email
+	@property
+	def is_email_confirmed(self):
+		return self.confirmed_email
 
-    @property
-    def is_active(self):
-        return self.active
+	@property
+	def is_active(self):
+		return self.active
 
-    @property
-    def is_admin(self):
-        return self.admin
+	@property
+	def is_admin(self):
+		return self.admin
 
-    @property
-    def is_staff(self):
-        return self.staff
+	@property
+	def is_staff(self):
+		return self.staff
 
-    @receiver(post_save, sender=AbstractBaseUser)
-    def update_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Volunteer.objects.create(user=instance)
-        instance.profile.save()
+	@receiver(post_save, sender=AbstractBaseUser)
+	def update_user_profile(sender, instance, created, **kwargs):
+		if created:
+			Volunteer.objects.create(user=instance)
+		instance.profile.save()
 
 
 class Volunteer(models.Model):
@@ -86,7 +85,7 @@ class Shop(models.Model):
 										geography=True, blank=True, null=True,
 										verbose_name = _('location'))
 
-    #gis = gis_models.GeoManager() GeoManager is used as follow since Django 2.0 in order to do spatial lookups
+	#gis = gis_models.GeoManager() GeoManager is used as follow since Django 2.0 in order to do spatial lookups
 	objects = GeoManager()
 
 	def __str__(self):
@@ -155,9 +154,13 @@ class Registration(models.Model):
 	def get_price(self):
 		return self.get_price
 
-    def get_stars(self):
-        return self.Rating_set.all().aggregate(Avg('stars'))
+	@property
+	def stars(self):
+		return self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
 
+	@stars.getter
+	def stars(self):
+		return self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
 
 	class Meta:
 		verbose_name = _('registration')

@@ -67,7 +67,7 @@
 						<div class="col-md-9">
 							<h2><i class="fa fa-file-o"></i> Αποτελέσματα Αναζήτησης</h2>
 							<hr>
-							<p>Αποτελέσματα για "πίνακας ζωγραφικής"</p>
+							<p>Αποτελέσματα για "{{ search_text }}"</p>
 
 							<div class="padding"></div>
 
@@ -104,85 +104,31 @@
 							<!-- BEGIN TABLE RESULT -->
 							<div class="table-responsive">
 								<table class="table table-hover">
-									<tbody><tr>
-										<td class="number text-center">1</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/1" alt=""></td>
-										<td class="product"><strong>Φύση - Πικάσο</strong><br>Να ένας πίνακας. Πρόκειται για ένα συλλεκτικό....</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
+									<tbody>
+										{% for result in results %}
+										<tr>
+										<td class="number text-center">{{ forloop.counter }}</td>
+										{% if result.image %}
+											<td class="image"><img src="{{ result.image.url }}" alt=""></td>
+										{% else %}
+											<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+										{% endif %}
+										<td class="product text-justify">
+											<span>{{ result.product_description }}</span></td>
+										<td class="rate text-right">
+										<span>
+												{{ result.stars | floatformat:-2 }}
+													<i class="fa fa-star"></i>
+										</span></td>
 										<td class="price text-right">10 χλμ</td>
-										<td class="price text-right">350&euro;</td>
+										<td class="price text-right">{{ result.price }} &euro;</td>
 									</tr>
-									<tr>
-										<td class="number text-center">2</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/2" alt=""></td>
-										<td class="product"><strong>Μπομπ Ρος</strong><br>Ένας συλλεκτικός πίνακας του Μπομ Ρος.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">20 χλμ</td>
-										<td class="price text-right">1100&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">3</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/3" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">2 χλμ</td>
-										<td class="price text-right">2300&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">4</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/4" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">1 χλμ</td>
-										<td class="price text-right">423&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">5</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/5" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">4 χλμ</td>
-										<td class="price text-right">32&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">6</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/6" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">30 χλμ</td>
-										<td class="price text-right">10&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">7</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/7" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">16 χλμ</td>
-										<td class="price text-right">120&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">8</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/8" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">7 χλμ</td>
-										<td class="price text-right">3100&euro;</td>
-									</tr>
+									{% endfor %}
 								</tbody></table>
 							</div>
 							<!-- END TABLE RESULT -->
 
-							<!-- BEGIN PAGINATION -->
-							<nav aria-label="Page navigation example">
-								<ul class="pagination">
-									<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-									<li class="page-item"><a class="page-link" href="#">1</a></li>
-									<li class="page-item"><a class="page-link" href="#">2</a></li>
-									<li class="page-item"><a class="page-link" href="#">3</a></li>
-									<li class="page-item"><a class="page-link" href="#">Next</a></li>
-								</ul>
-							</nav>
-							<!-- END PAGINATION -->
+
 						</div>
 						<!-- END RESULT -->
 					</div>
