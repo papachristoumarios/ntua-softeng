@@ -6,6 +6,7 @@ from django.contrib.gis.db import models as gis_models
 from django.contrib.gis import geos
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
+from django.contrib.gis.utils import GeoIP
 
 # Create your models here.
 
@@ -153,6 +154,11 @@ class Registration(models.Model):
 
 	def get_price(self):
 		return self.get_price
+
+    def get_stars(self):
+        return self.Rating_set.all().aggregate(Avg('stars'))
+
+
 	class Meta:
 		verbose_name = _('registration')
 		verbose_name_plural = _('registrations')
