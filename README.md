@@ -60,6 +60,9 @@ default-character-set = utf8
 Install the requirements with pip:
 
 ```bash
+sudo add-apt-repository ppa:maxmind/ppa
+sudo apt update
+sudo apt install libgeoip1 libgeoip-dev geoip-bin
 pip3 install -r requirements.txt
 ```
 
