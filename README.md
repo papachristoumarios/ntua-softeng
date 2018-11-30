@@ -63,6 +63,12 @@ Install the requirements with pip:
 pip3 install -r requirements.txt
 ```
 
+### Obtain latest data to perform geoip detection
+
+```bash
+python manage.py geoip_update
+```
+
 ### Run the development webserver
 
 Run webserver with:
