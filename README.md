@@ -28,7 +28,7 @@ This project was curated by "mycoderocks" team comprising of (alphabetical order
  * Dimitris Kelesis
  * [Marios Papachristou](https://github.com/papachristoumarios) (AM: 03115101, papachristoumarios@gmail.com)
  * Ioannis Siachos
- * Konstantinos Stavropoulos
+ * [Konstantinos Stavropoulos](https://github.com/konsntu17) (AM: 03115046, stako2009@hotmail.com)
 
 
 
