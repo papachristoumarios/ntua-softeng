@@ -23,7 +23,7 @@ _This repository hosts the [Software Engineering](https://courses.softlab.ntua.g
 ## Team
 
 This project was curated by "mycoderocks" team comprising of (alphabetical order):
- * Dimitris Christou
+ * [Dimitris Christou](https://github.com/christou-dimitris) (AM: 03115058, iochrist1997@gmail.com)
  * [Ioannis Daras](https://github.com/giannisdaras) (AM: 03115018, daras.giannhs@gmail.com)
  * [Dimitris Kelesis](https://github.com/jim113) (AM: 03115037, xd4ever7@gmail.com)
  * [Marios Papachristou](https://github.com/papachristoumarios) (AM: 03115101, papachristoumarios@gmail.com)
