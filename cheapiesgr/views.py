@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from .models import Registration
+from .models import Category
 
 def default_map(request):
     return render(request, 'map_default.html',
@@ -20,6 +21,9 @@ def signin(request):
     return render(request, 'signin.html', {})
 
 def index(request):
+    request.session['categories'] = list(Category.objects.all().values())
+    print(request.session['categories'])
+
     return render(request, 'index.html', {})
 
 def product(request):
