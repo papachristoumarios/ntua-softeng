@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from .models import Category
 from .models import Registration
 from django.contrib.gis.geoip2 import GeoIP2
 from django.contrib.gis.geos import Point
@@ -24,6 +25,9 @@ def signin(request):
     return render(request, 'signin.html', {})
 
 def index(request):
+    request.session['categories'] = list(Category.objects.all().values())
+    print(request.session['categories'])
+
     return render(request, 'index.html', {})
 
 def product(request):
