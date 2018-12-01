@@ -90,6 +90,10 @@ class Shop(models.Model):
 
 	def __str__(self):
 		return self.address
+
+	def get_location(self):
+		return self.location
+		
 	class Meta:
 		verbose_name = _('shop')
 		verbose_name_plural = _('shops')
@@ -116,11 +120,11 @@ class Category1(models.Model): # Mid level (sparse)
 	category2 = models.ForeignKey(Category2, on_delete = models.CASCADE)
 	image = models.ImageField()
 
+	verbose_name_plural = _('category1s')
 	def __str__(self):
 		return self.category1_description
 	class Meta:
 		verbose_name = _('category1')
-		verbose_name_plural = _('category1s')
 
 
 class Category(models.Model): # Lowest level (dense)
@@ -154,6 +158,9 @@ class Registration(models.Model):
 	def get_price(self):
 		return self.get_price
 
+	def get_location(self):
+		return self.shop.get_location()
+
 	@property
 	def stars(self):
 		return self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
@@ -183,6 +190,7 @@ class Rating(models.Model):
 
 	def get_validity(self):
 		return self.validity_of_this_rate
+
 	class Meta:
 		verbose_name = _('rating')
 		verbose_name_plural = _('ratings')

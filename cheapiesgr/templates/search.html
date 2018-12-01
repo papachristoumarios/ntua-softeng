@@ -108,20 +108,20 @@
 										{% for result in results %}
 										<tr>
 										<td class="number text-center">{{ forloop.counter }}</td>
-										{% if result.image %}
+										{% if result.0.image %}
 											<td class="image"><img src="{{ result.image.url }}" alt=""></td>
 										{% else %}
 											<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
 										{% endif %}
 										<td class="product text-justify">
-											<span>{{ result.product_description }}</span></td>
+											<span>{{ result.0.product_description }}</span></td>
 										<td class="rate text-right">
 										<span>
-												{{ result.stars | floatformat:-2 }}
+												{{ result.0.stars | floatformat:-2 }}
 													<i class="fa fa-star"></i>
 										</span></td>
-										<td class="price text-right">10 χλμ</td>
-										<td class="price text-right">{{ result.price }} &euro;</td>
+										<td class="price text-right">{{ result.1 | floatformat:-2 }} km</td>
+										<td class="price text-right">{{ result.0.price }} &euro;</td>
 									</tr>
 									{% endfor %}
 								</tbody></table>
