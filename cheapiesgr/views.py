@@ -50,16 +50,16 @@ def order_by_stars(results):
     return results
 
 def filter_results(results, dmin, dmax, rmin, pmin, pmax):
-    dresults = filter(lambda x: dmin <= x[1] <= dmax, results)
-    rresults = filter(lambda x: x[1].stars >= rmin, dresults)
-    presults = filter(lambda x: pmin <= x[0].price <= pmax, rresults)
-    return list(presults)
+    results = filter(lambda x: dmin <= x[1] <= dmax, results)
+    results = filter(lambda x: x[1].stars >= rmin, results)
+    results = filter(lambda x: pmin <= x[0].price <= pmax, results)
+    return list(results)
 
 @csrf_exempt
 def search(request):
     search_text = request.POST.get("search")
 
-    reg_data = Registration.objects.filter(product_description__contains=search_text).order_by('stars')
+    reg_data = Registration.objects.filter(product_description__contains=search_text)
     client_ip = '62.75.78.22' # Example
     '''
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -73,14 +73,7 @@ def search(request):
     distances = [distance(r.get_location(),client_loc) for r in reg_data]
     results = [(r,d) for r, d in zip(reg_data, distances)]
 
-
-
-    # order_by distance
-
-    #order_by stars
-
-    for r, d in results:
-        print(r.stars)
+    # apply search filters
 
 
     return render(request, 'search.html', {
