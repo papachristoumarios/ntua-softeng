@@ -2,9 +2,6 @@ from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
 
-def signin(request):
-    return render(request, 'signin.html', {})
-
 def default_map(request):
     return render(request, 'map_default.html',
                   { 'mapbox_access_token' : settings.MAPBOX_ACCESS_TOKEN })
@@ -55,3 +52,15 @@ def signup(request):
     else:
         f = UserRegistrationForm()
     return render(request, 'signup.html', {'form': f})
+
+#User login view
+from .forms import UserLoginForm
+def signin(request):
+    if request.method == 'POST':
+        f = UserLoginForm(request.POST)
+        if f.is_valid():
+            messages.success(request, 'Συνδεθήκατε με επιτυχία!')
+            return render(request, 'index.html', {})
+    else:
+        f = UserLoginForm()
+    return render(request, 'signin.html', {'form': f})
