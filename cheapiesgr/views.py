@@ -26,7 +26,6 @@ def signin(request):
 
 def index(request):
     request.session['categories'] = list(Category.objects.all().values())
-    print(request.session['categories'])
 
     return render(request, 'index.html', {})
 
@@ -42,10 +41,25 @@ def distance(a, b):
     meters = geopy_distance(a, b).meters
     return Distance(m=meters).km
 
+def order_by_distance(results):
+    results.sort(key = lambda x: x[1])
+    return results
+
+def order_by_stars(results):
+    results.sort(key = lambda x: 0 if x[0].stars == None else -x[0].stars)
+    return results
+
+def filter_results(results, dmin, dmax, rmin, pmin, pmax):
+    dresults = filter(lambda x: dmin <= x[1] <= dmax, results)
+    rresults = filter(lambda x: x[1].stars >= rmin, dresults)
+    presults = filter(lambda x: pmin <= x[0].price <= pmax, rresults)
+    return list(presults)
+
 @csrf_exempt
 def search(request):
     search_text = request.POST.get("search")
-    reg_data = Registration.objects.filter(product_description__contains=search_text)
+
+    reg_data = Registration.objects.filter(product_description__contains=search_text).order_by('stars')
     client_ip = '62.75.78.22' # Example
     '''
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -57,8 +71,18 @@ def search(request):
     client_loc = location(client_ip)
 
     distances = [distance(r.get_location(),client_loc) for r in reg_data]
-    results = [[r,d] for r in reg_data for d in distances]
-    print(distances)
+    results = [(r,d) for r, d in zip(reg_data, distances)]
+
+
+
+    # order_by distance
+
+    #order_by stars
+
+    for r, d in results:
+        print(r.stars)
+
+
     return render(request, 'search.html', {
         'results' : results,
         'search_text' : search_text,
