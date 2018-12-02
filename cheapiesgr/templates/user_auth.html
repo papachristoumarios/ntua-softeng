@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container h-100 d-flex">
+
+
+  <div class="card my-auto fullw">
+    <div class="card-header my-auto text-center">
+      <h1>Ανάκτηση Στοιχείων</h1>
+    </div>
+    <div class="card-body padded-card" style="">
+      <form action="/action_page.php">
+        <div class="form-group">
+          <label for="user"><i class="fas fa-at"></i>&nbsp; Ταυτοποίηση Λογαριασμού</label><input type="text" placeholder="Εισάγετε το email σας ή το όνομα χρήστη" class="form-control" id="user">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
