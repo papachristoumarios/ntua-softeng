@@ -17,20 +17,20 @@
 							<form method="POST" action="/search">
 								  <div class="form-group">
 								    <label for="rmin"><i class="fas fa-star"></i> &nbsp; Ελάχιστα αστέρια</label>
-								    <input type="text" class="form-control" id="rmin" placeholder="Από 1 ως 5 αστέρια">
+								    <input type="text" class="form-control" name="rmin" placeholder="Από 1 ως 5 αστέρια">
 								  </div>
 									<div class="form-group">
 								    <label for="pmin"><i class="fas fa-euro-sign"></i> &nbsp; Ελάχιστη τιμή πώλησης</label>
-								    <input type="text" class="form-control" id="pmin" placeholder="Δώστε ελάχιστη τιμή">
+								    <input type="text" class="form-control" name="pmin" placeholder="Δώστε ελάχιστη τιμή">
 								  </div>
 									<div class="form-group">
 								    <label for="pmax"><i class="fas fa-euro-sign"></i> &nbsp; Μέγιστη τιμή πώλησης</label>
-								    <input type="text" class="form-control" id="pmax" placeholder="Δώστε μέγιστη τιμή πώλησης">
+								    <input type="text" class="form-control" name="pmax" placeholder="Δώστε μέγιστη τιμή πώλησης">
 								  </div>
 
 									<div class="form-group">
 								    <label for="dmax"><i class="fas fa-map"></i> &nbsp; Μέγιστη απόσταση (km)</label>
-								    <input type="text" class="form-control" id="dmax" placeholder="Δώστε μέγιστη απόσταση">
+								    <input type="text" class="form-control" name="dmax" placeholder="Δώστε μέγιστη απόσταση">
 								  </div>
 
 									<div class="form-group">
@@ -42,19 +42,19 @@
 										<label for="order"><i class="fas fa-sort"></i> &nbsp; Ταξινόμηση ως προς</label>
 
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="price" checked>
+										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios1" value="price" checked>
 										  <label class="form-check-label" for="exampleRadios1">
 											</i> &nbsp; Τιμή
 										  </label>
 										</div>
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="rating">
+										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios2" value="rating">
 										  <label class="form-check-label" for="exampleRadios2">
-												<i class="fa fa-star"></i> &nbsp; Δημοτικότητα
+												<i class="fa fa-star"></i> &nbsp; Αστέρια
 										  </label>
 										</div>
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="distance">
+										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios3" value="distance">
 										  <label class="form-check-label" for="exampleRadios3">
 												<i class="fa fa-road"></i> &nbsp; Απόσταση
 										  </label>

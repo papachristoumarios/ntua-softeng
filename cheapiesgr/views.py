@@ -1,3 +1,4 @@
+import sys
 from django.shortcuts import render
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -45,21 +46,57 @@ def order_by_distance(results):
     results.sort(key = lambda x: x[1])
     return results
 
-def order_by_stars(results):
+def order_by_rating(results):
     results.sort(key = lambda x: 0 if x[0].stars == None else -x[0].stars)
     return results
 
-def filter_results(results, dmin, dmax, rmin, pmin, pmax):
-    results = filter(lambda x: dmin <= x[1] <= dmax, results)
-    results = filter(lambda x: x[1].stars >= rmin, results)
+def apply_search_filters(results, dmax, rmin, pmin, pmax):
+    results = filter(lambda x: x[1] <= dmax, results)
+    results = filter(lambda x: x[0].stars >= rmin, results)
     results = filter(lambda x: pmin <= x[0].price <= pmax, results)
     return list(results)
 
 @csrf_exempt
 def search(request):
-    search_text = request.POST.get("search")
-
+    search_text = request.POST.get('search')
     reg_data = Registration.objects.filter(product_description__contains=search_text)
+
+    try:
+        orderby = request.POST.get('orderby')
+    except:
+        orderby = 'price'
+
+    try:
+        rmin = int(request.POST.get('rmin'))
+    except ValueError:
+        rmin = 0
+    except TypeError:
+        rmin = 0
+
+    try:
+        pmin = float(request.POST.get('pmin'))
+    except ValueError:
+        pmin = 0
+    except TypeError:
+        pmin = 0
+
+    try:
+        pmax = float(request.POST.get('pmax'))
+    except ValueError:
+        pmax = sys.maxsize
+    except TypeError:
+        pmax = sys.maxsize
+
+    try:
+        dmax = float(request.POST.get('dmax'))
+    except ValueError:
+        dmax = sys.maxsize
+    except TypeError:
+        dmax = sys.maxsize
+
+    if orderby == 'price':
+        reg_data = reg_data.order_by('price')
+
     client_ip = '62.75.78.22' # Example
     '''
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -73,7 +110,13 @@ def search(request):
     distances = [distance(r.get_location(),client_loc) for r in reg_data]
     results = [(r,d) for r, d in zip(reg_data, distances)]
 
+    if orderby == 'rating':
+        results = order_by_rating(results)
+    elif orderby == 'distance':
+        results = order_by_distance(results)
+
     # apply search filters
+    results = apply_search_filters(results, dmax=dmax, pmin=pmin, pmax=pmax, rmin=rmin)
 
 
     return render(request, 'search.html', {
