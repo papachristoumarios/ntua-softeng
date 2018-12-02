@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser)
+from django.contrib.auth.models import AbstractBaseUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.gis.db import models as gis_models
@@ -7,7 +7,6 @@ from django.contrib.gis import geos
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
 
 
 class MyUser(AbstractBaseUser):
@@ -21,7 +20,6 @@ class MyUser(AbstractBaseUser):
     admin = models.BooleanField(default = False,
     verbose_name = _('admin'))
     confirmed_email = models.BooleanField(default=False) # is email confirmed
-
     USERNAME_FIELD = 'username'
 #   USERNAME_FIELD and password are required by default
     REQUIRED_FIELDS = ['email']
@@ -53,6 +51,10 @@ class MyUser(AbstractBaseUser):
         if created:
             Volunteer.objects.create(user=instance)
         instance.profile.save()
+
+
+
+
 
 
 class Volunteer(models.Model):

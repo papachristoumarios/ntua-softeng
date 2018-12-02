@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'profile', views.profile, name='profile'),
     url(r'search', views.search, name='search'),
     url(r'report', views.report, name='report'),
+    url(r'userauthentication', views.user_auth, name='userauthentication'),
     url(r'', views.index, name='index'),
 ]
