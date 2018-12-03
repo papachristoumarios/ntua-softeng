@@ -10,17 +10,17 @@ from django.utils.translation import gettext_lazy as _
 
 
 class MyUser(AbstractBaseUser):
-    username = models.CharField(max_length = 255, unique = True,
-    verbose_name = _('username'))
-    email = models.CharField(max_length = 255, unique = True)
-    active = models.BooleanField(default = True,
-    verbose_name = _('active'))
-    staff = models.BooleanField(default = False,
-    verbose_name = _('staff'))
-    admin = models.BooleanField(default = False,
-    verbose_name = _('admin'))
-    confirmed_email = models.BooleanField(default=False) # is email confirmed
-    USERNAME_FIELD = 'username'
+	username = models.CharField(max_length = 255, unique = True,
+	verbose_name = _('username'))
+	email = models.CharField(max_length = 255, unique = True)
+	active = models.BooleanField(default = True,
+	verbose_name = _('active'))
+	staff = models.BooleanField(default = False,
+	verbose_name = _('staff'))
+	admin = models.BooleanField(default = False,
+	verbose_name = _('admin'))
+	confirmed_email = models.BooleanField(default=False) # is email confirmed
+	USERNAME_FIELD = 'username'
 #   USERNAME_FIELD and password are required by default
 	REQUIRED_FIELDS = ['email']
 
