@@ -7,3 +7,5 @@ django-geojson
 cryptography
 osmapi
 nominatim
+geoip2
+geopy

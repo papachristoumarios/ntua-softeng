@@ -32,10 +32,9 @@
           Κατηγορίες
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+          {% for c in request.session.categories %}
+            <a class="dropdown-item" href="#">{{ c.category_description }}</a>
+          {% endfor %}
         </div>
       </li>
 
@@ -43,8 +42,8 @@
 
     {% if request.get_full_path != '/' %}
 
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search">
+    <form class="form-inline my-2 my-lg-0" method="POST" action="/search">
+      <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search" name="search">
       <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button> &nbsp;
       <button class="btn btn-primary my-2 my-sm-0" type="submit-camera"><i class="fas fa-camera"></i></button>
     </form>

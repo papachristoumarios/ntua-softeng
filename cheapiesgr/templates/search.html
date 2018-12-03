@@ -12,53 +12,62 @@
 					<div class="row">
 						<!-- BEGIN FILTERS -->
 						<div class="col-md-3">
-							<h2 class="grid-title"><i class="fa fa-filter"></i> Φίλτρα</h2>
-							<hr>
+							<h5 class="grid-title"><i class="fa fa-filter"></i> Φίλτρα</h5>
 
-							<!-- BEGIN FILTER BY DISTANCE -->
-							<h4><i class="fas fa-globe-africa"></i> Απόσταση</h4>
-							<div class="col-auto">
+							<form method="POST" action="/search">
+								  <div class="form-group">
+								    <label for="rmin"><i class="fas fa-star"></i> &nbsp; Ελάχιστα αστέρια</label>
+								    <input type="text" class="form-control" name="rmin" placeholder="Από 1 ως 5 αστέρια">
+								  </div>
+									<div class="form-group">
+								    <label for="pmin"><i class="fas fa-euro-sign"></i> &nbsp; Ελάχιστη τιμή πώλησης</label>
+								    <input type="text" class="form-control" name="pmin" placeholder="Δώστε ελάχιστη τιμή">
+								  </div>
+									<div class="form-group">
+								    <label for="pmax"><i class="fas fa-euro-sign"></i> &nbsp; Μέγιστη τιμή πώλησης</label>
+								    <input type="text" class="form-control" name="pmax" placeholder="Δώστε μέγιστη τιμή πώλησης">
+								  </div>
 
-								<input id="rating-slider" data-slider-id='rating-slider' type="text" data-slider-min="0.1" data-slider-max="50" data-slider-step="0.1" data-slider-value="3"/>
-								<script>
-								$('#rating-slider').slider({
-									formatter: function(value) {
-										return 'Τρέχουσα Απόσταση: ' + value + ' χλμ';
-									}
-								});
-								</script>
-							</div>
-							<!-- END FILTER BY DISTANCE -->
+									<div class="form-group">
+								    <label for="dmax"><i class="fas fa-map"></i> &nbsp; Μέγιστη απόσταση (km)</label>
+								    <input type="text" class="form-control" name="dmax" placeholder="Δώστε μέγιστη απόσταση">
+								  </div>
 
-							<div class="row top10p"></div>
+									<div class="form-group">
+										<label for="search"><i class="fas fa-pen"></i> &nbsp; Περιέχει τις λέξεις</label>
+										<input type="text" class="form-control" name="search" value="{{ search_text }}">
+									</div>
 
-							<!-- BEGIN FILTER BY RATING -->
-							<h4><i class="fas fa-star"></i> Κριτικές</h4>
+									<div class="form-group">
+										<label for="order"><i class="fas fa-sort"></i> &nbsp; Ταξινόμηση ως προς</label>
 
-							<div class="container">
-								<div class="starrating risingstar d-flex justify-content-center flex-row-reverse">
-									<input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 star">5</label>
-									<input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 star">4</label>
-									<input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 star">3</label>
-									<input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 star">2</label>
-									<input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">1</label>
-								</div>
-							</div>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios1" value="price" checked>
+										  <label class="form-check-label" for="exampleRadios1">
+											</i> &nbsp; Τιμή
+										  </label>
+										</div>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios2" value="rating">
+										  <label class="form-check-label" for="exampleRadios2">
+												<i class="fa fa-star"></i> &nbsp; Αστέρια
+										  </label>
+										</div>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios3" value="distance">
+										  <label class="form-check-label" for="exampleRadios3">
+												<i class="fa fa-road"></i> &nbsp; Απόσταση
+										  </label>
+										</div>
+									</div>
+									<hr>
+									<div class="text-center">
+									  <button type="submit" class="btn btn-primary fullw">Ψάξε ξανά</button>
+									</div>
+								</form>
 
 
-							<!-- END FILTER BY RATING -->
 
-							<div class="row top10p"></div>
-
-
-							<!-- BEGIN FILTER BY PRICE -->
-							<h4><i class="fas fa-euro-sign"></i> Τιμή</h4>
-							<input id="ex2" type="text" class="span2" value="" data-slider-min="1" data-slider-max="1000" data-slider-step="1" data-slider-value="[250,450]"/>
-							<script>
-							$("#ex2").slider({});
-							</script>
-
-							<!-- END FILTER BY PRICE -->
 						</div>
 						<!-- END FILTERS -->
 
@@ -67,122 +76,41 @@
 						<div class="col-md-9">
 							<h2><i class="fa fa-file-o"></i> Αποτελέσματα Αναζήτησης</h2>
 							<hr>
-							<p>Αποτελέσματα για "πίνακας ζωγραφικής"</p>
+							<p>Αποτελέσματα για "{{ search_text }}"</p>
 
 							<div class="padding"></div>
 
 							<div class="row pb-2" >
-								<!-- BEGIN ORDER RESULT -->
-								<div class="col-sm-6">
 
-									<div class="dropdown">
-										<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-											Ταξινόμηση κατά
-										</button>
-										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-											<a class="dropdown-item" href="#">Τιμή</a>
-											<a class="dropdown-item" href="#">Δημοτικότητα</a>
-											<a class="dropdown-item" href="#">Απόσταση</a>
-										</div>
-									</div>
-									<script>
-									$('.dropdown-toggle').dropdown();
-									</script>
-
-								</div>
-								<!-- END ORDER RESULT -->
-
-
-								<div class="col-md-6 text-right">
-									<div class="btn-group">
-										<button type="button" class="btn btn-default active"><i class="fa fa-list"></i></button>
-										<button type="button" class="btn btn-default"><i class="fa fa-th"></i></button>
-									</div>
-								</div>
-							</div>
 
 							<!-- BEGIN TABLE RESULT -->
 							<div class="table-responsive">
 								<table class="table table-hover">
-									<tbody><tr>
-										<td class="number text-center">1</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/1" alt=""></td>
-										<td class="product"><strong>Φύση - Πικάσο</strong><br>Να ένας πίνακας. Πρόκειται για ένα συλλεκτικό....</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">10 χλμ</td>
-										<td class="price text-right">350&euro;</td>
+									<tbody>
+										{% for result in results %}
+										<tr>
+										<td class="number text-center">{{ forloop.counter }}</td>
+										{% if result.0.image %}
+											<td class="image"><img src="{{ result.image.url }}" alt=""></td>
+										{% else %}
+											<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+										{% endif %}
+										<td class="product text-justify">
+											<span>{{ result.0.product_description }}</span></td>
+										<td class="rate text-right">
+										<span>
+												{{ result.0.stars | floatformat:-2 }}
+													<i class="fa fa-star"></i>
+										</span></td>
+										<td class="price text-right">{{ result.1 | floatformat:-2 }} km</td>
+										<td class="price text-right">{{ result.0.price }} &euro;</td>
 									</tr>
-									<tr>
-										<td class="number text-center">2</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/2" alt=""></td>
-										<td class="product"><strong>Μπομπ Ρος</strong><br>Ένας συλλεκτικός πίνακας του Μπομ Ρος.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">20 χλμ</td>
-										<td class="price text-right">1100&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">3</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/3" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">2 χλμ</td>
-										<td class="price text-right">2300&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">4</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/4" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">1 χλμ</td>
-										<td class="price text-right">423&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">5</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/5" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">4 χλμ</td>
-										<td class="price text-right">32&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">6</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/6" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">30 χλμ</td>
-										<td class="price text-right">10&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">7</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/7" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">16 χλμ</td>
-										<td class="price text-right">120&euro;</td>
-									</tr>
-									<tr>
-										<td class="number text-center">8</td>
-										<td class="image"><img src="https://lorempixel.com/400/300/nature/8" alt=""></td>
-										<td class="product"><strong>Πικάσο</strong><br>Να ένας πίνακας.</td>
-										<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-										<td class="price text-right">7 χλμ</td>
-										<td class="price text-right">3100&euro;</td>
-									</tr>
+									{% endfor %}
 								</tbody></table>
 							</div>
 							<!-- END TABLE RESULT -->
 
-							<!-- BEGIN PAGINATION -->
-							<nav aria-label="Page navigation example">
-								<ul class="pagination">
-									<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-									<li class="page-item"><a class="page-link" href="#">1</a></li>
-									<li class="page-item"><a class="page-link" href="#">2</a></li>
-									<li class="page-item"><a class="page-link" href="#">3</a></li>
-									<li class="page-item"><a class="page-link" href="#">Next</a></li>
-								</ul>
-							</nav>
-							<!-- END PAGINATION -->
+
 						</div>
 						<!-- END RESULT -->
 					</div>

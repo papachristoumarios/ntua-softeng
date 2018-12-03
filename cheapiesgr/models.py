@@ -22,35 +22,35 @@ class MyUser(AbstractBaseUser):
     confirmed_email = models.BooleanField(default=False) # is email confirmed
     USERNAME_FIELD = 'username'
 #   USERNAME_FIELD and password are required by default
-    REQUIRED_FIELDS = ['email']
+	REQUIRED_FIELDS = ['email']
 
-    def __str__(self):
-        return self.username
+	def __str__(self):
+		return self.username
 
-    def get_email(self):
-        return self.email
+	def get_email(self):
+		return self.email
 
-    @property
-    def is_email_confirmed(self):
-        return self.confirmed_email
+	@property
+	def is_email_confirmed(self):
+		return self.confirmed_email
 
-    @property
-    def is_active(self):
-        return self.active
+	@property
+	def is_active(self):
+		return self.active
 
-    @property
-    def is_admin(self):
-        return self.admin
+	@property
+	def is_admin(self):
+		return self.admin
 
-    @property
-    def is_staff(self):
-        return self.staff
+	@property
+	def is_staff(self):
+		return self.staff
 
-    @receiver(post_save, sender=AbstractBaseUser)
-    def update_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Volunteer.objects.create(user=instance)
-        instance.profile.save()
+	@receiver(post_save, sender=AbstractBaseUser)
+	def update_user_profile(sender, instance, created, **kwargs):
+		if created:
+			Volunteer.objects.create(user=instance)
+		instance.profile.save()
 
 
 
@@ -87,11 +87,15 @@ class Shop(models.Model):
 										geography=True, blank=True, null=True,
 										verbose_name = _('location'))
 
-    #gis = gis_models.GeoManager() GeoManager is used as follow since Django 2.0 in order to do spatial lookups
+	#gis = gis_models.GeoManager() GeoManager is used as follow since Django 2.0 in order to do spatial lookups
 	objects = GeoManager()
 
 	def __str__(self):
 		return self.address
+
+	def get_location(self):
+		return self.location
+
 	class Meta:
 		verbose_name = _('shop')
 		verbose_name_plural = _('shops')
@@ -118,11 +122,11 @@ class Category1(models.Model): # Mid level (sparse)
 	category2 = models.ForeignKey(Category2, on_delete = models.CASCADE)
 	image = models.ImageField()
 
+	verbose_name_plural = _('category1s')
 	def __str__(self):
 		return self.category1_description
 	class Meta:
 		verbose_name = _('category1')
-		verbose_name_plural = _('category1s')
 
 
 class Category(models.Model): # Lowest level (dense)
@@ -155,6 +159,26 @@ class Registration(models.Model):
 
 	def get_price(self):
 		return self.get_price
+
+	def get_location(self):
+		return self.shop.get_location()
+
+	@property
+	def stars(self):
+		r = self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
+		if r == None:
+			return 0
+		else:
+			return r
+
+	@stars.getter
+	def stars(self):
+		r = self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
+		if r == None:
+			return 0
+		else:
+			return r
+
 	class Meta:
 		verbose_name = _('registration')
 		verbose_name_plural = _('registrations')
@@ -176,6 +200,7 @@ class Rating(models.Model):
 
 	def get_validity(self):
 		return self.validity_of_this_rate
+
 	class Meta:
 		verbose_name = _('rating')
 		verbose_name_plural = _('ratings')

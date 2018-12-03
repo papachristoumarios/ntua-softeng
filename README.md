@@ -63,6 +63,20 @@ Install the requirements with pip:
 pip3 install -r requirements.txt
 ```
 
+### Install  libmaxminddb C library, so that geoip2 can leverage the C library’s faster speed.
+
+Add the PPA to your APT sources:
+
+```bash
+sudo add-apt-repository ppa:maxmind/ppa
+```
+Install the packages:
+
+```bash
+sudo apt update
+sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin
+```
+
 ### Run the development webserver
 
 Run webserver with:

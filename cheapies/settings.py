@@ -146,3 +146,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
+
+# GeoIP2 configuration
+
+GEOIP_PATH = os.path.join(BASE_DIR,'etc/GeoLite_Archive')
