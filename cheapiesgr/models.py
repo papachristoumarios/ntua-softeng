@@ -93,7 +93,7 @@ class Shop(models.Model):
 
 	def get_location(self):
 		return self.location
-		
+
 	class Meta:
 		verbose_name = _('shop')
 		verbose_name_plural = _('shops')
@@ -163,11 +163,19 @@ class Registration(models.Model):
 
 	@property
 	def stars(self):
-		return self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
+		r = self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
+		if r == None:
+			return 0
+		else:
+			return r
 
 	@stars.getter
 	def stars(self):
-		return self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
+		r = self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
+		if r == None:
+			return 0
+		else:
+			return r
 
 	class Meta:
 		verbose_name = _('registration')

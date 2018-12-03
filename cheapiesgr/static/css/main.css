@@ -62,6 +62,10 @@ body  {
     display: none;
   }
 
+  .hide-small {
+    display: none;
+  }
+
 }
 
 .search-button {
@@ -187,21 +191,22 @@ footer {
   font-size: 2em;
   font-family: FontAwesome;
   display: inline-block;
+  color: #222222;
 }
 
 .starrating > label
 {
-  color: #222222; /* Start color when not clicked */
+  color: black; /* Start color when not clicked */
 }
 
 .starrating > input:checked ~ label
 {
-  color: #f39c12;
+  color: #f39c12 !important;
 } /* Set yellow color when star checked */
 
 .starrating > input:hover ~ label
 {
-  color: #f39c12;
+  color: #f39c12 !important;
 } /* Set yellow color when star hover */
 
 

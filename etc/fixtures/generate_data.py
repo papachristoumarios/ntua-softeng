@@ -53,6 +53,7 @@ def generate_categories_data(n, d):
     output = []
 
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
+    print(categories)
 
     for i, c in enumerate(categories[:n]):
         img_path = glob.glob(os.path.join(c, 'images', '*'))
@@ -60,7 +61,7 @@ def generate_categories_data(n, d):
             'model' : 'cheapiesgr.category2',
             'pk' : i + 1,
             'fields' : {
-                'category2_description' : basename(c) + '2',
+                'category2_description' : os.path.split(c)[1] + '2',
                 # 'image' : random.choice(img_path)
             }
         }
@@ -87,6 +88,7 @@ def generate_categories_data(n, d):
 
         output.extend([category, category1, category2])
 
+    print(output)
     return output
 
 def generate_shop_data(n, d):
@@ -194,7 +196,7 @@ def generate_qar_data(n, d):
 def apply_fixtures(pipeline):
     os.chdir('../..')
     for p in pipeline:
-        os.system('python3 manage.py loaddata etc/fixtures/{}.json'.format(p))	
+        os.system('python3 manage.py loaddata etc/fixtures/{}.json'.format(p))
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
@@ -228,5 +230,5 @@ if __name__ == '__main__':
         with open(p + '.json', 'w+') as f:
             f.write(json.dumps(output, ensure_ascii=False))
 
-        if args.apply_fixtures:
+        if args.apply:
             apply_fixtures(pipeline)
