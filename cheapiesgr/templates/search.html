@@ -14,6 +14,7 @@
 						<div class="col-md-3">
 							<h5 class="grid-title"><i class="fa fa-filter"></i> Φίλτρα</h5>
 
+
 							<form method="POST" action="/search">
 								  <div class="form-group">
 								    <label for="rmin"><i class="fas fa-star"></i> &nbsp; Ελάχιστα αστέρια</label>
@@ -30,8 +31,13 @@
 
 									<div class="form-group">
 								    <label for="dmax"><i class="fas fa-map"></i> &nbsp; Μέγιστη απόσταση (km)</label>
-								    <input type="text" class="form-control" name="dmax" placeholder="Δώστε μέγιστη απόσταση">
+								    <input type="text" class="form-control" name="dmax" id="dmax" placeholder="Δώστε μέγιστη απόσταση">
 								  </div>
+
+									<div class="hidden">
+								    <input type="text" type="hidden" name="lat" id="lat">
+								    <input type="text" type="hidden" name="lon" id="lon">
+									</div>	
 
 									<div class="form-group">
 										<label for="search"><i class="fas fa-pen"></i> &nbsp; Περιέχει τις λέξεις</label>
@@ -42,19 +48,19 @@
 										<label for="order"><i class="fas fa-sort"></i> &nbsp; Ταξινόμηση ως προς</label>
 
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios1" value="price" checked>
+										  <input class="form-check-input" type="radio" name="orderby" id="price" value="price" checked>
 										  <label class="form-check-label" for="exampleRadios1">
 											</i> &nbsp; Τιμή
 										  </label>
 										</div>
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios2" value="rating">
+										  <input class="form-check-input" type="radio" name="orderby" id="rating" value="rating">
 										  <label class="form-check-label" for="exampleRadios2">
 												<i class="fa fa-star"></i> &nbsp; Αστέρια
 										  </label>
 										</div>
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="orderby" id="exampleRadios3" value="distance">
+										  <input class="form-check-input" type="radio" name="orderby" id="distance" value="distance">
 										  <label class="form-check-label" for="exampleRadios3">
 												<i class="fa fa-road"></i> &nbsp; Απόσταση
 										  </label>
@@ -120,4 +126,9 @@
 		<!-- END SEARCH RESULT -->
 	</div>
 </div>
+
+{% load static %}
+<script src="{% static 'js/search.js' %}"></script>
+
+
 {% endblock %}
