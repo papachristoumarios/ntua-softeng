@@ -1,5 +1,6 @@
 import requests
 import sys
+from .forms import UserRegistrationForm
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
@@ -58,8 +59,19 @@ def search(request):
     reg_data = Registration.objects.filter(product_description__contains=search_text)
 
     try:
+        lat = float(request.POST.get('lat'))
+        lon = float(request.POST.get('lon'))
+    except ValueError:
+        lat = lon = 0
+    except TypeError:
+        lat = lon = 0
+    finally:
+        client_loc = Point(lon, lat, srid=4326)
+
+
+    try:
         orderby = request.POST.get('orderby')
-    except:
+    except ValueError:
         orderby = 'price'
 
     try:
@@ -92,16 +104,6 @@ def search(request):
 
     if orderby == 'price':
         reg_data = reg_data.order_by('price')
-
-    client_ip = '62.75.78.22' # Example
-    '''
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        client_ip = x_forwarded_for.split(',')[0]
-    else:
-        client_ip = request.META.get('REMOTE_ADDR')
-    '''
-    client_loc = location(client_ip)
 
     distances = [distance(r.get_location(),client_loc) for r in reg_data]
     results = [(r,d) for r, d in zip(reg_data, distances)]
@@ -138,8 +140,6 @@ def addproduct(request):
 def user_auth(request):
     return render(request, 'user_auth.html', {})
 
-#User signup view
-from .forms import UserRegistrationForm
 def signup(request):
     if request.method == 'POST':
         f = UserRegistrationForm(request.POST)

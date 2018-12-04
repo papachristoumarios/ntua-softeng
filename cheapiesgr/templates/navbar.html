@@ -44,6 +44,11 @@
 
     <form class="form-inline my-2 my-lg-0" method="POST" action="/search">
       <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search" name="search">
+      <div class="hidden">
+        <input type="text" type="hidden" name="lat" id="latn">
+        <input type="text" type="hidden" name="lon" id="lonn">
+      </div>
+
       <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button> &nbsp;
       <button class="btn btn-primary my-2 my-sm-0" type="submit-camera"><i class="fas fa-camera"></i></button>
     </form>
@@ -51,4 +56,9 @@
     {% endif %}
 
   </div>
+
+
+  {% load static %}
+  <script src="{% static 'js/navbar.js' %}"></script>
+
 </nav>
