@@ -101,42 +101,17 @@ class Shop(models.Model):
 		verbose_name_plural = _('shops')
 
 
-class Category2(models.Model): # Highest level (abstract)
-	category2_description = models.CharField(max_length = 200,
-	verbose_name = _('category2_description'))
+class Category(models.Model): # Highest level (abstract)
+	category_name = models.CharField(max_length = 200,
+	verbose_name = _('category_name'))
+	category_description = models.CharField(max_length = 200,
+	verbose_name = _('category_description'))
 	image = models.ImageField()
 #   Ref for images: https://www.youtube.com/watch?v=-bjsz18pR54
 #                   https://www.youtube.com/watch?v=PIvlcmnayOE
 
 	def __str__(self):
-		return self.category2_description
-	class Meta:
-		verbose_name = _('category2')
-		verbose_name_plural = _('category2s')
-
-
-
-class Category1(models.Model): # Mid level (sparse)
-	category1_description = models.CharField(max_length = 200,
-	verbose_name = _('category1_description'))
-	category2 = models.ForeignKey(Category2, on_delete = models.CASCADE)
-	image = models.ImageField()
-
-	verbose_name_plural = _('category1s')
-	def __str__(self):
-		return self.category1_description
-	class Meta:
-		verbose_name = _('category1')
-
-
-class Category(models.Model): # Lowest level (dense)
-	category_description = models.CharField(max_length = 400,
-	verbose_name = _('category_description'))
-	category1 = models.ForeignKey(Category1, on_delete = models.CASCADE)
-	image = models.ImageField()
-
-	def __str__(self):
-		return self.category_description
+		return self.category_name
 	class Meta:
 		verbose_name = _('category')
 		verbose_name_plural = _('categorys')
