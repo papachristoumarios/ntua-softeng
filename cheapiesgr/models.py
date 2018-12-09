@@ -79,6 +79,7 @@ class Volunteer(models.Model):
 
 
 class Shop(models.Model):
+	name = models.CharField(max_length=100, verbose_name=_('name'))
 	address = models.CharField(max_length=500,
 	verbose_name = _('address'))
 	city = models.CharField(max_length=500,
@@ -91,7 +92,7 @@ class Shop(models.Model):
 	objects = GeoManager()
 
 	def __str__(self):
-		return self.address
+		return self.name
 
 	def get_location(self):
 		return self.location
@@ -128,6 +129,7 @@ class Registration(models.Model):
 	volunteer = models.ForeignKey(Volunteer, on_delete = models.CASCADE)
 	shop = models.ForeignKey(Shop, on_delete = models.CASCADE)
 	category = models.ForeignKey(Category, on_delete = models.CASCADE)
+	withdrawn = models.BooleanField(default=False)
 
 	def __str__(self):
 		return self.product_description
