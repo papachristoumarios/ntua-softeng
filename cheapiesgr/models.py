@@ -54,9 +54,6 @@ class MyUser(AbstractBaseUser):
 
 
 
-
-
-
 class Volunteer(models.Model):
 #   Class Volunteer is used to extend MyUser safely
 	user = models.OneToOneField(MyUser, on_delete = models.CASCADE)
@@ -112,7 +109,8 @@ class Category(models.Model): # Highest level (abstract)
 #                   https://www.youtube.com/watch?v=PIvlcmnayOE
 
 	def __str__(self):
-		return self.category_name
+		return self.category_description
+		
 	class Meta:
 		verbose_name = _('category')
 		verbose_name_plural = _('categorys')

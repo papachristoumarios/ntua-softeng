@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .models import Category
 from .models import Registration
-from django.contrib.gis.geoip2 import GeoIP2
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
