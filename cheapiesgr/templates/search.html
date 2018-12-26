@@ -114,8 +114,9 @@
 											<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
 										{% endif %}
 										<td class="product text-justify">
-											<span>{{ result.0.product_description }}</span>
-											<span>{{ result.0.shop.address }}</span>
+											<p><strong>Περιγραφή:</strong> {{ result.0.product_description }}</p>
+											<p><strong>Κατηγορία:</strong> {{ result.0.category }}</p>
+											<p><strong>Σουπερμάρκετ:</strong> {{ result.0.shop.address }}</p>
 										</td>
 
 										<td class="rate text-right">

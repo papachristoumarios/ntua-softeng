@@ -46,10 +46,12 @@ def order_by_rating(results):
     results.sort(key = lambda x: 0 if x[0].stars == None else -x[0].stars)
     return results
 
-def apply_search_filters(results, dmax, rmin, pmin, pmax):
+def apply_search_filters(results, category, dmax, rmin, pmin, pmax):
     results = filter(lambda x: x[1] <= dmax, results)
     results = filter(lambda x: x[0].stars >= rmin, results)
     results = filter(lambda x: pmin <= x[0].price <= pmax, results)
+    if category != 'Όλες':
+        results = filter(lambda x: str(x[0].category) == category, results)
     return list(results)
 
 @csrf_exempt
@@ -67,6 +69,10 @@ def search(request):
     finally:
         client_loc = Point(lon, lat, srid=4326)
 
+    try:
+        category = request.POST.get('category-select')
+    except ValueError:
+        category = 'Όλες'
 
     try:
         orderby = request.POST.get('orderby')
@@ -113,7 +119,7 @@ def search(request):
         results = order_by_distance(results)
 
     # apply search filters
-    results = apply_search_filters(results, dmax=dmax, pmin=pmin, pmax=pmax, rmin=rmin)
+    results = apply_search_filters(results, category=category, dmax=dmax, pmin=pmin, pmax=pmax, rmin=rmin)
 
 
     return render(request, 'search.html', {

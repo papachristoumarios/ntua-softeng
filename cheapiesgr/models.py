@@ -110,14 +110,14 @@ class Category(models.Model): # Highest level (abstract)
 
 	def __str__(self):
 		return self.category_description
-		
+
 	class Meta:
 		verbose_name = _('category')
 		verbose_name_plural = _('categorys')
 
 
 class Registration(models.Model):
-	product_description = models.CharField(max_length = 200,
+	product_description = models.CharField(max_length = 10000,
 	verbose_name = _('product_discription'))
 	price = models.DecimalField(max_digits = 10, decimal_places = 2,
 	verbose_name = _('price'))
