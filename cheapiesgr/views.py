@@ -51,64 +51,46 @@ def apply_search_filters(results, category, dmax, rmin, pmin, pmax):
     results = filter(lambda x: x[0].stars >= rmin, results)
     results = filter(lambda x: pmin <= x[0].price <= pmax, results)
     if category != 'Όλες':
+        print('kirk')
         results = filter(lambda x: str(x[0].category) == category, results)
     return list(results)
 
 @csrf_exempt
-def search(request):
-    search_text = request.POST.get('search')
-    reg_data = Registration.objects.filter(product_description__contains=search_text)
+def search(request, *args):
 
-    try:
-        lat = float(request.POST.get('lat'))
-        lon = float(request.POST.get('lon'))
-    except ValueError:
-        lat = lon = 0
-    except TypeError:
-        lat = lon = 0
-    finally:
+    if request.method == 'GET':
+
+        category = request.GET.get('categoryId')
+        reg_data = Registration.objects.filter(category__id=category)
+        lat = lon = 1
+        client_loc = Point(lon, lat, srid=4326)
+        orderby = 'price'
+        dmax = sys.maxsize
+        dmin = - sys.maxsize
+        rmin = 0
+        pmin = 0
+        rmax = 5
+        pmax = sys.maxsize
+        search_text = ''
+    else:
+        search_text = request.POST.get('search')
+        reg_data = Registration.objects.filter(product_description__contains=search_text)
+
+        lat = float(request.POST.get('lat', '0'))
+        lon = float(request.POST.get('lon', '0'))
         client_loc = Point(lon, lat, srid=4326)
 
-    try:
-        category = request.POST.get('category-select')
-    except ValueError:
-        category = 'Όλες'
+        category = request.POST.get('category-select', 'Όλες')
 
-    try:
-        orderby = request.POST.get('orderby')
-    except ValueError:
-        orderby = 'price'
+        orderby = request.POST.get('orderby', 'price')
+        rmin = int(request.POST.get('rmin', 0))
+        pmin = float(request.POST.get('pmin', 0))
 
-    try:
-        rmin = int(request.POST.get('rmin'))
-    except ValueError:
-        rmin = 0
-    except TypeError:
-        rmin = 0
-
-    try:
-        pmin = float(request.POST.get('pmin'))
-    except ValueError:
-        pmin = 0
-    except TypeError:
-        pmin = 0
-
-    try:
-        pmax = float(request.POST.get('pmax'))
-    except ValueError:
-        pmax = sys.maxsize
-    except TypeError:
-        pmax = sys.maxsize
-
-    try:
-        dmax = float(request.POST.get('dmax'))
-    except ValueError:
-        dmax = sys.maxsize
-    except TypeError:
-        dmax = sys.maxsize
-
-    if orderby == 'price':
-        reg_data = reg_data.order_by('price')
+        pmax = float(request.POST.get('pmax', sys.maxsize))
+        dmax = float(request.POST.get('dmax', sys.maxsize))
+        
+        if orderby == 'price':
+            reg_data = reg_data.order_by('price')
 
     distances = [distance(r.get_location(),client_loc) for r in reg_data]
     results = [(r,d) for r, d in zip(reg_data, distances)]

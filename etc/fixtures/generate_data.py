@@ -20,7 +20,7 @@ def generate_product_data(n, d):
 
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
     pk = 1
-    for i, c in enumerate(categories[:n]):
+    for i, c in enumerate(categories):
         with open(os.path.join(c, 'data.csv')) as f:
             products = f.read().splitlines()
 
@@ -29,6 +29,7 @@ def generate_product_data(n, d):
             try:
                 pr = float(q[1])
             except:
+                print('yack')
                 pr = 10 * random.random()
             registration = {
                 'model' : 'cheapiesgr.registration',
@@ -37,14 +38,13 @@ def generate_product_data(n, d):
                     'price' : pr,
                     'product_description' : ', '.join(q[2:-1]),
                     'shop' : random.randint(1, 5),
-                    'volunteer' : j + 1,
+                    'volunteer' : random.randint(1, 5),
                     'category' : i + 1,
                     'date_of_registration' : '2018-11-27'
                 }
             }
             pk += 1
-
-        output.extend([registration])
+            output.extend([registration])
 
     return output
 
@@ -57,36 +57,18 @@ def generate_categories_data(n, d):
 
     for i, c in enumerate(categories[:n]):
         img_path = glob.glob(os.path.join(c, 'images', '*'))
-        category2 = {
-            'model' : 'cheapiesgr.category2',
-            'pk' : i + 1,
-            'fields' : {
-                'category2_description' : os.path.split(c)[1] + '2',
-                # 'image' : random.choice(img_path)
-            }
-        }
-
-        category1 = {
-            'model' : 'cheapiesgr.category1',
-            'pk' : i + 1,
-            'fields' : {
-                'category1_description' : basename(c) + '1',
-                'category2' : i + 1,
-                # 'image' : random.choice(img_path)
-            }
-        }
-
+        print(c, os.path.split(c))
         category = {
             'model' : 'cheapiesgr.category',
             'pk' : i + 1,
             'fields' : {
-                'category_description' : basename(c),
-                'category1' : i + 1,
+                'category_description' : os.path.split(c[:-1])[1],
+                'category_name' : os.path.split(c[:-1])[1],
                 # 'image' : random.choice(img_path)
             }
         }
 
-        output.extend([category, category1, category2])
+        output.extend([category])
 
     print(output)
     return output
@@ -109,6 +91,7 @@ def generate_shop_data(n, d):
             'pk' : i + 1,
             'fields' : {
                 'address' : r['display_name'],
+                'name' : r['display_name'],
                 'city' : r['display_name'],
                 'location' : 'POINT({} {})'.format(r['lon'], r['lat'])
                 }
