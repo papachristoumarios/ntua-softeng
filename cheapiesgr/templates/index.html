@@ -17,18 +17,22 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8">
-        <form class="card card-sm rounded">
+        <form class="card card-sm rounded" method="POST" action="/search">
           <div class="card-body row no-gutters align-items-center">
 
             <div class="col-12 col-lg-8 my-auto py-auto">
-              <input class="form-control form-control-lg form-control-borderless" type="search" placeholder="Ρώτα με ό,τι θες...">
+              <input class="form-control form-control-lg form-control-borderless" type="search" name="search" id="search" placeholder="Ρώτα με ό,τι θες...">
             </div>
-            <div class="col-6 col-lg-2 text-center">
+
+            <div class="hidden">
+              <input type="text" type="hidden" name="lat" id="lat">
+              <input type="text" type="hidden" name="lon" id="lon">
+            </div>
+
+            <div class="col-6 col-lg-4 text-center">
               <button class="btn btn-lg btn-primary search-button" type="submit"><i class="fas fa-search"></i></button>
             </div>
-            <div class="col-6 col-lg-2 text-center">
-              <button class="btn btn-lg btn-primary search-button" type="submit"><i class="fas fa-camera"></i></button>
-            </div>
+
           </div>
         </form>
       </div>
@@ -37,6 +41,7 @@
 </div>
 
 
-
+{% load static %}
+<script src="{% static 'js/index.js' %}"></script>
 
 {% endblock %}
