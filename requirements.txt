@@ -10,3 +10,5 @@ nominatim
 geoip2
 geopy
 django-el-pagination
+markdown
+django-filter
