@@ -49,7 +49,7 @@
 									  <select class="form-control" id="category-select" name="category-select">
 									    <option>Όλες</option>
 											  {% for c in request.session.categories %}
-							            <option>{{ c.category_description }}</option>
+							            <option>{{ c.category_name }}</option>
 							          {% endfor %}
 
 									  </select>
@@ -60,19 +60,19 @@
 
 										<div class="form-check">
 										  <input class="form-check-input" type="radio" name="orderby" id="price" value="price" checked>
-										  <label class="form-check-label" for="exampleRadios1">
+										  <label class="form-check-label" for="price">
 											</i> &nbsp; Τιμή
 										  </label>
 										</div>
 										<div class="form-check">
 										  <input class="form-check-input" type="radio" name="orderby" id="rating" value="rating">
-										  <label class="form-check-label" for="exampleRadios2">
+										  <label class="form-check-label" for="rating">
 												<i class="fa fa-star"></i> &nbsp; Αστέρια
 										  </label>
 										</div>
 										<div class="form-check">
 										  <input class="form-check-input" type="radio" name="orderby" id="distance" value="distance">
-										  <label class="form-check-label" for="exampleRadios3">
+										  <label class="form-check-label" for="distance">
 												<i class="fa fa-road"></i> &nbsp; Απόσταση
 										  </label>
 										</div>
@@ -119,7 +119,7 @@
 									<table class="table table-hover">
 										<tbody>
 											{% for result in results %}
-											<tr>
+											<tr onclick="window.location='/product/?productId={{ result.0.id }}';">
 											{% if result.0.image %}
 												<td class="image"><img src="{{ result.image.url }}" alt=""></td>
 											{% else %}

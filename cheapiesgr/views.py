@@ -14,8 +14,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def default_map(request):
-    return render(request, 'map_default.html',
-                  { 'mapbox_access_token' : settings.MAPBOX_ACCESS_TOKEN })
+    return render(request, 'map_default.html', {})
 
 def profile(request):
     return render(request, 'profile.html', {})
@@ -29,8 +28,22 @@ def index(request):
     return render(request, 'index.html', {})
 
 def product(request):
-    return render(request, 'product.html',
-                  { 'mapbox_access_token' : settings.MAPBOX_ACCESS_TOKEN })
+    product_id = int(request.GET.get('productId', 0))
+    lat = request.session.get('lat', 0)
+    lon = request.session.get('lon', 0)
+    client_loc = Point(lon, lat, srid=4326)
+
+    product = Registration.objects.get(pk=product_id)
+    product_loc = product.get_location()
+
+    return render(request, 'product.html', {
+        'lat' : lat,
+        'lon' : lon,
+        'product' : product,
+        'plat' : product_loc.y,
+        'plon' : product_loc.x,
+        'distance' : distance(product.get_location(), client_loc)
+    })
 
 def location(ip):
     g = GeoIP2()
@@ -57,17 +70,17 @@ def apply_search_filters(results, category, dmax, rmin, pmin, pmax):
         results = filter(lambda x: str(x[0].category) == category, results)
     return list(results)
 
+def infinite_scroll_paginator(paginator):
+    for i in range(1, paginator.num_pages + 1):
+        yield paginator.page(i)
+
+
 @csrf_exempt
 def search(request):
-    page = request.GET.get('page', 1)
-
-
     if request.method == 'GET':
 
         category_id = request.GET.get('categoryId')
         reg_data = Registration.objects.filter(category__id=category_id)
-        lat = lon = 1
-        client_loc = Point(lon, lat, srid=4326)
         orderby = 'price'
         dmax = sys.maxsize
         dmin = - sys.maxsize
@@ -76,6 +89,9 @@ def search(request):
         rmax = 5
         pmax = sys.maxsize
         search_text = ''
+        lat = request.session.get('lat', 0)
+        lon = request.session.get('lon', 0)
+        client_loc = Point(lon, lat, srid=4326)
     else:
         search_text = request.POST.get('search')
         reg_data = Registration.objects.filter(product_description__contains=search_text)
@@ -85,6 +101,8 @@ def search(request):
         try:
             lat = float(request.POST.get('lat'))
             lon = float(request.POST.get('lon'))
+            request.session['lat'] = lat
+            request.session['lon'] = lon
         except ValueError:
             lat = lon = 0
         except TypeError:
@@ -145,16 +163,14 @@ def search(request):
     # paginate
     paginator = Paginator(results, 20)
 
-    pages = []
-    for i in range(1, paginator.num_pages + 1):
-        pages.append(paginator.page(i))
-
 
     return render(request, 'search.html', {
         'num_results': num_results,
         'num_pages' : paginator.num_pages,
-        'pages' : pages,
+        'pages' : infinite_scroll_paginator(paginator),
         'search_text' : search_text,
+        'lat' : lat,
+        'lon' : lon
     })
 
 def report(request):

@@ -2,6 +2,8 @@
 
 {% block content %}
 
+
+
 <div class="container-fluid fullscreen-container">
   <div class="row">
     <div class="col-12 col-lg-6">
@@ -12,26 +14,48 @@
 
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">
-              Adidas 6666 GLX
-            </h5>
 
             <div class="gallery text-center">
               <img style="width: 50%;" src="https://media.journeys.com/images/products/1_396077_ZM.JPG"></img>
             </div>
 
             <div class="row text-center">
-              <div class="col-12 col-lg-4">
-              <a href="#" class="card-link"><i class="fas fa-info"></i> &nbsp; Χαρακτηριστικά</a>
-            </div>
-            <div class="col-12 col-lg-4">
+
+            <div class="col-12 col-lg-6">
               <a href="#" class="card-link"><i class="fas fa-heart"></i> &nbsp; Προσθήκη στα αγαπημένα</a>
             </div>
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-6">
 
               <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; Προσθήκη στη wishlist</a>
             </div>
             </div>
+
+
+            <h4>Χαρακτηριστικά</h4>
+            <h5>
+              Περιγραφή προιόντος
+            </h5>
+            <p>
+              {{ product.product_description }}
+            </p>
+            <h5>
+              Τιμή
+            </h5>
+            <p>
+              {{ product.price }} &euro;
+            </p>
+            <h5>
+              Τοποθεσία
+            </h5>
+            <p>
+              Όνομα καταστήματος: {{ product.shop.name }}
+            </p>
+            <p>
+              Διεύθυνση καταστήματος: {{ product.shop.address }}
+            </p>
+            <p>
+              Απόσταση: {{ distance | floatformat:-2 }} km
+            </p>
 
           </div>
         </div>
@@ -45,24 +69,23 @@
         <div class="card card-body full-card">
           <div id='map'>
             <script>
-            mapboxgl.accessToken = "{{ mapbox_access_token }}";
-            var map = new mapboxgl.Map({
-              container: 'map',
-              style: 'mapbox://styles/mapbox/streets-v9',
-              center: [23.702099, 37.955894], // starting position
-              zoom: 15
-            });
+              var lat = parseFloat('{{ lat }}'.replace(',', '.'))
+              var lon = parseFloat('{{ lon }}'.replace(',', '.'))
+              var plat = parseFloat('{{ plat }}'.replace(',', '.'))
+              var plon = parseFloat('{{ plon }}'.replace(',', '.'))
+              var map = L.map('map').setView([lat , lon], 13);
 
-            // zoom controls
-            map.addControl(new mapboxgl.NavigationControl());
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(map);
 
-            // Add geolocate control to the map.
-            map.addControl(new mapboxgl.GeolocateControl({
-              positionOptions: {
-                enableHighAccuracy: true
-              },
-              trackUserLocation: true
-            }));
+              L.marker([lat, lon]).addTo(map)
+                .bindPopup('Η τοποθεσία σας')
+                .openPopup();
+
+              L.marker([plat, plon]).addTo(map)
+                .bindPopup('Κατάστημα: {{ product.shop.name }}')
+                .openPopup();
 
             </script>
 
