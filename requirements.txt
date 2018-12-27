@@ -9,3 +9,4 @@ osmapi
 nominatim
 geoip2
 geopy
+django-el-pagination

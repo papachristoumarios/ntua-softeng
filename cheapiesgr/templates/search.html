@@ -94,7 +94,10 @@
 						<div class="col-md-9">
 							<h2><i class="fa fa-file-o"></i> Αποτελέσματα Αναζήτησης</h2>
 							<hr>
-							<p>Αποτελέσματα για "{{ search_text }}"</p>
+							<p>Βρέθηκαν {{ num_results }}  αποτελέσματα για "{{ search_text }}"</p>
+							{% if num_results == 0 %}
+								<h3>Λυπούμαστε! Προσπαθήστε ξανά</h3>
+							{% endif %}
 
 							<div class="padding"></div>
 
@@ -102,36 +105,61 @@
 
 
 							<!-- BEGIN TABLE RESULT -->
-							<div class="table-responsive">
-								<table class="table table-hover">
-									<tbody>
-										{% for result in results %}
-										<tr>
-										<td class="number text-center">{{ forloop.counter }}</td>
-										{% if result.0.image %}
-											<td class="image"><img src="{{ result.image.url }}" alt=""></td>
-										{% else %}
-											<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
-										{% endif %}
-										<td class="product text-justify">
-											<p><strong>Περιγραφή:</strong> {{ result.0.product_description }}</p>
-											<p><strong>Κατηγορία:</strong> {{ result.0.category }}</p>
-											<p><strong>Σουπερμάρκετ:</strong> {{ result.0.shop.address }}</p>
-										</td>
+							{% for results in pages %}
 
-										<td class="rate text-right">
-										<span>
-												{{ result.0.stars | floatformat:-2 }}
-													<i class="fa fa-star"></i>
-										</span></td>
-										<td class="price text-right">{{ result.1 | floatformat:-2 }} km</td>
-										<td class="price text-right">{{ result.0.price }} &euro;</td>
-									</tr>
-									{% endfor %}
-								</tbody></table>
+								{% if forloop.counter > 1 %}
+									<div id="page{{ forloop.counter }}" class="hidden table-responsive">
+								{% else %}
+									<div id="page{{ forloop.counter }}" class="table-responsive">
+								{% endif %}
+									<table class="table table-hover">
+										<tbody>
+											{% for result in results %}
+											<tr>
+											{% if result.0.image %}
+												<td class="image"><img src="{{ result.image.url }}" alt=""></td>
+											{% else %}
+												<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+											{% endif %}
+											<td class="product text-justify">
+												<p><strong>Περιγραφή:</strong> {{ result.0.product_description }}</p>
+												<p><strong>Κατηγορία:</strong> {{ result.0.category }}</p>
+												<p><strong>Σουπερμάρκετ:</strong> {{ result.0.shop.address }}</p>
+											</td>
+
+											<td class="rate text-right">
+											<span>
+													{{ result.0.stars | floatformat:-2 }}
+														<i class="fa fa-star"></i>
+											</span></td>
+											<td class="price text-right">{{ result.1 | floatformat:-2 }} km</td>
+											<td class="price text-right">{{ result.0.price }} &euro;</td>
+										</tr>
+										{% endfor %}
+							</tbody></table>
+
+							{% if forloop.counter < num_pages %}
+							<div class="text-center" id="loadMore{{ forloop.counter }}">
+								<a href="#">Φόρτωσε περισσότερα</p>
+								
 							</div>
-							<!-- END TABLE RESULT -->
+							{% endif %}
+						</div>
 
+						<script>
+							$('#loadMore{{ forloop.counter }}').mouseenter(function(){
+								let counter = parseInt("{{ forloop.counter }}")
+								let next = counter + 1;
+								let nextPage = "#page" + next.toString();
+								$(nextPage).removeClass("hidden");
+								$('#loadMore{{ forloop.counter }}').addClass("hidden");
+								return false;
+							});
+
+						</script>
+
+
+						{% endfor %}
 
 						</div>
 						<!-- END RESULT -->

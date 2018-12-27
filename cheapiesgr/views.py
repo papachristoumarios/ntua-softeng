@@ -10,6 +10,8 @@ from .models import Registration
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def default_map(request):
     return render(request, 'map_default.html',
@@ -56,7 +58,9 @@ def apply_search_filters(results, category, dmax, rmin, pmin, pmax):
     return list(results)
 
 @csrf_exempt
-def search(request, *args):
+def search(request):
+    page = request.GET.get('page', 1)
+
 
     if request.method == 'GET':
 
@@ -71,7 +75,6 @@ def search(request, *args):
         pmin = 0
         rmax = 5
         pmax = sys.maxsize
-        search_text = ''
     else:
         search_text = request.POST.get('search')
         reg_data = Registration.objects.filter(product_description__contains=search_text)
@@ -88,7 +91,7 @@ def search(request, *args):
 
         pmax = float(request.POST.get('pmax', sys.maxsize))
         dmax = float(request.POST.get('dmax', sys.maxsize))
-        
+
         if orderby == 'price':
             reg_data = reg_data.order_by('price')
 
@@ -101,11 +104,22 @@ def search(request, *args):
         results = order_by_distance(results)
 
     # apply search filters
-    results = apply_search_filters(results, category=category, dmax=dmax, pmin=pmin, pmax=pmax, rmin=rmin)
+    if request.method == 'POST':
+        results = apply_search_filters(results, category=category, dmax=dmax, pmin=pmin, pmax=pmax, rmin=rmin)
+
+    num_results = len(results)
+    # paginate
+    paginator = Paginator(results, 20)
+
+    pages = []
+    for i in range(1, paginator.num_pages + 1):
+        pages.append(paginator.page(i))
 
 
     return render(request, 'search.html', {
-        'results' : results,
+        'num_results': num_results,
+        'num_pages' : paginator.num_pages,
+        'pages' : pages,
         'search_text' : search_text,
     })
 

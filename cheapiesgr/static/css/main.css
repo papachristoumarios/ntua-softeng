@@ -221,3 +221,21 @@ footer {
 }
 #inventory .btn-grad {background-image: linear-gradient(to right, #FF8008 0%, #FFC837 51%, #FF8008 100%)}
 #inventory .btn-grad:hover { background-position: right center; }
+
+/* LOADERS */
+.loader {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #428bca; /* Blue */
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  animation: spin 2s linear infinite;
+  justify-content: center !important;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
