@@ -64,8 +64,8 @@ def search(request):
 
     if request.method == 'GET':
 
-        category = request.GET.get('categoryId')
-        reg_data = Registration.objects.filter(category__id=category)
+        category_id = request.GET.get('categoryId')
+        reg_data = Registration.objects.filter(category__id=category_id)
         lat = lon = 1
         client_loc = Point(lon, lat, srid=4326)
         orderby = 'price'
@@ -75,6 +75,7 @@ def search(request):
         pmin = 0
         rmax = 5
         pmax = sys.maxsize
+        search_text = ''
     else:
         search_text = request.POST.get('search')
         reg_data = Registration.objects.filter(product_description__contains=search_text)

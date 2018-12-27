@@ -94,7 +94,11 @@
 						<div class="col-md-9">
 							<h2><i class="fa fa-file-o"></i> Αποτελέσματα Αναζήτησης</h2>
 							<hr>
+							{% if search_text != '' %}
 							<p>Βρέθηκαν {{ num_results }}  αποτελέσματα για "{{ search_text }}"</p>
+							{% else %}
+							<p>Βρέθηκαν {{ num_results }}  αποτελέσματα"</p>
+							{% endif %}
 							{% if num_results == 0 %}
 								<h3>Λυπούμαστε! Προσπαθήστε ξανά</h3>
 							{% endif %}
@@ -133,7 +137,7 @@
 														<i class="fa fa-star"></i>
 											</span></td>
 											<td class="price text-right">{{ result.1 | floatformat:-2 }} km</td>
-											<td class="price text-right">{{ result.0.price }} &euro;</td>
+											<td class="price text-right">{{ result.0.price }}&euro;</td>
 										</tr>
 										{% endfor %}
 							</tbody></table>
@@ -141,7 +145,7 @@
 							{% if forloop.counter < num_pages %}
 							<div class="text-center" id="loadMore{{ forloop.counter }}">
 								<a href="#">Φόρτωσε περισσότερα</p>
-								
+
 							</div>
 							{% endif %}
 						</div>
