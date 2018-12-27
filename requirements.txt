@@ -12,3 +12,6 @@ geopy
 django-el-pagination
 markdown
 django-filter
+requests
+selenium
+bs4
