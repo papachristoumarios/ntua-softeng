@@ -2,9 +2,19 @@ from django.contrib.auth.forms import UserCreationForm
 from cheapiesgr.models import MyUser
 from django import forms
 from django.core.exceptions import ValidationError
+from .models import Category
 
-#User signup form
+def get_categories():
+    iterable = Category.objects.all()
+    result = []
+    for category in iterable:
+        result.append((category.id, category.category_name))
+
+    return tuple(result)
+
 class UserRegistrationForm(forms.Form):
+    """User Signup Form"""
+
     email = forms.EmailField(
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'Εισάγετε το email σας','class' : 'form-control','id': 'email'}),
@@ -52,11 +62,11 @@ class UserRegistrationForm(forms.Form):
     #def save(self, commit=True):
         #Εδώ πρέπει να κάνουμε το query στο model για να επιβεβαιώσουμε την εγγραφή
 
-#....................#
 
 
-#User Login Form
 class UserLoginForm(forms.Form):
+    """ User login form """
+
     user = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε το όνομα χρήστη ή το email σας','class' : 'form-control','id': 'username'})
@@ -81,4 +91,31 @@ class UserLoginForm(forms.Form):
         if (0==0):
             raise ValidationError("Λάθος κωδικός πρόσβασης",code='wrong_password')
         return password
-#....................#
+
+
+
+class AddProductForm(forms.Form):
+
+    description = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε μια περιγραφή για το προϊόν','class' : 'form-control','id': 'description'}),
+    )
+
+    price = forms.FloatField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Δώστε τιμή για το προϊόν','class' : 'form-control','id': 'price'}),
+    )
+
+
+    location = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Δώστε τοποθεσία','class' : 'form-control','id': 'location'}),
+    )
+
+    image = forms.FileField(required=False)
+
+    category = forms.ChoiceField(
+        required=True,
+        widget=forms.Select(attrs={'class' : 'form-control','id': 'location'}),
+        choices=get_categories()
+    )
