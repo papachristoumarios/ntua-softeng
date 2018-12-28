@@ -24,11 +24,11 @@ def generate_product_data(n, d):
         with open(os.path.join(c, 'data.csv')) as f:
             products = f.read().splitlines()
         category = os.path.split(c[:-1])[-1]
-        print(category, i)
+
 
         for j, p in enumerate(products[:n]):
             q = p.split(', ')
-            img_url = 'media/supermarket-data/{}/images/{}.jpg'.format(category, j)
+            img_url = 'media/supermarket_crawlers/{}/images/{}.jpg'.format(category, j)
 
             try:
                 pr = float(q[1])
@@ -57,11 +57,9 @@ def generate_categories_data(n, d):
     output = []
 
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
-    print(categories)
 
     for i, c in enumerate(categories[:n]):
         img_path = glob.glob(os.path.join(c, 'images', '*'))
-        print(c, os.path.split(c))
         category = {
             'model' : 'cheapiesgr.category',
             'pk' : i + 1,
@@ -74,7 +72,6 @@ def generate_categories_data(n, d):
 
         output.extend([category])
 
-    print(output)
     return output
 
 def generate_shop_data(n, d):
@@ -108,7 +105,7 @@ def generate_shop_data(n, d):
 def generate_user_data(n, d):
     # Generate fake user data
     output = []
-    with open('FunnyNames.txt') as f:
+    with open('etc/fixtures/FunnyNames.txt') as f:
         names = f.read().splitlines()
 
     for i in range(1, n+1):
