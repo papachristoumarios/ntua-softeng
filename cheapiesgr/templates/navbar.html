@@ -43,7 +43,7 @@
     {% if request.get_full_path != '/' %}
 
     <form class="form-inline my-2 my-lg-0" method="POST" action="/search">
-      <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search" name="search">
+      <input class="form-control mr-sm-2" type="search" placeholder="Αναζήτηση" aria-label="Search" name="search" required>
       <div class="hidden">
         <input type="text" type="hidden" name="lat" id="latn">
         <input type="text" type="hidden" name="lon" id="lonn">
