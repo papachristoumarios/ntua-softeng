@@ -76,7 +76,7 @@ class Volunteer(models.Model):
 
 
 class Shop(models.Model):
-	name = models.CharField(max_length=100, verbose_name=_('name'))
+	name = models.CharField(max_length=500, verbose_name=_('name'))
 	address = models.CharField(max_length=500,
 	verbose_name = _('address'))
 	city = models.CharField(max_length=500,
