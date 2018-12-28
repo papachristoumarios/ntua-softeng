@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cheapiesgr',
+    'api',
     'social_django',
     'django.contrib.gis',
     'djgeojson',
-    'el_pagination'
+    'el_pagination',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
