@@ -40,7 +40,7 @@ The web application uses MySQL as a database for holding data.
 
 1. Setup MySQL
 ```bash
-sudo apt-get install mysql libmysqlclient-dev
+sudo apt-get install mysql-client libmysqlclient-dev
 ```
 2. Login into mysql from the command line and create the database
 ```sql
