@@ -120,8 +120,9 @@
 										<tbody>
 											{% for result in results %}
 											<tr onclick="window.location='/product/?productId={{ result.0.id }}';">
-											{% if result.0.image %}
-												<td class="image"><img src="{{ result.image.url }}" alt=""></td>
+											{% if result.0.image_url != '' %}
+											{% load static %}
+												<td class="image"><img src="{% static "" %}{{ result.0.image_url }}" alt="{{ result.0.product_description }}"></td>
 											{% else %}
 												<td class="image"><img src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
 											{% endif %}

@@ -123,6 +123,9 @@ class Registration(models.Model):
 	verbose_name = _('price'))
 	image = models.ImageField(blank=True, null=True,
 	verbose_name = _('image'))
+	image_url = models.CharField(max_length=500, null=True,
+	verbose_name = _('image_url'))
+
 	date_of_registration = models.DateField()
 	volunteer = models.ForeignKey(Volunteer, on_delete = models.CASCADE)
 	shop = models.ForeignKey(Shop, on_delete = models.CASCADE)

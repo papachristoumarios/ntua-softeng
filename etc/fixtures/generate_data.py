@@ -23,13 +23,16 @@ def generate_product_data(n, d):
     for i, c in enumerate(categories):
         with open(os.path.join(c, 'data.csv')) as f:
             products = f.read().splitlines()
+        category = os.path.split(c[:-1])[-1]
+        print(category, i)
 
         for j, p in enumerate(products[:n]):
             q = p.split(', ')
+            img_url = 'media/supermarket-data/{}/images/{}.jpg'.format(category, j)
+
             try:
                 pr = float(q[1])
             except:
-                print('yack')
                 pr = 10 * random.random()
             registration = {
                 'model' : 'cheapiesgr.registration',
@@ -40,7 +43,8 @@ def generate_product_data(n, d):
                     'shop' : random.randint(1, 5),
                     'volunteer' : random.randint(1, 5),
                     'category' : i + 1,
-                    'date_of_registration' : '2018-11-27'
+                    'date_of_registration' : '2018-11-27',
+                    'image_url' : img_url
                 }
             }
             pk += 1

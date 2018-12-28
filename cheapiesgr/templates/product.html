@@ -16,7 +16,9 @@
           <div class="card-body">
 
             <div class="gallery text-center">
-              <img style="width: 50%;" src="https://media.journeys.com/images/products/1_396077_ZM.JPG"></img>
+              {% load static %}
+
+              <img style="width: 50%;" src="{% static "" %}{{ product.image_url }}"></img>
             </div>
 
             <div class="row text-center">
