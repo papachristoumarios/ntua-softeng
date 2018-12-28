@@ -103,7 +103,19 @@ Run tests with:
 python3 manage.py test
 ```
 
+### Populate the database with data
 
+There is a Makefile inside the root directory designated to fill in the database with data using
+crawled data from the Internet as well as the OSM Nominatim API. You can use it with:
+
+```bash
+make data
+```
+
+Clean uneeded data
+```bash
+make clean
+```
 
 ### Building a Docker Image
 

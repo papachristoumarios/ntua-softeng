@@ -32,6 +32,7 @@ def product(request):
     lat = request.session.get('lat', 0)
     lon = request.session.get('lon', 0)
     client_loc = Point(lon, lat, srid=4326)
+    
 
     product = Registration.objects.get(pk=product_id)
     product_loc = product.get_location()
