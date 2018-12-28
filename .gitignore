@@ -125,4 +125,6 @@ user.json
 products.json
 shop.json
 
+# migrations
+*/migrations/
 # End of https://www.gitignore.io/api/django
