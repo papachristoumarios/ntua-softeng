@@ -121,7 +121,7 @@ dmypy.json
 
 # data jsons
 categories.json
-users.json
+user.json
 products.json
 shop.json
 
