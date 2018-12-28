@@ -11,7 +11,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib.gis.measure import D
 
 def default_map(request):
     return render(request, 'map_default.html', {})
@@ -35,7 +35,7 @@ def product(request):
 
 
     product = Registration.objects.get(pk=product_id)
-    product_loc = product.get_location()
+    product_loc = product.location
 
     return render(request, 'product.html', {
         'lat' : lat,
@@ -43,7 +43,7 @@ def product(request):
         'product' : product,
         'plat' : product_loc.y,
         'plon' : product_loc.x,
-        'distance' : distance(product.get_location(), client_loc)
+        'distance' : distance(product.location , client_loc)
     })
 
 def location(ip):
@@ -63,7 +63,6 @@ def order_by_rating(results):
     return results
 
 def apply_search_filters(results, dmax, rmin):
-    results = filter(lambda x: x[1] <= dmax, results)
     results = filter(lambda x: x[0].stars >= rmin, results)
     return list(results)
 
@@ -164,7 +163,7 @@ def search(request):
         if orderby == 'price':
             reg_data = reg_data.order_by('price')
 
-    distances = [distance(r.get_location(),client_loc) for r in reg_data]
+    distances = [distance(r.location ,client_loc) for r in reg_data]
     results = [(r,d) for r, d in zip(reg_data, distances)]
 
     if orderby == 'rating':

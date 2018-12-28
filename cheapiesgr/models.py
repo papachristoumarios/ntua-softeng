@@ -135,11 +135,9 @@ class Registration(models.Model):
 	def __str__(self):
 		return self.product_description
 
-	def get_price(self):
-		return self.get_price
-
-	def get_location(self):
-		return self.shop.get_location()
+	@property
+	def location(self):
+		return self.shop.location
 
 	@property
 	def stars(self):
