@@ -119,5 +119,12 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# data jsons
+categories.json
+user.json
+products.json
+shop.json
 
+# migrations
+*/migrations/
 # End of https://www.gitignore.io/api/django

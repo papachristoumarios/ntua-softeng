@@ -25,6 +25,7 @@ def generate_product_data(n, d):
             products = f.read().splitlines()
         category = os.path.split(c[:-1])[-1]
 
+        print(category)
 
         for j, p in enumerate(products[:n]):
             q = p.split(', ')
@@ -178,9 +179,8 @@ def generate_qar_data(n, d):
     return output
 
 def apply_fixtures(pipeline):
-    os.chdir('../..')
     for p in pipeline:
-        os.system('python3 manage.py loaddata etc/fixtures/{}.json'.format(p))
+        os.system('python3 manage.py loaddata {}.json'.format(p))
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
