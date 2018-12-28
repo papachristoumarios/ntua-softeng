@@ -45,6 +45,11 @@
 									</div>
 
 									<div class="form-group">
+										<label for="search"><i class="fas fa-pen"></i> &nbsp; Εμφάνιση αποτελεσμάτων</label>
+										<input type="number" class="form-control" name="limit" min="0" placeholder="π.χ. 100 για τα πρώτα 100">
+									</div>
+
+									<div class="form-group">
 									  <label for="sel1"><i class="fa fa-utensils"></i> &nbsp; Επιλέξτε Κατηγορία</label>
 									  <select class="form-control" id="category-select" name="category-select">
 									    <option>Όλες</option>
@@ -57,11 +62,17 @@
 
 									<div class="form-group">
 										<label for="order"><i class="fas fa-sort"></i> &nbsp; Ταξινόμηση ως προς</label>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="orderby" id="random" value="random" checked>
+										  <label class="form-check-label" for="random">
+											<i class="fa fa-dice"></i> &nbsp; Τυχαία
+										  </label>
+										</div>
 
 										<div class="form-check">
-										  <input class="form-check-input" type="radio" name="orderby" id="price" value="price" checked>
+										  <input class="form-check-input" type="radio" name="orderby" id="price" value="price">
 										  <label class="form-check-label" for="price">
-											</i> &nbsp; Τιμή
+											<i class="fa fa-euro-sign"></i> &nbsp; Τιμή
 										  </label>
 										</div>
 										<div class="form-check">

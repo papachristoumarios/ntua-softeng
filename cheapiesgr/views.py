@@ -32,7 +32,7 @@ def product(request):
     lat = request.session.get('lat', 0)
     lon = request.session.get('lon', 0)
     client_loc = Point(lon, lat, srid=4326)
-    
+
 
     product = Registration.objects.get(pk=product_id)
     product_loc = product.get_location()
@@ -62,13 +62,9 @@ def order_by_rating(results):
     results.sort(key = lambda x: 0 if x[0].stars == None else -x[0].stars)
     return results
 
-def apply_search_filters(results, category, dmax, rmin, pmin, pmax):
+def apply_search_filters(results, dmax, rmin):
     results = filter(lambda x: x[1] <= dmax, results)
     results = filter(lambda x: x[0].stars >= rmin, results)
-    results = filter(lambda x: pmin <= x[0].price <= pmax, results)
-    if category != 'Όλες':
-        print('kirk')
-        results = filter(lambda x: str(x[0].category) == category, results)
     return list(results)
 
 def infinite_scroll_paginator(paginator):
@@ -81,21 +77,21 @@ def search(request):
     if request.method == 'GET':
 
         category_id = request.GET.get('categoryId')
-        reg_data = Registration.objects.filter(category__id=category_id)
         orderby = 'price'
         dmax = sys.maxsize
         dmin = - sys.maxsize
         rmin = 0
         pmin = 0
         rmax = 5
+        limit = 100
         pmax = sys.maxsize
         search_text = ''
         lat = request.session.get('lat', 0)
         lon = request.session.get('lon', 0)
+        reg_data = Registration.objects.filter(category__id=category_id)[:limit]
         client_loc = Point(lon, lat, srid=4326)
     else:
         search_text = request.POST.get('search')
-        reg_data = Registration.objects.filter(product_description__contains=search_text)
 
         category = request.POST.get('category-select', 'Όλες')
 
@@ -124,6 +120,7 @@ def search(request):
         except TypeError:
             rmin = 0
 
+
         try:
             pmin = float(request.POST.get('pmin'))
         except ValueError:
@@ -145,6 +142,25 @@ def search(request):
         except TypeError:
             dmax = sys.maxsize
 
+        try:
+            limit = float(request.POST.get('limit'))
+        except ValueError:
+            limit = -1
+        except TypeError:
+            limit = -1
+
+
+
+        reg_data = Registration.objects.filter(product_description__contains=search_text,
+                        price__gte=pmin,
+                        price__lte=pmax)
+
+        if category != 'Όλες':
+            reg_data = reg_data.filter(category__category_name=category)
+
+        if limit > 0:
+            reg_data = reg_data[:limit]
+
         if orderby == 'price':
             reg_data = reg_data.order_by('price')
 
@@ -158,7 +174,7 @@ def search(request):
 
     # apply search filters
     if request.method == 'POST':
-        results = apply_search_filters(results, category=category, dmax=dmax, pmin=pmin, pmax=pmax, rmin=rmin)
+        results = apply_search_filters(results, dmax=dmax, rmin=rmin)
 
     num_results = len(results)
     # paginate
@@ -166,6 +182,10 @@ def search(request):
 
 
     return render(request, 'search.html', {
+        'rmin' : rmin,
+        'pmin' : pmin,
+        'pmax' : pmax,
+        'dmax' : dmax,
         'num_results': num_results,
         'num_pages' : paginator.num_pages,
         'pages' : infinite_scroll_paginator(paginator),
