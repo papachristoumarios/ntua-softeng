@@ -15,7 +15,7 @@ import os
 from django.conf import settings
 from django.conf.urls.static import static
 
-MEDIA_ROOT = os.path.abspath('cheapiesgr/static/media')
+MEDIA_ROOT = os.path.abspath('cheapiesgr/static')
 MEDIA_URL = '/media/'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

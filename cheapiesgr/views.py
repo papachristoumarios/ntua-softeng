@@ -1,5 +1,6 @@
 import requests
 import sys
+import datetime
 from .forms import UserRegistrationForm
 from .forms import AddProductForm
 from .forms import UserLoginForm
@@ -8,12 +9,27 @@ from django.conf import settings
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from .models import Category
+from .models import Shop
 from .models import Registration
+from .models import Volunteer
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.gis.measure import D
+from nominatim import Nominatim
+import random
+import os
+nom = Nominatim()
+
+def handle_uploaded_file(f, category_name):
+    category_name = category_name.replace(' ', '-')
+    fname = '{}_{}'.format(random.randint(0, 100), str(f))
+    dest = 'media/supermarket_crawlers/{}/images/{}'.format(category_name, fname)
+    with open(os.path.join(settings.MEDIA_ROOT, dest), 'wb+') as g:
+        g.write(f.read())
+
+    return dest
 
 def default_map(request):
     return render(request, 'map_default.html', {})
@@ -209,13 +225,47 @@ def newproduct3(request):
 
 def addproduct(request):
     if request.method == 'POST':
-        f = AddProductForm(request.POST)
+        f = AddProductForm(request.POST, request.FILES)
         if f.is_valid():
-            print('post!')
-            print(f.cleaned_data['new_location'])
-            print(f.cleaned_data['location'])
-            print(f.cleaned_data['category'])
 
+            price = f.cleaned_data['price']
+            product_description = f.cleaned_data['description']
+            new_location = f.cleaned_data['new_location']
+            category_id = f.cleaned_data['category']
+            category = Category.objects.get(pk=category_id)
+            date_of_registration=datetime.datetime.today().strftime('%Y-%m-%d')
+            image_url = handle_uploaded_file(request.FILES['img'], category.category_name)
+
+            if len(new_location) > 0:
+                print('Adding a new shop at', new_location)
+                query = nom.query(new_location)[0]
+                shop = Shop(
+                    name=new_location,
+                    address=query['display_name'],
+                    city=query['display_name'],
+                    location='POINT({} {})'.format(query['lon'], query['lat']),
+                )
+                shop.save()
+            else:
+                shop_id = f.cleaned_data['location']
+                shop = Shop.objects.get(pk=shop_id)
+
+
+
+            # TODO Change volunteer
+            volunteer = Volunteer.objects.get(pk=1)
+
+            new_product = Registration(
+                product_description=product_description,
+                price=price,
+                date_of_registration=date_of_registration,
+                volunteer=volunteer,
+                shop=shop,
+                category=category,
+                image_url=image_url
+            )
+
+            new_product.save()
 
             messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
             return render(request, 'index.html', {})

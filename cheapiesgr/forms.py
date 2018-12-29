@@ -128,18 +128,12 @@ class AddProductForm(forms.Form):
     )
 
 
-    image = forms.FileField(required=False)
+    img = forms.FileField(
+        widget=forms.FileInput(attrs={'accept':'image/*'})
+    )
 
     category = forms.ChoiceField(
         required=True,
         widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
         choices=get_categories()
     )
-
-    def clean_new_location(self):
-        new_loc = self.cleaned_data.get('new_location')
-        loc = self.cleaned_data.get('location')
-        if loc != -1:
-            return ''
-        else:
-            return new_loc

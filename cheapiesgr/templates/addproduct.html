@@ -10,7 +10,7 @@
       <h1>Καταχώρηση Προϊόντος</h1>
     </div>
     <div class="card-body padded-card" style="">
-      <form method="POST">
+      <form enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <div class="form-group">
           <label for="product_dsr"><i class="fas fa-shopping-basket"></i> &nbsp; Περιγραφή Προϊόντος</label>
@@ -45,7 +45,7 @@
 
         <div class="form-group">
           <label for="new-pwd"><a href="your link here"><i class="fas fa-camera"></i> </a> &nbsp; Τραβήξτε Φωτογραφία (προαιρετικά)</label>
-          {{ form.image }}
+          {{ form.img }}
         </div>
 
 
