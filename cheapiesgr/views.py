@@ -1,6 +1,8 @@
 import requests
 import sys
 from .forms import UserRegistrationForm
+from .forms import AddProductForm
+from .forms import UserLoginForm
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
@@ -206,6 +208,21 @@ def newproduct3(request):
     return render(request, 'newproduct3.html', {})
 
 def addproduct(request):
+    if request.method == 'POST':
+        f = AddProductForm(request.POST)
+        if f.is_valid():
+            print('post!')
+            print(f.cleaned_data['new_location'])
+            print(f.cleaned_data['location'])
+            print(f.cleaned_data['category'])
+
+
+            messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
+            return render(request, 'index.html', {})
+    else:
+        f = AddProductForm()
+    return render(request, 'addproduct.html', {'form': f})
+
     return render(request, 'addproduct.html', {})
 
 def user_auth(request):
@@ -223,7 +240,6 @@ def signup(request):
     return render(request, 'signup.html', {'form': f})
 
 #User login view
-from .forms import UserLoginForm
 def signin(request):
     if request.method == 'POST':
         f = UserLoginForm(request.POST)

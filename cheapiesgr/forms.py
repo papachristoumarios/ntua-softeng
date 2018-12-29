@@ -2,15 +2,24 @@ from django.contrib.auth.forms import UserCreationForm
 from cheapiesgr.models import MyUser
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Category
+from .models import Category, Shop
 
 def get_categories():
-    iterable = Category.objects.all()
+    iterable = Category.objects.all().order_by('category_name')
     result = []
     for category in iterable:
         result.append((category.id, category.category_name))
+    return tuple(result)
+
+def get_shops():
+    iterable = Shop.objects.all().order_by('name')
+    result = [(-1, 'Άλλο')]
+    for shop in iterable:
+        result.append((shop.id, shop.name))
 
     return tuple(result)
+
+
 
 class UserRegistrationForm(forms.Form):
     """User Signup Form"""
@@ -98,7 +107,7 @@ class AddProductForm(forms.Form):
 
     description = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε μια περιγραφή για το προϊόν','class' : 'form-control','id': 'description'}),
+        widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια περιγραφή για το προϊόν','class' : 'form-control','id': 'description'}),
     )
 
     price = forms.FloatField(
@@ -107,15 +116,30 @@ class AddProductForm(forms.Form):
     )
 
 
-    location = forms.CharField(
+    location = forms.ChoiceField(
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Δώστε τοποθεσία','class' : 'form-control','id': 'location'}),
+        widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
+        choices=get_shops()
     )
+
+    new_location = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Καταχωρήστε νέο κατάστημα','class' : 'form-control','id': 'new_location'}),
+    )
+
 
     image = forms.FileField(required=False)
 
     category = forms.ChoiceField(
         required=True,
-        widget=forms.Select(attrs={'class' : 'form-control','id': 'location'}),
+        widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
         choices=get_categories()
     )
+
+    def clean_new_location(self):
+        new_loc = self.cleaned_data.get('new_location')
+        loc = self.cleaned_data.get('location')
+        if loc != -1:
+            return ''
+        else:
+            return new_loc
