@@ -180,11 +180,16 @@ class Rating(models.Model):
     def __str__(self):
         return str(self.stars)
 
-    def get_explanation(self):
-        return self.rate_explanation
 
-    def get_validity(self):
-        return self.validity_of_this_rate
+    @property
+    def rating_range(self):
+        return range(int(self.stars))
+
+
+    @property
+    def rating_range_inv(self):
+        return range(5 - int(self.stars))
+
 
     class Meta:
         verbose_name = _('rating')

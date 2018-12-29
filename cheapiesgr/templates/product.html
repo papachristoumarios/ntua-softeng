@@ -139,27 +139,25 @@
           <p class="mb-0">Δείτε τι έγραψαν άλλοι χρήστες για αυτό το προϊόν</p>
         </blockquote>
 
-
-        <div class="card">
+        {% for rating in product.ratings %}
+        <div class="card" style="padding-bottom: 1.5rem;">
           <div class="card-body">
             <h5 class="card-title">
-
             </h5>
             <span class="heading">Αξιολόγηση Χρήστη</span>
-            <span class="fas fa-star checked"></span>
-            <span class="fas fa-star checked"></span>
-            <span class="fas fa-star checked"></span>
-            <span class="fas fa-star checked"></span>
-            <span class="far fa-star"></span>
-            <p><strong>Μέση Βαθμολογία</strong> 4.49</p>
-            <h6 class="card-subtitle mb-2 text-muted">από Μάριος Παπαχρήστου</h6>
-            <p class="card-text">Το παπούτσι αν και 46 ήταν πολύ μικρό για το πόδι μου</p>
-            <a href="#" class="card-link"><i class="fas fa-thumbs-up"></i> &nbsp; Η αξιολόγηση ήταν χρήσιμη</a>
-            <a href="#" class="card-link"><i class="fas fa-thumbs-down"></i> &nbsp; Η αξιολόγηση δεν ήταν χρήσιμη</a>
-            <a href="#" class="card-link"><i class="fas fa-flag"></i> &nbsp;Αναφορά</a>
+            {% for s in rating.rating_range %}
+              <span class="fas fa-star checked"></span>
+            {% endfor %}
+            {% for s in rating.rating_range_inv %}
+              <span class="far fa-star"></span>
+            {% endfor %}
+            <h6 class="card-subtitle mb-2 text-muted">από {{ rating.volunteer.first_name }} {{ rating.volunteer.last_name }}</h6>
+            <p class="card-text">{{ rating.rate_explanation }}</p>
 
           </div>
         </div>
+        {% endfor %}
+
       </div>
 
     </div>

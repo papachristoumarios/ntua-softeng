@@ -17,6 +17,7 @@ from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.gis.measure import D
+from django import template
 from nominatim import Nominatim
 import random
 import os
