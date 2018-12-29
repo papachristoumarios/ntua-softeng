@@ -157,7 +157,7 @@ class Registration(models.Model):
 
     @property
     def ratings(self):
-        return self.rating_set.all()
+        return self.rating_set.all().order_by('-stars')
 
     @property
     def questions(self):

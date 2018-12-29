@@ -4,7 +4,9 @@ import datetime
 from .forms import UserRegistrationForm
 from .forms import AddProductForm
 from .forms import UserLoginForm
+from .forms import ReviewForm
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +14,7 @@ from .models import Category
 from .models import Shop
 from .models import Registration
 from .models import Volunteer
+from .models import Rating
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
@@ -54,6 +57,7 @@ def index(request):
 
 
 def product(request):
+
     product_id = int(request.GET.get('productId', 0))
     lat = request.session.get('lat', 0)
     lon = request.session.get('lon', 0)
@@ -62,13 +66,40 @@ def product(request):
     product = Registration.objects.get(pk=product_id)
     product_loc = product.location
 
+    if request.method == 'POST':
+        f = ReviewForm(request.POST)
+        if f.is_valid():
+            stars = f.cleaned_data['stars']
+            rate_explanation = f.cleaned_data['rate_explanation']
+            registration = Registration.objects.get(pk=product_id)
+
+            # TODO Change volunteer
+            volunteer = Volunteer.objects.get(pk=1)
+
+            rating = Rating(
+                stars=stars,
+                rate_explanation=rate_explanation,
+                registration=registration,
+                volunteer=volunteer,
+                validity_of_this_rate=0
+            )
+
+            rating.save()
+
+            messages.success(
+                request, 'Καταχωρήθηκε η κριτική!')
+        return redirect('product/?productId={}'.format(product_id))
+    else:
+        f = ReviewForm()
+
     return render(request, 'product.html', {
         'lat': lat,
         'lon': lon,
         'product': product,
         'plat': product_loc.y,
         'plon': product_loc.x,
-        'distance': distance(product.location, client_loc)
+        'distance': distance(product.location, client_loc),
+        'form' : f
     })
 
 
