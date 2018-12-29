@@ -155,6 +155,14 @@ class Registration(models.Model):
 		else:
 			return r
 
+	@property
+	def ratings(self):
+		return self.rating_set.all()
+
+	@property
+	def questions(self):
+		return self.question_set.all()
+
 	class Meta:
 		verbose_name = _('registration')
 		verbose_name_plural = _('registrations')
@@ -189,9 +197,16 @@ class Question(models.Model):
 
 	def __str__(self):
 		return self.question_text
+
+	@property
+	def answers(self):
+		return self.answer_set.all()	
+
 	class Meta:
 		verbose_name = _('question')
 		verbose_name_plural = _('questions')
+
+
 
 
 class Answer(models.Model):
