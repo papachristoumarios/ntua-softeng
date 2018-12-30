@@ -19,6 +19,8 @@ def get_shops():
 
     return tuple(result)
 
+def get_stars():
+    return tuple([(1, '1 αστέρι')] + [(i, str(i) + ' αστέρια') for i in range(2, 6)])
 
 
 class UserRegistrationForm(forms.Form):
@@ -136,4 +138,17 @@ class AddProductForm(forms.Form):
         required=True,
         widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
         choices=get_categories()
+    )
+
+class ReviewForm(forms.Form):
+
+    rate_explanation = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια αξιολόγηση για το προϊόν','class' : 'form-control','id': 'rate_explanation'}),
+    )
+
+    stars = forms.ChoiceField(
+        required=True,
+        widget=forms.Select(attrs={'class' : 'form-control','id': 'stars'}),
+        choices=get_stars()
     )
