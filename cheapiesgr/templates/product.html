@@ -213,10 +213,10 @@
                   <p class="mb-0">Δείτε τι ρώτησαν άλλοι χρήστες για αυτό το προϊόν</p>
                 </blockquote>
 
-
+                {% for question in product.questions %}
                 <div class="card">
                   <div class="card-body">
-                    <p class="card-text">Προκαλεί καράφλα;</p>
+                    <p class="card-text">{{ question }}</p>
 
                     <div class="container">
                       <div class="row">
@@ -232,81 +232,57 @@
                     <div class="container">
                       <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
                         <div class="col col-12">
+                        {% with question.id as id %}
+                        
                       <form method="post">
                         {% csrf_token %}
                         <div class="form-group">
-                          {{ aform.answer }}
+                          {{ answer_forms.id.answer }}
                         </div>
 
                         <div class="form-group text-center fullw">
                           <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση απάντησης</button>
                         </div>
                       </form>
+                      {% endwith %}
                     </div>
                     </div>
 
 
                       <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
                         <div class="col-12 text-center">
-                          <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις 10 απαντήσεις</a>
+                          <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις {{ question.answers | length }} απαντήσεις</a>
                         </div>
+
                       </div>
                     </div>
                     <div class="container" id="collapse" style="display: none;">
-                      <div class="row half-pad">
-                        <div class="container">
-                          <div class="card card-body card-text text-justify">
-                            <div class="row half-pad">
-                              <div class="col">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec felis venenatis, luctus nulla sed, lobortis purus. Morbi tincidunt feugiat iaculis. Nullam orci velit, feugiat nec mauris eget, ullamcorper molestie velit. Vestibulum auctor ornare porta. Integer quis cursus sem. Quisque venenatis nisi bibendum, porta ipsum aliquet, iaculis neque. Quisque id orci vitae magna ornare tempor. Sed congue augue magna, sit amet suscipit odio euismod vehicula. Integer vehicula leo quis bibendum fermentum.
-
-                              </div>
-                            </div>
-                            <div class="row half-pad">
-                              <div class="col-12 col-6 text-center text-lg-left">
-                                <button type="button" class="btn btn-primary">
-                                  Ντόναλντ Κνουθ <span class="badge badge-light">17k</span>
-                                </button>
-                              </div>
-
-                              <div class="col-12 col-6 text-center text-lg-right">
-                                <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; (123)</a>
-                                <a href="#" class="card-link"><i class="fas fa-minus"></i> &nbsp; (123)</a>
-                                &nbsp; <span class="text-success"><i class="fas fa-check"></i></span>
-
-                              </div>
-                            </div>
-                          </div>
-
-                        </div>
-                      </div>
+                      {% for answer in question.answers %}
 
                       <div class="row half-pad">
                         <div class="container">
                           <div class="card card-body card-text text-justify">
                             <div class="row half-pad">
                               <div class="col">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec felis venenatis, luctus nulla sed, lobortis purus. Morbi tincidunt feugiat iaculis. Nullam orci velit, feugiat nec mauris eget, ullamcorper molestie velit. Vestibulum auctor ornare porta. Integer quis cursus sem. Quisque venenatis nisi bibendum, porta ipsum aliquet, iaculis neque. Quisque id orci vitae magna ornare tempor. Sed congue augue magna, sit amet suscipit odio euismod vehicula. Integer vehicula leo quis bibendum fermentum.
-
+                                {{ answer }}
                               </div>
                             </div>
                             <div class="row half-pad">
-                              <div class="col-12 col-6 text-center text-lg-left">
+                              <div class="col-12 col-12 text-center">
                                 <button type="button" class="btn btn-primary">
-                                  Mr. Bean <span class="badge badge-light">42k</span>
+                                  από {{ answer.volunteer.first_name }} {{ answer.volunteer.last_name }}
                                 </button>
                               </div>
 
-                              <div class="col-12 col-6 text-center text-lg-right">
-                                <a href="#" class="card-link"><i class="fas fa-plus"></i>&nbsp; (123)</a>
-                                <a href="#" class="card-link"><i class="fas fa-minus"></i>&nbsp; (123)</a>
 
-                              </div>
                             </div>
                           </div>
 
                         </div>
                       </div>
+
+                      {% endfor %}
+
 
                     </div>
 
@@ -317,23 +293,17 @@
                       <div class="row">
                         <div class="col-6 col-lg-4 text-center text-lg-left">
                           <button type="button" class="btn btn-primary">
-                            Άλαν Τούρινγκ <span class="badge badge-light">10.1k</span>
+                            {{ question.volunteer.first_name }} {{ question.volunteer.last_name }}
                             <span class="sr-only"></span>
                           </button>
                         </div>
-                        <div class="col-6 col-lg-4 text-center">
-                          2 days ago
-                        </div>
 
-                          <div class="col-12 col-lg-4 text-center text-lg-right medium-badge">
-                            <a href="#" class="badge badge-primary">Primary</a>
-                            <a href="#" class="badge badge-primary">Primary</a>
-                            <a href="#" class="badge badge-primary">Primary</a>
-                          </div>
+
                         </div>
                       </div>
                     </div>
                   </div>
+                  {% endfor %}
 
                 </div>
 

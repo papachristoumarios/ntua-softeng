@@ -158,7 +158,7 @@ class QuestionForm(forms.Form):
 
     question = forms.CharField(
         required=True,
-        widget=forms.Textarea(attrs={'placeholder': 'Κάντε μια ερώτηση','class' : 'form-control','id': 'question'}),
+        widget=forms.Textarea(attrs={'placeholder': 'Κάντε μια ερώτηση','class' : 'form-control','id': 'question', 'cols': 30, 'rows': 2}),
     )
 
 
@@ -166,5 +166,5 @@ class AnswerForm(forms.Form):
 
     answer = forms.CharField(
         required=True,
-        widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer'}),
+        widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer', 'cols': 30, 'rows': 1}),
     )

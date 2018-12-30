@@ -1,7 +1,6 @@
 import requests
 import sys
 import datetime
-from .forms import UserRegistrationForm
 from .forms import *
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -59,15 +58,17 @@ def product(request):
 
     product = Registration.objects.get(pk=product_id)
     product_loc = product.location
+    registration = Registration.objects.get(pk=product_id)
 
     if request.method == 'POST':
         f = ReviewForm(request.POST)
         q = QuestionForm(request.POST)
-        a = AnswerForm(request.POST)
+        answer_forms = {}
+        for quest in product.questions:
+            answer_forms[quest.id] = AnswerForm(request.POST)
         if f.is_valid():
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
-            registration = Registration.objects.get(pk=product_id)
 
             # TODO Change volunteer
             volunteer = Volunteer.objects.get(pk=1)
@@ -84,11 +85,42 @@ def product(request):
 
             messages.success(
                 request, 'Καταχωρήθηκε η κριτική!')
+        elif q.is_valid():
+            question_text = q.cleaned_data['question']
+
+            # TODO Change volunteer
+            volunteer = Volunteer.objects.get(pk=1)
+
+            question = Question(
+                question_text=question_text,
+                registration=registration,
+                volunteer=volunteer
+            )
+
+            question.save()
+
+        # elif a.is_valid():
+        #     answer_text = a.cleaned_data['answer']
+        #
+        #     # TODO Change volunteer
+        #     volunteer = Volunteer.objects.get(pk=1)
+        #
+        #     question = Question(
+        #         answer_text=answer_text,
+        #         registration=registration,
+        #         volunteer=volunteer
+        #     )
+        #
+        #     question.save()
+
         return redirect('product/?productId={}'.format(product_id))
     else:
         f = ReviewForm()
         q = QuestionForm()
-        a = AnswerForm()
+        answer_forms = {}
+        for quest in product.questions:
+            answer_forms[quest.id] = AnswerForm()
+
 
     return render(request, 'product.html', {
         'lat': lat,
@@ -99,7 +131,7 @@ def product(request):
         'distance': distance(product.location, client_loc),
         'form' : f,
         'qform' : q,
-        'aform' : a
+        'answer_forms' : answer_forms
     })
 
 
