@@ -152,3 +152,19 @@ class ReviewForm(forms.Form):
         widget=forms.Select(attrs={'class' : 'form-control','id': 'stars'}),
         choices=get_stars()
     )
+
+
+class QuestionForm(forms.Form):
+
+    question = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'placeholder': 'Κάντε μια ερώτηση','class' : 'form-control','id': 'question'}),
+    )
+
+
+class AnswerForm(forms.Form):
+
+    answer = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer'}),
+    )

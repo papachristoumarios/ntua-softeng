@@ -2,19 +2,13 @@ import requests
 import sys
 import datetime
 from .forms import UserRegistrationForm
-from .forms import AddProductForm
-from .forms import UserLoginForm
-from .forms import ReviewForm
+from .forms import *
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-from .models import Category
-from .models import Shop
-from .models import Registration
-from .models import Volunteer
-from .models import Rating
+from .models import *
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
@@ -68,6 +62,8 @@ def product(request):
 
     if request.method == 'POST':
         f = ReviewForm(request.POST)
+        q = QuestionForm(request.POST)
+        a = AnswerForm(request.POST)
         if f.is_valid():
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
@@ -91,6 +87,8 @@ def product(request):
         return redirect('product/?productId={}'.format(product_id))
     else:
         f = ReviewForm()
+        q = QuestionForm()
+        a = AnswerForm()
 
     return render(request, 'product.html', {
         'lat': lat,
@@ -99,7 +97,9 @@ def product(request):
         'plat': product_loc.y,
         'plon': product_loc.x,
         'distance': distance(product.location, client_loc),
-        'form' : f
+        'form' : f,
+        'qform' : q,
+        'aform' : a
     })
 
 

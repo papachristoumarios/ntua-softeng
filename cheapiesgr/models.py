@@ -200,6 +200,8 @@ class Question(models.Model):
     question_text = models.CharField(max_length=2000,
                                      verbose_name=_('question_text'))
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.question_text
@@ -217,6 +219,8 @@ class Answer(models.Model):
     answer_text = models.CharField(max_length=2000,
                                    verbose_name=_('answer_text'))
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.answer_text

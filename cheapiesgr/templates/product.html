@@ -198,9 +198,10 @@
                   <p class="mb-0">Ρωτήστε κάτι για αυτό το προϊόν</p>
                 </blockquote>
 
-                <form>
+                <form method="post">
+                  {% csrf_token %}
                   <div class="form-group">
-                    <textarea class="form-control" rows="5" id="question" placeholder="Γράψτε την ερώτησή σας"></textarea>
+                    {{ qform.question }}
                   </div>
 
                   <div class="form-group text-center fullw">
@@ -230,13 +231,24 @@
 
                     <div class="container">
                       <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
-                        <div class="col-12 col-lg-6 text-center text-lg-left">
-                          <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις 10 απαντήσεις</a>
+                        <div class="col col-12">
+                      <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                          {{ aform.answer }}
                         </div>
 
-                        <div class="col-12 col-lg-6 text-center text-lg-right">
-                          <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; Θετική Ψήφος</a>
-                          <a href="#" class="card-link"><i class="fas fa-minus"></i> &nbsp; Αρνητική Ψήφος</a>
+                        <div class="form-group text-center fullw">
+                          <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση απάντησης</button>
+                        </div>
+                      </form>
+                    </div>
+                    </div>
+
+
+                      <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <div class="col-12 text-center">
+                          <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις 10 απαντήσεις</a>
                         </div>
                       </div>
                     </div>
