@@ -166,5 +166,5 @@ class AnswerForm(forms.Form):
 
     answer = forms.CharField(
         required=True,
-        widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer', 'cols': 30, 'rows': 1}),
+        widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer'}),
     )

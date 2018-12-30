@@ -63,9 +63,6 @@ def product(request):
     if request.method == 'POST':
         f = ReviewForm(request.POST)
         q = QuestionForm(request.POST)
-        answer_forms = {}
-        for quest in product.questions:
-            answer_forms[quest.id] = AnswerForm(request.POST)
         if f.is_valid():
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
@@ -98,28 +95,10 @@ def product(request):
             )
 
             question.save()
-
-        # elif a.is_valid():
-        #     answer_text = a.cleaned_data['answer']
-        #
-        #     # TODO Change volunteer
-        #     volunteer = Volunteer.objects.get(pk=1)
-        #
-        #     question = Question(
-        #         answer_text=answer_text,
-        #         registration=registration,
-        #         volunteer=volunteer
-        #     )
-        #
-        #     question.save()
-
         return redirect('product/?productId={}'.format(product_id))
     else:
         f = ReviewForm()
         q = QuestionForm()
-        answer_forms = {}
-        for quest in product.questions:
-            answer_forms[quest.id] = AnswerForm()
 
 
     return render(request, 'product.html', {
@@ -131,7 +110,6 @@ def product(request):
         'distance': distance(product.location, client_loc),
         'form' : f,
         'qform' : q,
-        'answer_forms' : answer_forms
     })
 
 
@@ -357,6 +335,32 @@ def user_auth(request):
     return render(request, 'user_auth.html', {})
 
 
+def answer(request):
+    question_id = request.GET.get('questionId', 1)
+    product_id = request.GET.get('productId', 1)
+    # TODO Change volunteer
+    volunteer = Volunteer.objects.get(pk=1)
+    question = Question.objects.get(pk=int(question_id))
+    
+    if request.method == 'POST':
+        f = AnswerForm(request.POST)
+        if f.is_valid():
+            answer_text = f.cleaned_data['answer']
+            answer = Answer(
+                answer_text=answer_text,
+                volunteer=volunteer,
+                question=question
+            )
+
+            answer.save()
+            messages.success(
+                request, 'Ο λογαριασμός δημιουργήθηκε με επιτυχία!')
+            return redirect('product/?productId={}'.format(product_id))
+    else:
+        f = AnswerForm()
+    return render(request, 'answer.html', {'form': f})
+
+
 def signup(request):
     if request.method == 'POST':
         f = UserRegistrationForm(request.POST)
@@ -368,8 +372,6 @@ def signup(request):
     else:
         f = UserRegistrationForm()
     return render(request, 'signup.html', {'form': f})
-
-# User login view
 
 
 def signin(request):

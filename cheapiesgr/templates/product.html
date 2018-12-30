@@ -232,19 +232,9 @@
                     <div class="container">
                       <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
                         <div class="col col-12">
-                        {% with question.id as id %}
-                        
-                      <form method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                          {{ answer_forms.id.answer }}
-                        </div>
 
-                        <div class="form-group text-center fullw">
-                          <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση απάντησης</button>
-                        </div>
-                      </form>
-                      {% endwith %}
+                        <a href="/answer/?productId={{ product.id }}&questionId={{ question.id }}">Δημοσίευση Απάντησης</a>
+
                     </div>
                     </div>
 
