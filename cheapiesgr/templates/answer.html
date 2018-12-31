@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container h-100 d-flex">
+
+
+  <div class="card my-auto fullw">
+    <div class="card-header my-auto text-center">
+      <h1>Καταχώρηση Απάντησης</h1>
+    </div>
+    <div class="card-body padded-card" style="">
+      <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="answer"><i class="fas fa-pen"></i> &nbsp; Απάντηση</label>
+          {{ form.answer }}
+
+        <div class="form-group text-center fullw">
+          <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Υποβολή Απάντησης</button>
+        </div>
+
+        <hr>
+    </form>
+
+  </div>
+</div>
+
+</div>
+
+
+{% endblock %}
