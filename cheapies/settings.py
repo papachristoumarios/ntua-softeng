@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+AUTH_USER_MODEL = 'cheapiesgr.Volunteer'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -129,7 +131,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Athens'
 
 USE_I18N = True
 

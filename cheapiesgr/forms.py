@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from cheapiesgr.models import MyUser
+from cheapiesgr.models import Volunteer as MyUser
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Category, Shop
