@@ -61,54 +61,56 @@ class UserRegistrationForm(forms.Form):
     accept = forms.BooleanField(
         required=True
     )
-    # first_name = forms.CharField(
-    #     widget=forms.TextInput(attrs={
-    #                                 'placeholder': 'Εισάγετε το όνομα σας',
-    #                                 'class': 'form-control',
-    #                                 'id': 'name'})
-    # )
-    #
-    # last_name = forms.CharField(
-    #     widget=forms.TextInput(attrs={
-    #                                 'placeholder': 'Εισάγετε το όνομα σας',
-    #                                 'class': 'form-control',
-    #                                 'id': 'surname'})
-    # )
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+                                    'placeholder': 'Εισάγετε το όνομα σας',
+                                    'class': 'form-control',
+                                    'id': 'name'})
+    )
 
-    # def clean_email(self):
-    #     email = self.cleaned_data['email'].lower()
-    #     r = MyUser.objects.filter(email=email)
-    #     if r.count():
-    #         raise ValidationError("Το email υπάρχει ήδη", code='email exists')
-    #     return email
-    #
-    # def clean_username(self):
-    #     username = self.cleaned_data.get('username')
-    #     if len(username) < 4:
-    #         raise ValidationError("Το όνομα χρήστη πρέπει να αποτελείται από τουλάχιστον 4 χαρακτήρες", code='small_username')
-    #     if len(username) > 100:
-    #         raise ValidationError("Χρησιμοποιήστε ένα μικρότερο όνομα χρήστη", code='long_username')
-    #     r = MyUser.objects.filter(username=username)
-    #     if r.count():
-    #         raise ValidationError("Το όνομα χρήστη υπάρχει ήδη", code='username_exists')
-    #     return username
-    #
-    # def clean_password2(self):
-    #     password1 = self.cleaned_data.get('password1')
-    #     password2 = self.cleaned_data.get('password2')
-    #     if password1 and password2 and password1 != password2:
-    #         raise ValidationError("Οι κωδικοί δεν ταιριάζουν", code='passwords_not_match')
-    #     return password1
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={
+                                    'placeholder': 'Εισάγετε το όνομα σας',
+                                    'class': 'form-control',
+                                    'id': 'surname'})
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].lower()
+        r = User.objects.filter(email=email)
+        if r.count():
+            raise ValidationError("Το email υπάρχει ήδη", code='email exists')
+        return email
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if len(username) < 4:
+            raise ValidationError("Το όνομα χρήστη πρέπει να αποτελείται από τουλάχιστον 4 χαρακτήρες", code='small_username')
+        if len(username) > 100:
+            raise ValidationError("Χρησιμοποιήστε ένα μικρότερο όνομα χρήστη", code='long_username')
+        r = User.objects.filter(username=username)
+        if r.count():
+            raise ValidationError("Το όνομα χρήστη υπάρχει ήδη", code='username_exists')
+        return username
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Οι κωδικοί δεν ταιριάζουν", code='passwords_not_match')
+        return password1
 
     def save(self):
         username = self.cleaned_data.get('username')
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password1')
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
         usr = User.objects.create_user(username=username,
                                        email=email,
                                        password=password,
-                                       first_name='Giannis',
-                                       last_name='Daras')
+                                       first_name=first_name,
+                                       last_name=last_name)
         usr.save()
         volunteer = Volunteer(user=usr, confirmed_email=True)
         volunteer.save()
@@ -128,8 +130,8 @@ class UserLoginForm(forms.Form):
 #
 #     def clean_username(self):
 #         user = self.cleaned_data.get('user')
-#         r_user = MyUser.objects.filter(username=username)
-#         r_mail = MyUser.objects.filter(email=user)
+#         r_user = User.objects.filter(username=username)
+#         r_mail = User.objects.filter(email=user)
 #         if r_user.count()==0 and r_mail.count()==0:
 #             raise  ValidationError("Ο χρήστης δεν βρέθηκε στο σύστημα", code='user_not_exists')
 #         return user
@@ -160,7 +162,7 @@ class AddProductForm(forms.Form):
     location = forms.ChoiceField(
         required=True,
         widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
-        # choices=get_shops()
+        choices=get_shops()
     )
 
     new_location = forms.CharField(
@@ -176,7 +178,7 @@ class AddProductForm(forms.Form):
     category = forms.ChoiceField(
         required=True,
         widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
-        # choices=get_categories()
+        choices=get_categories()
     )
 
 class ReviewForm(forms.Form):
