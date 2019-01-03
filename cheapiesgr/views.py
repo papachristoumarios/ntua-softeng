@@ -341,7 +341,7 @@ def answer(request):
     # TODO Change volunteer
     volunteer = Volunteer.objects.get(pk=1)
     question = Question.objects.get(pk=int(question_id))
-    
+
     if request.method == 'POST':
         f = AnswerForm(request.POST)
         if f.is_valid():
@@ -365,7 +365,7 @@ def signup(request):
     if request.method == 'POST':
         f = UserRegistrationForm(request.POST)
         if f.is_valid():
-            # f.save()
+            f.save()
             messages.success(
                 request, 'Ο λογαριασμός δημιουργήθηκε με επιτυχία!')
             return render(request, 'index.html', {})
