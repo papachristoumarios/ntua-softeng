@@ -1,8 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm
-from cheapiesgr.models import Volunteer as MyUser
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Category, Shop
+from .models import Category, Shop, Volunteer
+from django.contrib.auth.models import User
+
 
 def get_categories():
     iterable = Category.objects.all().order_by('category_name')
@@ -10,6 +11,7 @@ def get_categories():
     for category in iterable:
         result.append((category.id, category.category_name))
     return tuple(result)
+
 
 def get_shops():
     iterable = Shop.objects.all().order_by('name')
@@ -19,8 +21,10 @@ def get_shops():
 
     return tuple(result)
 
+
 def get_stars():
-    return tuple([(1, '1 αστέρι')] + [(i, str(i) + ' αστέρια') for i in range(2, 6)])
+    return tuple([(1, '1 αστέρι')] + [(i, str(i) + ' αστέρια')
+                 for i in range(2, 6)])
 
 
 class UserRegistrationForm(forms.Form):
