@@ -144,16 +144,20 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTHENTICATION_BACKENDS = (
-    ''' Google Authentication '''
-    'social_core.backends.open_id.OpenIdAuth',
-    'social_core.backends.google.GoogleOpenId',
-    'social_core.backends.google.GoogleOAuth2',
-    ''' Facebook Authentication '''
-    'social_core.backends.facebook.FacebookOAuth2',
-
-    'django.contrib.auth.backends.ModelBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#
+#     ''' Google Authentication '''
+#
+#     'social_core.backends.open_id.OpenIdAuth',
+#     'social_core.backends.google.GoogleOpenId',
+#     'social_core.backends.google.GoogleOAuth2',
+#
+#     ''' Facebook Authentication '''
+#
+#     'social_core.backends.facebook.FacebookOAuth2',
+#
+#     'django.contrib.auth.backends.ModelBackend',
+# )
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
