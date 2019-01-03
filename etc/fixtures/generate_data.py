@@ -116,11 +116,14 @@ def generate_user_data(n, d):
         last_name = ' '.join(temp[1:])
 
         user = {
-            'model': 'cheapiesgr.myuser',
+            'model': 'auth.user',
             'pk' : i,
             'fields' : {
                 'username' : uname,
-                'email' : uname + '@example.com'
+                'email' : uname + '@example.com',
+                'password' : '1234',
+                'first_name' : first_name,
+                'last_name' : last_name
             }
         }
 
@@ -129,8 +132,7 @@ def generate_user_data(n, d):
             'pk' : i,
             'fields' : {
                 'user' : i,
-                'first_name' : first_name,
-                'last_name' : last_name
+                'confirmed_email' : False
             }
         }
 
