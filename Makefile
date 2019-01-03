@@ -4,7 +4,7 @@ MEDIA=cheapiesgr/static/media
 GEN_DATA=etc/fixtures/generate_data.py 
 SHELL := /bin/bash
 
-PYTHON=/usr/bin/env python3.5
+PYTHON=python
 
 data: download_data populate_db 
 
