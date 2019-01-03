@@ -34,7 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Mapbox
-#MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqb2oxOTEwOTAwZXYzcG84bWdnejg4djYifQ.autpt1M6pVeCDOVCdRyz2Q"
+#  MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqb2oxOTEwOTAwZXYzcG84bWdnejg4djYifQ.autpt1M6pVeCDOVCdRyz2Q"
 
 # Application definition
 
@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'djgeojson',
     'el_pagination',
     'rest_framework',
+    'rest_framework.authtoken',
+
 ]
 
 MIDDLEWARE = [
@@ -160,3 +162,10 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 # GeoIP2 configuration
 
 GEOIP_PATH = os.path.join(BASE_DIR,'etc/GeoLite_Archive')
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework.authentication.TokenAuthentication'
+    ]
+}
