@@ -15,8 +15,8 @@ import os
 from django.conf import settings
 from django.conf.urls.static import static
 
-#MEDIA_ROOT = os.path.abspath('cheapiesgr/media')
-#MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.abspath('cheapiesgr/static')
+MEDIA_URL = '/media/'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,9 +33,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+<<<<<<< HEAD
 # Mapbox
 #  MAPBOX_ACCESS_TOKEN="pk.eyJ1IjoicGFwYWNocmlzdG91bWFyaW9zIiwiYSI6ImNqb2oxOTEwOTAwZXYzcG84bWdnejg4djYifQ.autpt1M6pVeCDOVCdRyz2Q"
 
+=======
+>>>>>>> 02fb6cf03616f623e1df9ef8fa913e6583fa99ea
 # Application definition
 
 INSTALLED_APPS = [
@@ -55,6 +58,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
 ]
+
+AUTH_USER_MODEL = 'cheapiesgr.Volunteer'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -134,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Athens'
 
 USE_I18N = True
 

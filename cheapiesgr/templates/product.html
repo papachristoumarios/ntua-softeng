@@ -58,6 +58,21 @@
             <p>
               Απόσταση: {{ distance | floatformat:-2 }} km
             </p>
+            <h5>
+              Ημερομηνία Καταχώρησης:
+            </h5>
+            <p>
+              {{ product.date_of_registration }}
+            </p>
+            <h5>
+              Μέση Βαθμολογία
+            </h5>
+            <p>
+              {{ product.stars }} <span class="fas fa-star checked"></span>
+
+            </p>
+
+
 
           </div>
         </div>
@@ -67,8 +82,8 @@
 
     </div>
     <div class="col-12 col-lg-6">
-      <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
-        <div class="card card-body full-card">
+      <div class="container" style="padding-top: 2rem; padding-bottom: 2rem; height: 100%">
+        <div class="full-card">
           <div id='map'>
             <script>
               var lat = parseFloat('{{ lat }}'.replace(',', '.'))
@@ -94,208 +109,208 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- REVIEWS AND QUESTIONS -->
+
+  <div class="row"  style="padding-bottom: 6rem;">
+    <div class="col col-12">
+    <div class="container d-flex">
+
+      <div class="card my-auto fullw">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs pull-right"  id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="true">Κριτικές</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="questions-tab" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Ερωτήσεις</a>
+            </li>
+
+          </ul>
+        </div>
+        <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+              <!-- Reviews -->
+
+              <div class="container">
+
+                <h2>Αξιολογήσεις Προϊόντος</h2>
+
+                <blockquote class="blockquote">
+                  <p class="mb-0">Γράψτε την κριτική σας</p>
+                </blockquote>
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    {{ form.rate_explanation }}
+                  </div>
+
+                  <div class="form-group row">
+                    <div class="col-auto">
+                      {{ form.stars }}
+
+                    </div>
+
+                    <div class="col">
+                      <button type="submit" class="btn btn-default fullw"><i class="fas fa-comment"></i> &nbsp; Δημοσίευση Κριτικής</button>
+                    </div>
+                  </div>
+                </form>
+
+                <blockquote class="blockquote">
+                  <p class="mb-0">Δείτε τι έγραψαν άλλοι χρήστες για αυτό το προϊόν</p>
+                </blockquote>
+
+                {% for rating in product.ratings %}
+                <div class="card" style="padding-bottom: 1.5rem;">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                    </h5>
+                    <span class="heading">Αξιολόγηση Χρήστη</span>
+                    {% for s in rating.rating_range %}
+                      <span class="fas fa-star checked"></span>
+                    {% endfor %}
+                    {% for s in rating.rating_range_inv %}
+                      <span class="far fa-star"></span>
+                    {% endfor %}
+                    <h6 class="card-subtitle mb-2 text-muted">από {{ rating.volunteer.first_name }} {{ rating.volunteer.last_name }}</h6>
+                    <p class="card-text">{{ rating.rate_explanation }}</p>
+
+                  </div>
+                </div>
+                {% endfor %}
+
+              </div>
+
+
+            </div>
+            <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+              <!-- Questions -->
+
+              <div class="container">
+                <h2>Ερωτήσεις για το προϊόν</h2>
+
+                <blockquote class="blockquote">
+                  <p class="mb-0">Ρωτήστε κάτι για αυτό το προϊόν</p>
+                </blockquote>
+
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    {{ qform.question }}
+                  </div>
+
+                  <div class="form-group text-center fullw">
+                    <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση ερώτησης</button>
+                  </div>
+                </form>
+
+                <blockquote class="blockquote">
+                  <p class="mb-0">Δείτε τι ρώτησαν άλλοι χρήστες για αυτό το προϊόν</p>
+                </blockquote>
+
+                {% for question in product.questions %}
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-text">{{ question }}</p>
+
+                    <div class="container">
+                      <div class="row">
+                        <div class="col">
+
+
+                        </div>
+
+
+                      </div>
+                    </div>
+
+                    <div class="container">
+                      <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <div class="col col-12">
+
+                        <a href="/answer/?productId={{ product.id }}&questionId={{ question.id }}">Δημοσίευση Απάντησης</a>
+
+                    </div>
+                    </div>
+
+
+                      <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <div class="col-12 text-center">
+                          <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις {{ question.answers | length }} απαντήσεις</a>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="container" id="collapse" style="display: none;">
+                      {% for answer in question.answers %}
+
+                      <div class="row half-pad">
+                        <div class="container">
+                          <div class="card card-body card-text text-justify">
+                            <div class="row half-pad">
+                              <div class="col">
+                                {{ answer }}
+                              </div>
+                            </div>
+                            <div class="row half-pad">
+                              <div class="col-12 col-12 text-center">
+                                <button type="button" class="btn btn-primary">
+                                  από {{ answer.volunteer.first_name }} {{ answer.volunteer.last_name }}
+                                </button>
+                              </div>
+
+
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                      {% endfor %}
+
+
+                    </div>
+
+
+                  </div>
+                  <div class="card-footer text-muted">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-6 col-lg-4 text-center text-lg-left">
+                          <button type="button" class="btn btn-primary">
+                            {{ question.volunteer.first_name }} {{ question.volunteer.last_name }}
+                            <span class="sr-only"></span>
+                          </button>
+                        </div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+
+                </div>
+
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
 
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-12 col-md-6 col-lg-6">
-      <div class="container">
-        <h2>Αξιολογήσεις Προϊόντος</h2>
-
-        <blockquote class="blockquote">
-          <p class="mb-0">Γράψτε την κριτική σας</p>
-        </blockquote>
-        <form>
-          <div class="form-group">
-            <textarea class="form-control" rows="5" id="question" placeholder="Γράψτε την ερώτησή σας"></textarea>
-          </div>
-
-          <div class="form-group row">
-            <div class="col-auto">
-
-              <div class="container">
-								<div class="starrating risingstar d-flex justify-content-center flex-row-reverse">
-									<input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 star">5</label>
-									<input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 star">4</label>
-									<input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 star">3</label>
-									<input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 star">2</label>
-									<input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">1</label>
-								</div>
-							</div>
-            </div>
-            <div class="col">
-              <button type="submit" class="btn btn-default fullw"><i class="fas fa-comment"></i> &nbsp; Δημοσίευση Κριτικής</button>
-            </div>
-          </div>
-        </form>
-
-        <blockquote class="blockquote">
-          <p class="mb-0">Δείτε τι έγραψαν άλλοι χρήστες για αυτό το προϊόν</p>
-        </blockquote>
 
 
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">
+  </div>
 
-            </h5>
-            <span class="heading">Αξιολόγηση Χρήστη</span>
-            <span class="fas fa-star checked"></span>
-            <span class="fas fa-star checked"></span>
-            <span class="fas fa-star checked"></span>
-            <span class="fas fa-star checked"></span>
-            <span class="far fa-star"></span>
-            <p><strong>Μέση Βαθμολογία</strong> 4.49</p>
-            <h6 class="card-subtitle mb-2 text-muted">από Μάριος Παπαχρήστου</h6>
-            <p class="card-text">Το παπούτσι αν και 46 ήταν πολύ μικρό για το πόδι μου</p>
-            <a href="#" class="card-link"><i class="fas fa-thumbs-up"></i> &nbsp; Η αξιολόγηση ήταν χρήσιμη</a>
-            <a href="#" class="card-link"><i class="fas fa-thumbs-down"></i> &nbsp; Η αξιολόγηση δεν ήταν χρήσιμη</a>
-            <a href="#" class="card-link"><i class="fas fa-flag"></i> &nbsp;Αναφορά</a>
-
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="col-12 col-md-6 col-lg-6">
-      <div class="container">
-        <h2>Ερωτήσεις για το προϊόν</h2>
-
-        <blockquote class="blockquote">
-          <p class="mb-0">Ρωτήστε κάτι για αυτό το προϊόν</p>
-        </blockquote>
-
-        <form>
-          <div class="form-group">
-            <textarea class="form-control" rows="5" id="question" placeholder="Γράψτε την ερώτησή σας"></textarea>
-          </div>
-
-          <div class="form-group text-center fullw">
-            <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση ερώτησης</button>
-          </div>
-        </form>
-
-        <blockquote class="blockquote">
-          <p class="mb-0">Δείτε τι ρώτησαν άλλοι χρήστες για αυτό το προϊόν</p>
-        </blockquote>
-
-
-        <div class="card">
-          <div class="card-body">
-            <p class="card-text">Προκαλεί καράφλα;</p>
-
-            <div class="container">
-              <div class="row">
-                <div class="col">
-
-
-                </div>
-
-
-              </div>
-            </div>
-
-            <div class="container">
-              <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
-                <div class="col-12 col-lg-6 text-center text-lg-left">
-                  <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις 10 απαντήσεις</a>
-                </div>
-
-                <div class="col-12 col-lg-6 text-center text-lg-right">
-                  <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; Θετική Ψήφος</a>
-                  <a href="#" class="card-link"><i class="fas fa-minus"></i> &nbsp; Αρνητική Ψήφος</a>
-                </div>
-              </div>
-            </div>
-            <div class="container" id="collapse" style="display: none;">
-              <div class="row half-pad">
-                <div class="container">
-                  <div class="card card-body card-text text-justify">
-                    <div class="row half-pad">
-                      <div class="col">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec felis venenatis, luctus nulla sed, lobortis purus. Morbi tincidunt feugiat iaculis. Nullam orci velit, feugiat nec mauris eget, ullamcorper molestie velit. Vestibulum auctor ornare porta. Integer quis cursus sem. Quisque venenatis nisi bibendum, porta ipsum aliquet, iaculis neque. Quisque id orci vitae magna ornare tempor. Sed congue augue magna, sit amet suscipit odio euismod vehicula. Integer vehicula leo quis bibendum fermentum.
-
-                      </div>
-                    </div>
-                    <div class="row half-pad">
-                      <div class="col-12 col-6 text-center text-lg-left">
-                        <button type="button" class="btn btn-primary">
-                          Ντόναλντ Κνουθ <span class="badge badge-light">17k</span>
-                        </button>
-                      </div>
-
-                      <div class="col-12 col-6 text-center text-lg-right">
-                        <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; (123)</a>
-                        <a href="#" class="card-link"><i class="fas fa-minus"></i> &nbsp; (123)</a>
-                        &nbsp; <span class="text-success"><i class="fas fa-check"></i></span>
-
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="row half-pad">
-                <div class="container">
-                  <div class="card card-body card-text text-justify">
-                    <div class="row half-pad">
-                      <div class="col">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut nec felis venenatis, luctus nulla sed, lobortis purus. Morbi tincidunt feugiat iaculis. Nullam orci velit, feugiat nec mauris eget, ullamcorper molestie velit. Vestibulum auctor ornare porta. Integer quis cursus sem. Quisque venenatis nisi bibendum, porta ipsum aliquet, iaculis neque. Quisque id orci vitae magna ornare tempor. Sed congue augue magna, sit amet suscipit odio euismod vehicula. Integer vehicula leo quis bibendum fermentum.
-
-                      </div>
-                    </div>
-                    <div class="row half-pad">
-                      <div class="col-12 col-6 text-center text-lg-left">
-                        <button type="button" class="btn btn-primary">
-                          Mr. Bean <span class="badge badge-light">42k</span>
-                        </button>
-                      </div>
-
-                      <div class="col-12 col-6 text-center text-lg-right">
-                        <a href="#" class="card-link"><i class="fas fa-plus"></i>&nbsp; (123)</a>
-                        <a href="#" class="card-link"><i class="fas fa-minus"></i>&nbsp; (123)</a>
-
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
-
-          </div>
-          <div class="card-footer text-muted">
-            <div class="container">
-              <div class="row">
-                <div class="col-6 col-lg-4 text-center text-lg-left">
-                  <button type="button" class="btn btn-primary">
-                    Άλαν Τούρινγκ <span class="badge badge-light">10.1k</span>
-                    <span class="sr-only"></span>
-                  </button>
-                </div>
-                <div class="col-6 col-lg-4 text-center">
-                  2 days ago
-                </div>
-
-                  <div class="col-12 col-lg-4 text-center text-lg-right medium-badge">
-                    <a href="#" class="badge badge-primary">Primary</a>
-                    <a href="#" class="badge badge-primary">Primary</a>
-                    <a href="#" class="badge badge-primary">Primary</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-
-    </div>
   </div>
 </div>
 

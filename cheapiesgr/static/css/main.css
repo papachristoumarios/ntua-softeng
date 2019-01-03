@@ -98,6 +98,7 @@ body  {
 }
 
 .full-card {
+  background-color: rgba(245, 245, 245, 1);
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;
@@ -121,6 +122,7 @@ body  {
 
 footer {
   position: fixed;
+  z-index: 1000;
   left: 0;
   bottom: 0;
   width: 100%;

@@ -10,30 +10,43 @@
       <h1>Καταχώρηση Προϊόντος</h1>
     </div>
     <div class="card-body padded-card" style="">
-      <form action="/action_page.php">
+      <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
         <div class="form-group">
           <label for="product_dsr"><i class="fas fa-shopping-basket"></i> &nbsp; Περιγραφή Προϊόντος</label>
-          <textarea class="form-control" id ="product_dsr" cols="40" rows="5"></textarea>
+          {{ form.description }}
+
         </div>
         <div class="form-group">
           <label for="price"><i class="fas fa-euro-sign"></i> &nbsp; Τιμή</label>
-          <input type="number" min="0.00" step="0.01" class="form-control" id="price">
+          {% if form.price.errors %}
+          <div class="alert alert-danger">
+              <strong>{{ form.price.errors  | striptags}}</strong>
+          </div>
+          {% endif %}
+          {{ form.price }}
         </div>
         <div class="form-group">
-          <label for="address"><i class="fas fa-globe-americas"></i>&nbsp; Τοποθεσία (<a href="get adr api">πατήστε</a> για αυτόματη συμπλήρωση)</label>
-          <input type="text" class="form-control" id="address">
+          <label for="location"><i class="fas fa-globe-americas"></i>&nbsp; Τοποθεσία</label>
+          {% if form.new_location.errors %}
+          <div class="alert alert-danger">
+              <strong>{{ form.new_location.errors  | striptags}}</strong>
+          </div>
+          {% endif %}
+          {{ form.location }}
+          {{ form.new_location }}
         </div>
 
-        <hr>
+        <div class="form-group">
+          <label for="category"><i class="fas fa-shopping-cart"></i>&nbsp; Κατηγορία</label>
+          {{ form.category }}
+        </div>
+
 
         <div class="form-group">
           <label for="new-pwd"><a href="your link here"><i class="fas fa-camera"></i> </a> &nbsp; Τραβήξτε Φωτογραφία (προαιρετικά)</label>
-          <div class="card">
-              <img class="img-fluid" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg">
-          </div>
+          {{ form.img }}
         </div>
-
-
 
 
         <div class="form-group text-center fullw">
