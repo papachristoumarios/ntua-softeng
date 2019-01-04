@@ -14,15 +14,35 @@
   <body>
     <div id='map' style='width: 800px; height: 800px;'></div>
     <script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
 
-    L.marker([lat, lon]).addTo(map)
-      .bindPopup('{{ product.product_description }}')
-      .openPopup();
+      function success(pos) {
+        var crd = pos.coords;
+        console.log(typeof(crd.latitude));
+
+        var map = L.map('map').setView([crd.latitude, crd.longitude], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([crd.latitude, crd.longitude]).addTo(map)
+        .bindPopup('dfs')
+        .openPopup();
+
+      };
+
+      function error(err) {
+        console.warn('ERROR(' + err.code + '): ' + err.message);
+      };
+
+      navigator.geolocation.getCurrentPosition(success, error, options);
+
 
 
     </script>

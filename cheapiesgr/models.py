@@ -1,91 +1,28 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.gis.db import models as gis_models
-from django.contrib.gis import geos
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
-
-
-class MyUser(AbstractBaseUser):
-    username = models.CharField(max_length=255, unique=True,
-                                verbose_name=_('username'))
-    email = models.CharField(max_length=255, unique=True)
-    active = models.BooleanField(default=True,
-                                 verbose_name=_('active'))
-    staff = models.BooleanField(default=False,
-                                verbose_name=_('staff'))
-    admin = models.BooleanField(default=False,
-                                verbose_name=_('admin'))
-    confirmed_email = models.BooleanField(default=False)  # is email confirmed
-    USERNAME_FIELD = 'username'
-#   USERNAME_FIELD and password are required by default
-    REQUIRED_FIELDS = ['email']
-
-    def __str__(self):
-        return self.username
-
-    def get_email(self):
-        return self.email
-
-    @property
-    def is_email_confirmed(self):
-        return self.confirmed_email
-
-    @property
-    def is_active(self):
-        return self.active
-
-    @property
-    def is_admin(self):
-        return self.admin
-
-    @property
-    def is_staff(self):
-        return self.staff
-
-    @receiver(post_save, sender=AbstractBaseUser)
-    def update_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Volunteer.objects.create(user=instance)
-        instance.profile.save()
+from django.contrib.auth.models import User
 
 
 class Volunteer(models.Model):
-    #   Class Volunteer is used to extend MyUser safely
-    user = models.OneToOneField(MyUser, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100,
-                                  verbose_name=_('first_name'))
-    last_name = models.CharField(max_length=100,
-                                 verbose_name=_('last_name'))
-
-    def __str__(self):
-        return self.user
-
-    def get_last_name(self):
-        return self.last_name
-
-    def get_first_name(self):
-        return self.first_name
+    ''' Volunteer is a profile model for a user '''
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    confirmed_email = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = _('volunteer')
-        verbose_name_plural = _('volunteers')
+        db_table = 'volunteer'
 
 
 class Shop(models.Model):
     name = models.CharField(max_length=500, verbose_name=_('name'))
-    address = models.CharField(max_length=500,
-                               verbose_name=_('address'))
-    city = models.CharField(max_length=500,
-                            verbose_name=_('city'))
+    address = models.CharField(max_length=500, verbose_name=_('address'))
+    city = models.CharField(max_length=500, verbose_name=_('city'))
     location = gis_models.PointField(
         geography=True, blank=True, null=True,
         verbose_name=_('location'))
 
-    # gis = gis_models.GeoManager() GeoManager is used as follow since Django
-    # 2.0 in order to do spatial lookups
+    # update the manager
     objects = GeoManager()
 
     def __str__(self):
@@ -99,12 +36,13 @@ class Shop(models.Model):
         verbose_name_plural = _('shops')
 
 
-class Category(models.Model):  # Highest level (abstract)
+class Category(models.Model):
     category_name = models.CharField(max_length=200,
-                                     verbose_name=_('category_name'))
+                                     verbose_name=('category_name'))
     category_description = models.CharField(
         max_length=200, verbose_name=_('category_description'))
     image = models.ImageField()
+
 #   Ref for images: https://www.youtube.com/watch?v=-bjsz18pR54
 #                   https://www.youtube.com/watch?v=PIvlcmnayOE
 
@@ -113,7 +51,8 @@ class Category(models.Model):  # Highest level (abstract)
 
     class Meta:
         verbose_name = _('category')
-        verbose_name_plural = _('categorys')
+        verbose_name_plural = _('categories')
+        db_table = 'category'
 
 
 class Registration(models.Model):
@@ -127,7 +66,7 @@ class Registration(models.Model):
                                  verbose_name=_('image_url'))
 
     date_of_registration = models.DateField()
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     withdrawn = models.BooleanField(default=False)
@@ -175,21 +114,18 @@ class Rating(models.Model):
     rate_explanation = models.CharField(max_length=1000,
                                         verbose_name=_('rate_explanation'))
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.stars)
-
 
     @property
     def rating_range(self):
         return range(int(self.stars))
 
-
     @property
     def rating_range_inv(self):
         return range(5 - int(self.stars))
-
 
     class Meta:
         verbose_name = _('rating')
@@ -200,8 +136,7 @@ class Question(models.Model):
     question_text = models.CharField(max_length=2000,
                                      verbose_name=_('question_text'))
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
-
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.question_text
@@ -219,8 +154,7 @@ class Answer(models.Model):
     answer_text = models.CharField(max_length=2000,
                                    verbose_name=_('answer_text'))
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    volunteer = models.ForeignKey(Volunteer, on_delete=models.CASCADE)
-
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.answer_text

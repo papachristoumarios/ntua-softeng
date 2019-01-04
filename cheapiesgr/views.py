@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from django.contrib.gis.geos import Point
@@ -68,14 +70,11 @@ def product(request):
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
 
-            # TODO Change volunteer
-            volunteer = Volunteer.objects.get(pk=1)
-
             rating = Rating(
                 stars=stars,
                 rate_explanation=rate_explanation,
                 registration=registration,
-                volunteer=volunteer,
+                volunteer=request.user,
                 validity_of_this_rate=0
             )
 
@@ -85,13 +84,11 @@ def product(request):
         elif q.is_valid():
             question_text = q.cleaned_data['question']
 
-            # TODO Change volunteer
-            volunteer = Volunteer.objects.get(pk=1)
 
             question = Question(
                 question_text=question_text,
                 registration=registration,
-                volunteer=volunteer
+                volunteer=request.user
             )
 
             question.save()
@@ -279,7 +276,7 @@ def newproduct2(request):
 def newproduct3(request):
     return render(request, 'newproduct3.html', {})
 
-
+@login_required(login_url='/signin')
 def addproduct(request):
     if request.method == 'POST':
         f = AddProductForm(request.POST, request.FILES)
@@ -326,14 +323,12 @@ def addproduct(request):
                 shop_id = f.cleaned_data['location']
                 shop = Shop.objects.get(pk=shop_id)
 
-            # TODO Change volunteer
-            volunteer = Volunteer.objects.get(pk=1)
 
             new_product = Registration(
                 product_description=product_description,
                 price=price,
                 date_of_registration=date_of_registration,
-                volunteer=volunteer,
+                volunteer=request.user,
                 shop=shop,
                 category=category,
                 image_url=image_url
@@ -353,12 +348,10 @@ def addproduct(request):
 def user_auth(request):
     return render(request, 'user_auth.html', {})
 
-
+@login_required(login_url='/signin')
 def answer(request):
     question_id = request.GET.get('questionId', 1)
     product_id = request.GET.get('productId', 1)
-    # TODO Change volunteer
-    volunteer = Volunteer.objects.get(pk=1)
     question = Question.objects.get(pk=int(question_id))
 
     if request.method == 'POST':
@@ -367,14 +360,14 @@ def answer(request):
             answer_text = f.cleaned_data['answer']
             answer = Answer(
                 answer_text=answer_text,
-                volunteer=volunteer,
+                volunteer=request.user,
                 question=question
             )
 
             answer.save()
             messages.success(
                 request, 'Ο λογαριασμός δημιουργήθηκε με επιτυχία!')
-            return redirect('product/?productId={}'.format(product_id))
+            return redirect('/product/?productId={}'.format(product_id))
     else:
         f = AnswerForm()
     return render(request, 'answer.html', {'form': f})
@@ -384,7 +377,7 @@ def signup(request):
     if request.method == 'POST':
         f = UserRegistrationForm(request.POST)
         if f.is_valid():
-            # f.save()
+            f.save()
             messages.success(
                 request, 'Ο λογαριασμός δημιουργήθηκε με επιτυχία!')
             return render(request, 'index.html', {})
@@ -393,12 +386,28 @@ def signup(request):
     return render(request, 'signup.html', {'form': f})
 
 
+def signout(request):
+    logout(request)
+    return render(request, 'index.html', {})
+
+
 def signin(request):
     if request.method == 'POST':
         f = UserLoginForm(request.POST)
         if f.is_valid():
-            messages.success(request, 'Συνδεθήκατε με επιτυχία!')
-            return render(request, 'index.html', {})
+            username = f.cleaned_data['user']
+            password = f.cleaned_data['password']
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                print('login sucess')
+                if user.is_active:
+                    login(request, user)
+                    messages.success(request, 'Συνδεθήκατε με επιτυχία!')
+                    return render(request, 'index.html', {})
+            else:
+                print('login failed')
     else:
         f = UserLoginForm()
     return render(request, 'signin.html', {'form': f})

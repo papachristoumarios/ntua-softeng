@@ -97,6 +97,12 @@ Migrate with:
 python3 manage.py migrate
 ```
 
+Compile messages to Greek with:
+
+```bash
+python3 manage.py compilemessages
+```
+
 Run tests with:
 
 ```bash
