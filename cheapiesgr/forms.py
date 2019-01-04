@@ -122,7 +122,7 @@ class UserLoginForm(forms.Form):
 
     user = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε το όνομα χρήστη ή το email σας','class' : 'form-control','id': 'username'})
+        widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε το όνομα χρήστη σας','class' : 'form-control','id': 'username'})
     )
     password = forms.CharField(
         required=True,

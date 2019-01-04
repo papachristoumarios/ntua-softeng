@@ -69,14 +69,11 @@ def product(request):
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
 
-            # TODO Change volunteer
-            volunteer = Volunteer.objects.get(pk=1)
-
             rating = Rating(
                 stars=stars,
                 rate_explanation=rate_explanation,
                 registration=registration,
-                volunteer=volunteer,
+                volunteer=request.user,
                 validity_of_this_rate=0
             )
 
@@ -87,13 +84,11 @@ def product(request):
         elif q.is_valid():
             question_text = q.cleaned_data['question']
 
-            # TODO Change volunteer
-            volunteer = Volunteer.objects.get(pk=1)
 
             question = Question(
                 question_text=question_text,
                 registration=registration,
-                volunteer=volunteer
+                volunteer=request.user
             )
 
             question.save()
@@ -309,14 +304,12 @@ def addproduct(request):
                 shop_id = f.cleaned_data['location']
                 shop = Shop.objects.get(pk=shop_id)
 
-            # TODO Change volunteer
-            volunteer = Volunteer.objects.get(pk=1)
 
             new_product = Registration(
                 product_description=product_description,
                 price=price,
                 date_of_registration=date_of_registration,
-                volunteer=volunteer,
+                volunteer=request.user,
                 shop=shop,
                 category=category,
                 image_url=image_url
@@ -340,8 +333,6 @@ def user_auth(request):
 def answer(request):
     question_id = request.GET.get('questionId', 1)
     product_id = request.GET.get('productId', 1)
-    # TODO Change volunteer
-    volunteer = Volunteer.objects.get(pk=1)
     question = Question.objects.get(pk=int(question_id))
 
     if request.method == 'POST':
@@ -350,14 +341,14 @@ def answer(request):
             answer_text = f.cleaned_data['answer']
             answer = Answer(
                 answer_text=answer_text,
-                volunteer=volunteer,
+                volunteer=request.user,
                 question=question
             )
 
             answer.save()
             messages.success(
                 request, 'Ο λογαριασμός δημιουργήθηκε με επιτυχία!')
-            return redirect('product/?productId={}'.format(product_id))
+            return redirect('/product/?productId={}'.format(product_id))
     else:
         f = AnswerForm()
     return render(request, 'answer.html', {'form': f})
