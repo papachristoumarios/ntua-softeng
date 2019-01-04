@@ -10,21 +10,29 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
 
+      {% if not request.user.is_authenticated %}
       <li class="nav-item ">
         <a class="nav-link" href="/signin">Σύνδεση</a>
       </li>
-
+      {% else %}
+        <li class="nav-item ">
+          <a class="nav-link" href="/logout">Αποσύνδεση</a>
+        </li>
+      {% endif %}
       <li class="nav-item">
         <a class="nav-link" href="/signup">Εγγραφή</a>
       </li>
 
+      {% if request.user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="/profile">Το προφίλ μου</a>
+        <a class="nav-link" href="/profile">Το προφίλ μου {{ request.user.username }}</a>
       </li>
+      {% endif %}
 
       <li class="nav-item">
         <a class="nav-link" href="/addproduct">Προσθήκη προϊόντος</a>
       </li>
+
 
 
       <li class="nav-item dropdown">

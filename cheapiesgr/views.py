@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from django.contrib.gis.geos import Point
@@ -374,12 +375,28 @@ def signup(request):
     return render(request, 'signup.html', {'form': f})
 
 
+def signout(request):
+    logout(request)
+    return render(request, 'index.html', {})
+
+
 def signin(request):
     if request.method == 'POST':
         f = UserLoginForm(request.POST)
         if f.is_valid():
-            messages.success(request, 'Συνδεθήκατε με επιτυχία!')
-            return render(request, 'index.html', {})
+            username = f.cleaned_data['user']
+            password = f.cleaned_data['password']
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                print('login sucess')
+                if user.is_active:
+                    login(request, user)
+                    messages.success(request, 'Συνδεθήκατε με επιτυχία!')
+                    return render(request, 'index.html', {})
+            else:
+                print('login failed')
     else:
         f = UserLoginForm()
     return render(request, 'signin.html', {'form': f})

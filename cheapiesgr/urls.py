@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'addproduct', views.addproduct, name='addproduct'),
     url(r'answer', views.answer, name='answer'),
     url(r'map', views.default_map, name='map'),
+    url(r'logout', views.signout, name='logout'),
     url(r'signup', views.signup, name='signup'),
     url(r'signin', views.signin, name='signin'),
     url(r'product', views.product, name='product'),
