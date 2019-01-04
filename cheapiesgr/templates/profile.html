@@ -10,46 +10,58 @@
       <h1>Το προφίλ μου</h1>
     </div>
     <div class="card-body padded-card" style="">
-      <form action="/action_page.php">
-        <div class="form-group">
-          <label for="email"><i class="fas fa-at"></i> &nbsp; Διεύθυνση email</label>
-          <input type="email" class="form-control" id="email">
+      <form method="post">
+        {% csrf_token %}
+        <div class="fieldWrapper">
+          <div class="form-group">
+            <label for="user"><i class="fas fa-at"></i>&nbsp; Όνομα Χρήστη</label>
+            <br>
+            {% if form.user.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ form.user.errors  | striptags}}</strong>
+            </div>
+            {% endif %}
+            {{ form.user }}
+          </div>
         </div>
-        <div class="form-group">
-          <label for="usr"><i class="fas fa-user"></i> &nbsp; Όνομα Χρήστη</label>
-          <input type="text" class="form-control" id="usr">
+        <div class="fieldWrapper">
+          <div class="form-group">
+            <label for="old_password"><i class="fas fa-unlock"></i> &nbsp; Παλαιός Κωδικός Πρόσβασης</label>
+            <br>
+            {% if form.old_password.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ form.old_password.errors  | striptags}}</strong>
+            </div>
+            {% endif %}
+            {{ form.old_password }}
+          </div>
         </div>
-
         <hr>
+        <div class="fieldWrapper">
+          <div class="form-group">
+            <label for="new_password"><i class="fas fa-key"></i> &nbsp; Νέος Κωδικός Πρόσβασης</label>
+            <br>
+            {% if form.new_password_repeat.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ form.new_password_repeat.errors  | striptags}}</strong>
+            </div>
+            {% endif %}
+            {{ form.new_password }}
+          </div>
+          <div class="form-group">
+            {{ form.new_password_repeat }}
+          </div>
+          <b><p id="password-strength-text"></p></b>
 
-        <div class="form-group">
-          <label for="pwd"><i class="fas fa-key"></i> &nbsp; Παλαιός Κωδικός Πρόσβασης</label>
-          <input type="password" placeholder="Πληκτρολογήστε τον κωδικό πρόσβασής σας" class="form-control" id="pwd">
         </div>
-
-        <div class="form-group">
-          <label for="new-pwd"><i class="fas fa-key"></i> &nbsp; Νέος Κωδικός Πρόσβασης</label>
-          <input type="password" placeholder="Πληκτρολογήστε ένα νέο κωδικό" class="form-control" id="new-pwd">
-        </div>
-
-
-        <p id="password-strength-text">Δεν έχετε εισάγει κωδικό</p>
-
-
-
 
 
         <div class="form-group text-center fullw">
           <button type="submit" class="btn btn-default fullw"><i class="far fa-save"></i> &nbsp; Αποθήκευση αλλαγών</button>
         </div>
-
-        <hr>
-      </div>
-    </form>
-
+      </form>
+    </div>
   </div>
-</div>
-
 </div>
 
 <div class="container d-flex">

@@ -228,3 +228,65 @@ class AnswerForm(forms.Form):
         required=True,
         widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer'}),
     )
+
+
+
+class UserProfileForm(forms.Form):
+    """User Profile Form"""
+
+    user = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+                                    'placeholder': 'Πληκτρολογήστε το όνομα χρήστη σας',
+                                    'class': 'form-control',
+                                    'id': 'username'})
+    )
+
+    old_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+                                        'placeholder': 'Πληκτρολογήστε τον (παλαιό) κωδικό σας',
+                                        'class': 'form-control',
+                                        'id': 'pwd_old'})
+    )
+
+
+    new_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+                                        'placeholder': 'Πληκτρολογήστε τον νέο σας κωδικό',
+                                        'class': 'form-control',
+                                        'id': 'pwd'})
+    )
+
+    new_password_repeat = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+                                        'placeholder': 'Επαναλάβετε τον νέο σας κωδικό',
+                                        'class': 'form-control',
+                                        'id': 'new_pwd_rep'})
+    )
+
+
+    def clean_user(self):
+        user = self.cleaned_data.get('user')
+        r_user = User.objects.filter(username=user)
+        if r_user.count() == 0:
+            raise  ValidationError("Ο χρήστης δεν βρέθηκε στο σύστημα", code='user_not_exists')
+        return user
+
+    def clean_old_password(self):
+        user = self.cleaned_data.get('user')
+        password = self.cleaned_data.get('old_password')
+        user = authenticate(username=user, password=password)
+
+        if user is None:
+            raise ValidationError("Λάθος κωδικός πρόσβασης",code='wrong_password')
+        return password
+
+    def clean_new_password_repeat(self):
+        password1 = self.cleaned_data.get('new_password')
+        password2 = self.cleaned_data.get('new_password_repeat')
+        if password1 != password2:
+            raise ValidationError("Οι κωδικοί δεν ταιριάζουν", code='passwords_not_match')
+        return password1

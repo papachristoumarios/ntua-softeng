@@ -38,10 +38,6 @@ def default_map(request):
     return render(request, 'map_default.html', {})
 
 
-def profile(request):
-    return render(request, 'profile.html', {})
-
-
 def privacy(request):
     return render(request, 'privacy.html', {})
 
@@ -411,3 +407,25 @@ def signin(request):
     else:
         f = UserLoginForm()
     return render(request, 'signin.html', {'form': f})
+
+
+def profile(request):
+    if request.method == 'POST':
+        f = UserProfileForm(request.POST)
+        if f.is_valid():
+            username = f.cleaned_data['user']
+            old_password = f.cleaned_data['old_password']
+            new_password = f.cleaned_data['new_password']
+            new_password_repeat = f.cleaned_data['new_password_repeat']
+            u = authenticate(username=username, password=old_password)
+            if u is not None:
+                u.set_password(new_password)
+                u.save()
+                login(request, u)
+                messages.success(request, 'H αλλαγή πραγματοποιήθηκε με επιτυχία!')
+                return render(request, 'index.html', {})
+            else:
+                print("Authentication failed")
+    else:
+        f = UserProfileForm()
+    return render(request, 'profile.html', {'form': f})
