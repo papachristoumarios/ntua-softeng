@@ -22,6 +22,29 @@ body  {
   opacity: 0.95;
 }
 
+/* ADD PRODUCT PAGE */
+
+.collapsible {
+ background-image: linear-gradient(to right, #FF8008 0%, #FFC837 51%, #FF8008 100%)
+ color: #000;
+ cursor: pointer;
+ padding: 10px;
+ width: 100%;
+ border: none;
+ text-align: center;
+ outline: none;
+}
+
+.active, .collapsible:hover {
+ background-color: #ccc;
+}
+
+.content {
+ display: none;
+ overflow: hidden;
+ background-color: #f1f1f1;
+}
+
 /* SIGN-IN PAGE */
 
 .fullw {

@@ -35,6 +35,18 @@
           {% endif %}
           {{ form.location }}
           {{ form.new_location }}
+          <button class="collapsible"> &nbsp; Καταχώρηση νέου καταστήματος</button>
+          <div class="content">
+           {{ form.new_shop_name }}
+           {{ form.new_shop_city }}
+           {{ form.new_shop_street }}
+           {{ form.new_shop_number }}
+          </div>
+          {% if correct_address == False %}
+          <div class="alert alert-danger text-center">
+              <strong>Παρακαλώ εισάγετε έγκυρη διεύθυνση.</strong>
+          </div>
+          {% endif %}
         </div>
 
         <div class="form-group">
@@ -49,7 +61,7 @@
         </div>
 
 
-        <div class="form-group text-center fullw">
+        <div class="form-group text-center fullw"  style="padding-bottom: 2rem;">
           <button type="submit" class="btn btn-default fullw"><i class="far fa-save"></i> &nbsp; Υποβολή Καταχώρησης</button>
         </div>
 
@@ -61,5 +73,7 @@
 
 </div>
 
+{% load static %}
+<script src="{% static 'js/addproduct.js' %}"></script>
 
 {% endblock %}

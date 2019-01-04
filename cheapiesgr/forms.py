@@ -126,8 +126,25 @@ class AddProductForm(forms.Form):
 
     new_location = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Καταχωρήστε νέο κατάστημα','class' : 'form-control','id': 'new_location'}),
+        widget=forms.TextInput(attrs={'placeholder': 'Νέο κατάστημα','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_location'}),
     )
+    new_shop_name = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Όνομα καταστήματος','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_name'}),
+    )
+    new_shop_city = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Πόλη','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_city'})
+    )
+    new_shop_street = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Οδός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_street'})
+    )
+    new_shop_number = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Αριθμός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_number'})
+    )
+
 
 
     img = forms.FileField(

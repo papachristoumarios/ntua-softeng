@@ -15,6 +15,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.gis.measure import D
 from django import template
 from nominatim import Nominatim
+from geopy.geocoders import Nominatim as geonom
 import random
 import os
 nom = Nominatim()
@@ -79,7 +80,6 @@ def product(request):
             )
 
             rating.save()
-
             messages.success(
                 request, 'Καταχωρήθηκε η κριτική!')
         elif q.is_valid():
@@ -116,6 +116,7 @@ def product(request):
 def location(ip):
     g = GeoIP2()
     return g.geos(ip)
+
 
 
 def distance(a, b):
@@ -287,6 +288,10 @@ def addproduct(request):
             price = f.cleaned_data['price']
             product_description = f.cleaned_data['description']
             new_location = f.cleaned_data['new_location']
+            new_shop_name = f.cleaned_data['new_shop_name']
+            new_shop_city = f.cleaned_data['new_shop_city']
+            new_shop_street = f.cleaned_data['new_shop_street']
+            new_shop_number = f.cleaned_data['new_shop_number']
             category_id = f.cleaned_data['category']
             category = Category.objects.get(pk=category_id)
             date_of_registration = datetime.datetime.today().strftime('%Y-%m-%d')
@@ -301,6 +306,20 @@ def addproduct(request):
                     address=query['display_name'],
                     city=query['display_name'],
                     location='POINT({} {})'.format(query['lon'], query['lat']),
+                )
+                shop.save()
+            elif len(new_shop_name) > 0:
+                print('Adding a new shop named', new_shop_name)
+                geolocator = geonom(user_agent="cheapiesgr")
+                location = geolocator.geocode(new_shop_street+" "+new_shop_number+" "+new_shop_city)
+                if str(type(location)) == "<class 'NoneType'>":
+                    print('Μη έγκυρη διεύθυνση.')
+                    return render(request, 'addproduct.html',{'form':f, 'correct_address': False})
+                shop = Shop(
+                    name=new_shop_name,
+                    address=new_shop_street+" "+new_shop_number,
+                    city=new_shop_city,
+                    location='POINT({} {})'.format(location.longitude, location.latitude),
                 )
                 shop.save()
             else:
@@ -341,7 +360,7 @@ def answer(request):
     # TODO Change volunteer
     volunteer = Volunteer.objects.get(pk=1)
     question = Question.objects.get(pk=int(question_id))
-    
+
     if request.method == 'POST':
         f = AnswerForm(request.POST)
         if f.is_valid():
