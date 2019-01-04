@@ -5,6 +5,16 @@ GEN_DATA=etc/fixtures/generate_data.py
 SHELL := /bin/bash
 
 PYTHON=python
+MANAGE=$(PYTHON) manage.py
+PIP=pip3
+
+help:
+	@echo "Usage"
+	@echo "data    Download data and populate database"
+	@echo "deps    Install requirements"
+	@echo "database_config Make database configuration file"
+	@echo "deploy  Run deployment routine"
+	@echo "tests   Run tests"
 
 data: download_data populate_db 
 
@@ -22,3 +32,13 @@ populate_db: supermarket-data.zip
 	$(PYTHON) $(GEN_DATA) -d $(MEDIA)/supermarket_crawlers -t categories -n 10 --apply
 	$(PYTHON) $(GEN_DATA) -d $(MEDIA)/supermarket_crawlers -t user -n 10 --apply
 	$(PYTHON) $(GEN_DATA) -d $(MEDIA)/supermarket_crawlers -t products -n 3000 --apply
+
+migrate:
+	$(MANAGE) makemigrations
+	$(MANAGE) migrate
+
+test:
+	$(MANAGE) test
+
+deps: requirements.txt
+	$(PIP) install -r requirements.txt
