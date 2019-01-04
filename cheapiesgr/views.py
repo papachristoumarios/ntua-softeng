@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from .models import *
 from django.contrib.gis.geos import Point
@@ -279,7 +280,7 @@ def newproduct2(request):
 def newproduct3(request):
     return render(request, 'newproduct3.html', {})
 
-
+@login_required(login_url='/signin')
 def addproduct(request):
     if request.method == 'POST':
         f = AddProductForm(request.POST, request.FILES)
@@ -335,7 +336,7 @@ def addproduct(request):
 def user_auth(request):
     return render(request, 'user_auth.html', {})
 
-
+@login_required(login_url='/signin')
 def answer(request):
     question_id = request.GET.get('questionId', 1)
     product_id = request.GET.get('productId', 1)

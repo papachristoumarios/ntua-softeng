@@ -24,14 +24,14 @@
       </li>
 
       {% if request.user.is_authenticated %}
-      <li class="nav-item">
-        <a class="nav-link" href="/profile">Το προφίλ μου {{ request.user.username }}</a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">Το προφίλ μου {{ request.user.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/addproduct">Προσθήκη προϊόντος</a>
+        </li>
       {% endif %}
 
-      <li class="nav-item">
-        <a class="nav-link" href="/addproduct">Προσθήκη προϊόντος</a>
-      </li>
 
 
 
