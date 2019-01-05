@@ -51,12 +51,12 @@ test_db:
 	mysql -e 'create database cheapies;' -u root	
 	./test_database_config.sh >database.cnf
 	
-deplo:
+deploy:
 	$(MAKE) deps
 	$(MAKE) test_db
 	$(MAKE) migrate
 	$(MAKE) data
 
-dockerize:
+dockerize: Dockerfile docker-compose.yml
 	$(DOCKER_COMPOSE) build
 	$(DOCKER_COMPOSE) up
