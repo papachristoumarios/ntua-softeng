@@ -2,9 +2,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'newproduct1', views.newproduct1, name='newproduct1'),
-    url(r'newproduct2', views.newproduct2, name='newproduct2'),
-    url(r'newproduct3', views.newproduct3, name='newproduct3'),
     url(r'addproduct', views.addproduct, name='addproduct'),
     url(r'answer', views.answer, name='answer'),
     url(r'map', views.default_map, name='map'),

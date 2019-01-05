@@ -273,17 +273,6 @@ def report(request):
     return render(request, 'report.html', {})
 
 
-def newproduct1(request):
-    return render(request, 'newproduct1.html', {})
-
-
-def newproduct2(request):
-    return render(request, 'newproduct2.html', {})
-
-
-def newproduct3(request):
-    return render(request, 'newproduct3.html', {})
-
 @login_required(login_url='/signin')
 def addproduct(request):
     if request.method == 'POST':
