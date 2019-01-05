@@ -23,7 +23,7 @@ data: download_data populate_db
 download_data:
 	wget -O supermarket-data.zip https://pithos.okeanos.grnet.gr/public/eYYbrUY7m4WOzsywBNG175
 	mkdir -p $(MEDIA)
-	unzip supermarket-data.zip -d cheapiesgr/static/media
+	unzip -qq supermarket-data.zip -d cheapiesgr/static/media
 	
 clean:
 	rm -rf supermarket-data.zip
