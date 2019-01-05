@@ -42,3 +42,12 @@ test:
 
 deps: requirements.txt
 	$(PIP) install -r requirements.txt
+
+test_db:
+	mysql -e 'create database cheapies;' -u root	
+
+deploy:
+	$(MAKE) deps
+	$(MAKE) test_db
+	$(MAKE) migrate
+
