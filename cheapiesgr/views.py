@@ -294,7 +294,7 @@ def report(request):
 
 @login_required(login_url='/signin')
 def remove_favorite(request):
-    fav_id = request.GET.get('fav_id')
+    fav_id = request.GET.get('favId')
     favorite = Favorite.objects.get(pk=int(fav_id))
     favorite.delete()
     return redirect('/profile')
