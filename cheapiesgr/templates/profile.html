@@ -178,16 +178,7 @@
                     {{ fav.registration.product_description}}
                   </div>
                 </div>
-                <form method="post">
-                  {% csrf_token %}
-                  <div class="form-group">
-                    {{ favform }}
-                  </div>
-                  <div class="form-group text-center fullw">
-                    <button class="btn btn-link" type="submit" name="remove_from_fav" value="remove_from_fav"><i class="fas fa-trash-alt"></i> &nbsp; Κατάργηση από τα αγαπημένα</button>
-                    <!-- Prepei na steilw to favorite id wste na to diagrapsw sto view -->
-                  </div>
-                </form>
+                    <a class="text-center" href="/removeFavorite/?favId={{ fav.id }}"><i class="fas fa-trash-alt"></i> &nbsp; Κατάργηση από τα αγαπημένα</button>
               </div>
             </div>
             {% endfor %}

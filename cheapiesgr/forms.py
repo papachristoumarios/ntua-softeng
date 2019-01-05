@@ -232,8 +232,6 @@ class AnswerForm(forms.Form):
     )
 
 
-class FavoritesForm(forms.Form):
-    """ Does nothing """
 
 class UserProfileForm(forms.Form):
     """User Profile Form"""

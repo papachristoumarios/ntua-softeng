@@ -272,6 +272,10 @@ def search(request):
 def report(request):
     return render(request, 'report.html', {})
 
+@login_required(login_url='/signin')
+def remove_favorite(request):
+    pass
+
 
 @login_required(login_url='/signin')
 def addproduct(request):
@@ -409,7 +413,6 @@ def signin(request):
 
 
 def profile(request):
-    del_fav = FavoritesForm(request.POST)
     user = request.user
     registered_products =  user.registration_set.all()
     user_questions =  user.question_set.all()
@@ -432,11 +435,12 @@ def profile(request):
             else:
                 print("Authentication failed")
 
-        #elif del_fav.is_valid():
-            #Get passed parameter and delete favorite, then refresh profile
 
     else:
         f = UserProfileForm(username = user.username)
-    return render(request, 'profile.html', {'form': f, 'user': user, 'products' : registered_products,
-                                            'questions' : user_questions, 'answers' : user_answers,
-                                            'favorites' : user_favorites, 'favform' : del_fav})
+    return render(request, 'profile.html', {'form': f, 'user': user,
+                                            'products' : registered_products,
+                                            'questions' : user_questions,
+                                            'answers' : user_answers,
+                                            'favorites' : user_favorites
+                                            })
