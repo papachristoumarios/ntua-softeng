@@ -47,8 +47,8 @@ test_db:
 	mysql -e 'create database cheapies;' -u root	
 	./test_database_config.sh >database.cnf
 	
-deploy:
+deplo:
 	$(MAKE) deps
 	$(MAKE) test_db
 	$(MAKE) migrate
-
+	$(MAKE) data
