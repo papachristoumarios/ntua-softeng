@@ -45,7 +45,8 @@ deps: requirements.txt
 
 test_db:
 	mysql -e 'create database cheapies;' -u root	
-
+	./test_database_config.sh >database.cnf
+	
 deploy:
 	$(MAKE) deps
 	$(MAKE) test_db
