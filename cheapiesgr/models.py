@@ -162,3 +162,13 @@ class Answer(models.Model):
     class Meta:
         verbose_name = _('answer')
         verbose_name_plural = _('answers')
+
+
+class Favorite(models.Model):
+    registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _('favorite')
+        verbose_name_plural = _('favorites')
+        unique_together = ["registration", "volunteer"]

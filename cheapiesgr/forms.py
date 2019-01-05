@@ -230,17 +230,12 @@ class AnswerForm(forms.Form):
     )
 
 
+class FavoritesForm(forms.Form):
+    """ Does nothing """
 
 class UserProfileForm(forms.Form):
     """User Profile Form"""
 
-    user = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={
-                                    'placeholder': 'Πληκτρολογήστε το όνομα χρήστη σας',
-                                    'class': 'form-control',
-                                    'id': 'username'})
-    )
 
     old_password = forms.CharField(
         required=True,
@@ -267,18 +262,15 @@ class UserProfileForm(forms.Form):
                                         'id': 'new_pwd_rep'})
     )
 
+    def __init__(self,*args,**kwargs):
+        self.user = kwargs.pop('username')
+        super(UserProfileForm, self).__init__(*args, **kwargs)
 
-    def clean_user(self):
-        user = self.cleaned_data.get('user')
-        r_user = User.objects.filter(username=user)
-        if r_user.count() == 0:
-            raise  ValidationError("Ο χρήστης δεν βρέθηκε στο σύστημα", code='user_not_exists')
-        return user
 
     def clean_old_password(self):
-        user = self.cleaned_data.get('user')
+        username = self.user
         password = self.cleaned_data.get('old_password')
-        user = authenticate(username=user, password=password)
+        user = authenticate(username=username, password=password)
 
         if user is None:
             raise ValidationError("Λάθος κωδικός πρόσβασης",code='wrong_password')

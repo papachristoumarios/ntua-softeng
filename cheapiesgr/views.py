@@ -60,6 +60,7 @@ def product(request):
     registration = Registration.objects.get(pk=product_id)
 
     if request.method == 'POST':
+        h = FavoritesForm(request.POST)
         f = ReviewForm(request.POST)
         q = QuestionForm(request.POST)
         if f.is_valid():
@@ -88,10 +89,20 @@ def product(request):
             )
 
             question.save()
+
+        elif h.is_valid():
+            if (Favorite.objects.filter(volunteer=request.user, registration=registration).count() == 0):
+                fav = Favorite(
+                volunteer=request.user,
+                registration=registration
+                )
+                fav.save()
+
         return redirect('product/?productId={}'.format(product_id))
     else:
         f = ReviewForm()
         q = QuestionForm()
+        h = FavoritesForm()
 
 
     return render(request, 'product.html', {
@@ -103,6 +114,7 @@ def product(request):
         'distance': distance(product.location, client_loc),
         'form' : f,
         'qform' : q,
+        'favform' : h
     })
 
 
@@ -410,10 +422,16 @@ def signin(request):
 
 
 def profile(request):
+    del_fav = FavoritesForm(request.POST)
+    user = request.user
+    registered_products =  user.registration_set.all()
+    user_questions =  user.question_set.all()
+    user_answers = user.answer_set.all()
+    user_favorites = user.favorite_set.all()
     if request.method == 'POST':
-        f = UserProfileForm(request.POST)
+        f = UserProfileForm(request.POST, username = user.username)
         if f.is_valid():
-            username = f.cleaned_data['user']
+            username = user.username
             old_password = f.cleaned_data['old_password']
             new_password = f.cleaned_data['new_password']
             new_password_repeat = f.cleaned_data['new_password_repeat']
@@ -426,6 +444,12 @@ def profile(request):
                 return render(request, 'index.html', {})
             else:
                 print("Authentication failed")
+
+        #elif del_fav.is_valid():
+            #Get passed parameter and delete favorite, then refresh profile
+
     else:
-        f = UserProfileForm()
-    return render(request, 'profile.html', {'form': f})
+        f = UserProfileForm(username = user.username)
+    return render(request, 'profile.html', {'form': f, 'user': user, 'products' : registered_products,
+                                            'questions' : user_questions, 'answers' : user_answers,
+                                            'favorites' : user_favorites, 'favform' : del_fav})

@@ -3,27 +3,13 @@
 {% block content %}
 
 <div class="container h-100 d-flex">
-
-
   <div class="card my-auto fullw">
     <div class="card-header my-auto text-center">
-      <h1>Το προφίλ μου</h1>
+      <h1>Το προφίλ μου - {{ user }}</h1>
     </div>
     <div class="card-body padded-card" style="">
       <form method="post">
         {% csrf_token %}
-        <div class="fieldWrapper">
-          <div class="form-group">
-            <label for="user"><i class="fas fa-at"></i>&nbsp; Όνομα Χρήστη</label>
-            <br>
-            {% if form.user.errors %}
-            <div class="alert alert-danger">
-                <strong>{{ form.user.errors  | striptags}}</strong>
-            </div>
-            {% endif %}
-            {{ form.user }}
-          </div>
-        </div>
         <div class="fieldWrapper">
           <div class="form-group">
             <label for="old_password"><i class="fas fa-unlock"></i> &nbsp; Παλαιός Κωδικός Πρόσβασης</label>
@@ -52,10 +38,7 @@
             {{ form.new_password_repeat }}
           </div>
           <b><p id="password-strength-text"></p></b>
-
         </div>
-
-
         <div class="form-group text-center fullw">
           <button type="submit" class="btn btn-default fullw"><i class="far fa-save"></i> &nbsp; Αποθήκευση αλλαγών</button>
         </div>
@@ -64,8 +47,8 @@
   </div>
 </div>
 
-<div class="container d-flex">
 
+<div class="container d-flex">
   <div class="card my-auto fullw">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs pull-right"  id="myTab" role="tablist">
@@ -76,27 +59,146 @@
           <a class="nav-link" id="questions-tab" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Οι ερωτήσεις μου</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="answers-tab" data-toggle="tab" href="#answers" role="tab" aria-controls="answers-tab" aria-selected="false">Οι απαντήσεις μου</a>
+          <a class="nav-link" id="answers-tab" data-toggle="tab" href="#answers" role="tab" aria-controls="answers" aria-selected="false">Οι απαντήσεις μου</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites-tab" aria-selected="false">Τα αγαπημένα μου</a>
+          <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Τα αγαπημένα μου</a>
         </li>
       </ul>
     </div>
     <div class="card-body">
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
 
+
+
+        <div class="tab-pane fade show active" id="products" role="tabpanel" aria-labelledby="products-tab">
+          <div class="container">
+            {% for p in products %}
+            <div class="card" style="padding-bottom: 1.5rem;">
+              <div class="card-body">
+                <div class="gallery text-center">
+                  <a href='/product/?productId={{ p.id }}'>
+                    {% if p.image_url != '' %}
+                      {% load static %}
+                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ p.image_url }}"></td>
+                    {% else %}
+                      <td class="image"><img style="width: 30%;" src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="card-text" style="padding-top: 1rem;">
+                  <div class="text center">
+                    {{ p.product_description}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+
+
+        <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+          <div class="container">
+            {% for q in questions %}
+            <div class="card" style="padding-bottom: 1.5rem;">
+              <div class="card-body">
+                <div class="gallery text-center">
+                  <a href='/product/?productId={{ q.registration.id }}'>
+                    {% if q.registration.image_url != '' %}
+                      {% load static %}
+                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ q.registration.image_url }}"></td>
+                    {% else %}
+                      <td class="image"><img style="width: 30%;" src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="card-text" style="padding-top: 1rem;">
+                  <div class="text center">
+                    <b> Q: {{ q.question_text }} </b>
+                    {% for a in q.answers %}
+                      <p> <font color="green">A : {{ a.answer_text }} </font></p>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
+
+
+        <div class="tab-pane fade" id="answers" role="tabpanel" aria-labelledby="answers-tab">
+          <div class="container">
+            {% for ans in answers %}
+            <div class="card" style="padding-bottom: 1.5rem;">
+              <div class="card-body">
+                <div class="gallery text-center">
+                  <a href='/product/?productId={{ q.registration.id }}'>
+                    {% if ans.question.registration.image_url != '' %}
+                      {% load static %}
+                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ ans.question.registration.image_url }}"></td>
+                    {% else %}
+                      <td class="image"><img style="width: 30%;" src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="card-text" style="padding-top: 1rem;">
+                  <div class="text center">
+                    Q: {{ ans.question.question_text }}
+                    <p><b>A: {{ ans.answer_text }} </b></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="favorites" role="tabpanel" aria-labelledby="favorite-tab">
+          <div class="container">
+            {% for fav in favorites %}
+            <div class="card" style="padding-bottom: 1.5rem;">
+              <div class="card-body">
+                <div class="gallery text-center">
+                  <a href='/product/?productId={{ f.registration.id }}'>
+                    {% if fav.registration.image_url != '' %}
+                      {% load static %}
+                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ fav.registration.image_url }}"></td>
+                    {% else %}
+                      <td class="image"><img style="width: 30%;" src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="card-text" style="padding-top: 1rem;">
+                  <div class="text center">
+                    {{ fav.registration.product_description}}
+                  </div>
+                </div>
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    {{ favform }}
+                  </div>
+                  <div class="form-group text-center fullw">
+                    <button class="btn btn-link" type="submit" name="remove_from_fav" value="remove_from_fav"><i class="fas fa-trash-alt"></i> &nbsp; Κατάργηση από τα αγαπημένα</button>
+                    <!-- Prepei na steilw to favorite id wste na to diagrapsw sto view -->
+                  </div>
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
+
       </div>
     </div>
-
-
   </div>
-
 </div>
 
 
