@@ -161,10 +161,11 @@ class AddProductForm(forms.Form):
     )
 
 
-    location = forms.ChoiceField(
+    location = forms.ModelChoiceField(
         required=True,
         widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
-        choices=get_shops()
+        queryset=Shop.objects.all(),
+        empty_label='Άλλο'
     )
 
     new_location = forms.CharField(
@@ -194,10 +195,11 @@ class AddProductForm(forms.Form):
         widget=forms.FileInput(attrs={'accept':'image/*'})
     )
 
-    category = forms.ChoiceField(
+    category = forms.ModelChoiceField(
         required=True,
         widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
-        choices=get_categories()
+        queryset=Category.objects.all(),
+        initial=0
     )
 
 class ReviewForm(forms.Form):

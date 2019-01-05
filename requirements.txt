@@ -5,6 +5,7 @@ social-auth-app-django
 Pillow
 django-geojson
 cryptography
+lipsum
 osmapi
 nominatim
 geoip2

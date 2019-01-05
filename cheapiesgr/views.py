@@ -297,8 +297,7 @@ def addproduct(request):
             new_shop_city = f.cleaned_data['new_shop_city']
             new_shop_street = f.cleaned_data['new_shop_street']
             new_shop_number = f.cleaned_data['new_shop_number']
-            category_id = f.cleaned_data['category']
-            category = Category.objects.get(pk=category_id)
+            category = f.cleaned_data['category']
             date_of_registration = datetime.datetime.today().strftime('%Y-%m-%d')
             image_url = handle_uploaded_file(
                 request.FILES['img'], category.category_name)
@@ -328,8 +327,7 @@ def addproduct(request):
                 )
                 shop.save()
             else:
-                shop_id = f.cleaned_data['location']
-                shop = Shop.objects.get(pk=shop_id)
+                shop = f.cleaned_data['location']
 
 
             new_product = Registration(
