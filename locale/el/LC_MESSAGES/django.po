@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-02 18:13+0200\n"
+"POT-Creation-Date: 2019-01-05 18:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,151 +26,144 @@ msgstr "Διαχείριση cheapies"
 msgid "My Site Administration"
 msgstr "Διαχείριση cheapies"
 
-#: cheapiesgr/models.py:37
-msgid "username"
-msgstr "Όνομα χρήστη"
-
-#: cheapiesgr/models.py:40
-msgid "active"
-msgstr "Ενεργός"
-
-#: cheapiesgr/models.py:42
-msgid "staff"
-msgstr "Προσωπικό"
-
-#: cheapiesgr/models.py:44
-msgid "admin"
-msgstr "Διαχειριστής"
-
-#: cheapiesgr/models.py:47
-msgid "first_name"
-msgstr "Όνομα"
-
-#: cheapiesgr/models.py:49
-msgid "last_name"
-msgstr "Επώνυμο"
-
-#: cheapiesgr/models.py:90
-msgid "Volunteer"
-msgstr "Εθελοντής/Χρήστης/Προσωπικό"
-
-#: cheapiesgr/models.py:91
-msgid "Volunteers"
-msgstr "Εθελοντές/Χρήστες/Προσωπικό"
-
-#: cheapiesgr/models.py:97
+#: cheapiesgr/models.py:18
 #, fuzzy
 #| msgid "username"
 msgid "name"
 msgstr "Όνομα χρήστη"
 
-#: cheapiesgr/models.py:99
+#: cheapiesgr/models.py:19
 msgid "address"
 msgstr "Διεύθυνση"
 
-#: cheapiesgr/models.py:101
+#: cheapiesgr/models.py:20
 msgid "city"
 msgstr "Πόλη"
 
-#: cheapiesgr/models.py:104
+#: cheapiesgr/models.py:23
 msgid "location"
 msgstr "Τοποθεσία"
 
-#: cheapiesgr/models.py:117
+#: cheapiesgr/models.py:35
 msgid "shop"
 msgstr "Κατάστημα"
 
-#: cheapiesgr/models.py:118
+#: cheapiesgr/models.py:36
 msgid "shops"
 msgstr "Καταστήματα"
 
-#: cheapiesgr/models.py:123
-#, fuzzy
-#| msgid "category"
-msgid "category_name"
-msgstr "Κατηγορία"
-
-#: cheapiesgr/models.py:125
+#: cheapiesgr/models.py:43
 msgid "category_description"
 msgstr "Περιγραφή Κατηγορίας"
 
-#: cheapiesgr/models.py:134
+#: cheapiesgr/models.py:53
 msgid "category"
 msgstr "Κατηγορία"
 
-#: cheapiesgr/models.py:135
-msgid "categorys"
+#: cheapiesgr/models.py:54
+#, fuzzy
+#| msgid "categorys"
+msgid "categories"
 msgstr "Κατηγορίες"
 
-#: cheapiesgr/models.py:140
+#: cheapiesgr/models.py:60
 msgid "product_discription"
 msgstr "Περιγραφή Προϊόντος"
 
-#: cheapiesgr/models.py:142
+#: cheapiesgr/models.py:62
 msgid "price"
 msgstr "Τιμή"
 
-#: cheapiesgr/models.py:144
+#: cheapiesgr/models.py:64
 msgid "image"
 msgstr "Εικόνα"
 
-#: cheapiesgr/models.py:146
+#: cheapiesgr/models.py:66
 #, fuzzy
 #| msgid "image"
 msgid "image_url"
 msgstr "Εικόνα"
 
-#: cheapiesgr/models.py:186
+#: cheapiesgr/models.py:106
 msgid "registration"
 msgstr "Καταχώρηση"
 
-#: cheapiesgr/models.py:187
+#: cheapiesgr/models.py:107
 msgid "registrations"
 msgstr "Καταχωρήσεις"
 
-#: cheapiesgr/models.py:191
+#: cheapiesgr/models.py:111
 msgid "stars"
 msgstr "Αστέρια"
 
-#: cheapiesgr/models.py:193
+#: cheapiesgr/models.py:113
 msgid "validity_of_this_rate"
 msgstr "Εγκυρότητα αυτής της κριτικής"
 
-#: cheapiesgr/models.py:195
+#: cheapiesgr/models.py:115
 msgid "rate_explanation"
 msgstr "Επεξήγηση βαθμολογίας"
 
-#: cheapiesgr/models.py:214
+#: cheapiesgr/models.py:131
 msgid "rating"
 msgstr "Βαθμολογία"
 
-#: cheapiesgr/models.py:215
+#: cheapiesgr/models.py:132
 msgid "ratings"
 msgstr "Βαθμολογίες"
 
-#: cheapiesgr/models.py:220
+#: cheapiesgr/models.py:137
 msgid "question_text"
 msgstr "Κείμενο Ερώτησης"
 
-#: cheapiesgr/models.py:233
+#: cheapiesgr/models.py:149
 msgid "question"
 msgstr "Ερώτηση"
 
-#: cheapiesgr/models.py:234
+#: cheapiesgr/models.py:150
 msgid "questions"
 msgstr "Ερωτήσεις"
 
-#: cheapiesgr/models.py:239
+#: cheapiesgr/models.py:155
 msgid "answer_text"
 msgstr "Κείμενο Απάντησης"
 
-#: cheapiesgr/models.py:248
+#: cheapiesgr/models.py:163
 msgid "answer"
 msgstr "Απάντηση"
 
-#: cheapiesgr/models.py:249
+#: cheapiesgr/models.py:164
 msgid "answers"
 msgstr "Απαντήσεις"
+
+#~ msgid "username"
+#~ msgstr "Όνομα χρήστη"
+
+#~ msgid "active"
+#~ msgstr "Ενεργός"
+
+#~ msgid "staff"
+#~ msgstr "Προσωπικό"
+
+#~ msgid "admin"
+#~ msgstr "Διαχειριστής"
+
+#~ msgid "first_name"
+#~ msgstr "Όνομα"
+
+#~ msgid "last_name"
+#~ msgstr "Επώνυμο"
+
+#~ msgid "Volunteer"
+#~ msgstr "Εθελοντής/Χρήστης/Προσωπικό"
+
+#~ msgid "Volunteers"
+#~ msgstr "Εθελοντές/Χρήστες/Προσωπικό"
+
+#, fuzzy
+#~| msgid "category"
+#~ msgid "category_name"
+#~ msgstr "Κατηγορία"
 
 #~ msgid "My Index Title"
 #~ msgstr "Διαχείριση cheapies"

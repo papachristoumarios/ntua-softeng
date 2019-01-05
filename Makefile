@@ -38,8 +38,8 @@ populate_db: supermarket-data.zip
 migrate:
 	$(MANAGE) makemigrations
 	$(MANAGE) migrate
+	$(MANAGE) makemessages	
 	$(MANAGE) compilemessages
-	$(MANAGE) 
 
 test:
 	$(MANAGE) test
