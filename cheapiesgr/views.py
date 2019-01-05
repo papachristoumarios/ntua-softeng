@@ -15,6 +15,7 @@ from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.gis.measure import D
+from django.http import HttpResponse
 from django import template
 from nominatim import Nominatim
 from geopy.geocoders import Nominatim as geonom
@@ -269,12 +270,34 @@ def search(request):
     })
 
 
+@login_required(login_url='/signin')
 def report(request):
-    return render(request, 'report.html', {})
+    product_id = request.GET.get('productId', 1)
+
+    if request.method == 'POST':
+        f = AnswerForm(request.POST)
+        if f.is_valid():
+            report_text = f.cleaned_data['answer']
+            report = Report(
+                report_text=report_text,
+                volunteer=request.user
+                )
+
+            report.save()
+            messages.success(
+                request, 'Καταχωρήθηκε αναφορά')
+            return redirect('/product/?productId={}'.format(product_id))
+    else:
+        f = AnswerForm()
+    return render(request, 'report.html', {'form': f})
+
 
 @login_required(login_url='/signin')
 def remove_favorite(request):
-    pass
+    fav_id = request.GET.get('fav_id')
+    favorite = Favorite.objects.get(pk=int(fav_id))
+    favorite.delete()
+    return redirect('/profile')
 
 
 @login_required(login_url='/signin')

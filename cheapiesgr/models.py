@@ -164,6 +164,18 @@ class Answer(models.Model):
         verbose_name_plural = _('answers')
 
 
+class Report(models.Model):
+    report_text = models.CharField(max_length=2000,
+                                   verbose_name=_('answer_text'))
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.report_text
+
+    class Meta:
+        verbose_name = _('report')
+        verbose_name_plural = _('reports')
+
 class Favorite(models.Model):
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
     volunteer = models.ForeignKey(User, on_delete=models.CASCADE)

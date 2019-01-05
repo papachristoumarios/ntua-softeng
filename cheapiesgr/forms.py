@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from .models import Category, Shop, Volunteer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
 
 
 def get_categories():
@@ -232,6 +233,9 @@ class AnswerForm(forms.Form):
     )
 
 
+class FavoritesForm(forms.Form):
+    """ Add to favorites """
+    pass
 
 class UserProfileForm(forms.Form):
     """User Profile Form"""
