@@ -3,6 +3,7 @@
 MEDIA=cheapiesgr/static/media
 GEN_DATA=etc/fixtures/generate_data.py 
 SHELL := /bin/bash
+DOCKER_COMPOSE=docker-compose
 
 PYTHON=python
 MANAGE=$(PYTHON) manage.py
@@ -15,6 +16,7 @@ help:
 	@echo "database_config Make database configuration file"
 	@echo "deploy  Run deployment routine"
 	@echo "tests   Run tests"
+	@echo "dockerize Dockerize application"
 
 data: download_data populate_db 
 
@@ -36,6 +38,8 @@ populate_db: supermarket-data.zip
 migrate:
 	$(MANAGE) makemigrations
 	$(MANAGE) migrate
+	$(MANAGE) compilemessages
+	$(MANAGE) 
 
 test:
 	$(MANAGE) test
@@ -52,3 +56,7 @@ deplo:
 	$(MAKE) test_db
 	$(MAKE) migrate
 	$(MAKE) data
+
+dockerize:
+	$(DOCKER_COMPOSE) build
+	$(DOCKER_COMPOSE) up
