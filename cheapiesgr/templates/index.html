@@ -17,7 +17,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8">
-        <form class="card card-sm rounded" method="POST" action="/search">
+        <form class="card card-sm rounded" method="POST" action="/search" id="search-form">
           <div class="card-body row no-gutters align-items-center">
 
             <div class="col-12 col-lg-8 my-auto py-auto">
@@ -29,12 +29,17 @@
               <input type="text" type="hidden" name="lon" id="lon">
             </div>
 
-            <div class="col-6 col-lg-4 text-center">
+            <div class="col-3 col-lg-2 text-center">
               <button class="btn btn-lg btn-primary search-button" type="submit"><i class="fas fa-search"></i></button>
             </div>
+            <div class="col-3 col-lg-2 text-center">
+              <button class="btn btn-lg btn-primary search-button" type="button" onclick="recognizeSpeech()"><i class="fas fa-microphone"></i></button>
+            </div>
+
 
           </div>
         </form>
+
       </div>
     </div>
   </div>
