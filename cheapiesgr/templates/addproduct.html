@@ -57,17 +57,17 @@
         <div class="form-group">
           <label for="new-pwd"><i class="fas fa-camera"></i> &nbsp; Ανεβάστε φωτογραφία </label>
           {{ form.img }}
-          <button class="collapsible"> &nbsp; Ή τραβήξτε φωτογραφία </button>
+          <div class="textbox"> &nbsp; Ή τραβήξτε φωτογραφία </div>
           <div>
             <div id="container">
                 <video autoplay="true" id="videoElement"></video>
             </div>
-            <button onclick="capture " style="font-size:24px; width:100%" ><i class="fa fa-camera"></i> &nbsp; Τράβα!</button>
-            <script>
-            function capture() {}
-            </script>
+            <button id="screenshot-button"><i class="fa fa-camera"></i> &nbsp; Τράβα!</button>
+            <img id="screenshot">
+            <canvas style="display:none;"></canvas>
           </div>
         </div>
+
 
         <div class="form-group text-center fullw"  style="padding-bottom: 2rem;">
           <button type="submit" class="btn btn-default fullw"><i class="far fa-save"></i> &nbsp; Υποβολή Καταχώρησης</button>

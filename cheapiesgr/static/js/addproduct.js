@@ -13,7 +13,10 @@ for (i = 0; i < coll.length; i++) {
   });
 }
 
-var video = document.querySelector("#videoElement");
+const video = document.querySelector("#videoElement");
+const screenshotButton = document.querySelector('#screenshot-button');
+const img = document.querySelector('#screenshot');
+const canvas = document.createElement('canvas');
 
 if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({video: true})
@@ -24,3 +27,11 @@ if (navigator.mediaDevices.getUserMedia) {
     console.log("Something went wrong!");
   });
 }
+
+screenshotButton.onclick = video.onclick = function() {
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  // Other browsers will fall back to image/png
+  img.src = canvas.toDataURL('image/png');
+};
