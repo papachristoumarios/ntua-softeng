@@ -167,10 +167,6 @@ class AddProductForm(forms.Form):
         choices=get_shops()
     )
 
-    new_location = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Νέο κατάστημα','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_location'}),
-    )
     new_shop_name = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Όνομα καταστήματος','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_name'}),
@@ -187,8 +183,6 @@ class AddProductForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Αριθμός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_number'})
     )
-
-
 
     img = forms.FileField(
         widget=forms.FileInput(attrs={'accept':'image/*'})

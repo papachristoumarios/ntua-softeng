@@ -284,7 +284,6 @@ def addproduct(request):
 
             price = f.cleaned_data['price']
             product_description = f.cleaned_data['description']
-            new_location = f.cleaned_data['new_location']
             new_shop_name = f.cleaned_data['new_shop_name']
             new_shop_city = f.cleaned_data['new_shop_city']
             new_shop_street = f.cleaned_data['new_shop_street']
@@ -295,17 +294,7 @@ def addproduct(request):
             image_url = handle_uploaded_file(
                 request.FILES['img'], category.category_name)
 
-            if len(new_location) > 0:
-                print('Adding a new shop at', new_location)
-                query = nom.query(new_location)[0]
-                shop = Shop(
-                    name=new_location,
-                    address=query['display_name'],
-                    city=query['display_name'],
-                    location='POINT({} {})'.format(query['lon'], query['lat']),
-                )
-                shop.save()
-            elif len(new_shop_name) > 0:
+            if len(new_shop_name) > 0:
                 print('Adding a new shop named', new_shop_name)
                 geolocator = geonom(user_agent="cheapiesgr")
                 location = geolocator.geocode(new_shop_street+" "+new_shop_number+" "+new_shop_city)

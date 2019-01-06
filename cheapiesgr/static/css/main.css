@@ -45,6 +45,15 @@ body  {
  background-color: #f1f1f1;
 }
 
+#container {
+    width: 100%;
+    border: 1px #333 solid;
+}
+#videoElement {
+    width: 100%;
+    background-color: #666;
+}
+
 /* SIGN-IN PAGE */
 
 .fullw {
