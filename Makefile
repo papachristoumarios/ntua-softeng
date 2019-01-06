@@ -4,7 +4,7 @@ MEDIA=cheapiesgr/static/media
 GEN_DATA=etc/fixtures/generate_data.py 
 SHELL := /bin/bash
 DOCKER_COMPOSE=docker-compose
-
+APT=apt-get install -y
 PYTHON=python
 MANAGE=$(PYTHON) manage.py
 PIP=pip3
@@ -44,8 +44,13 @@ migrate:
 test:
 	$(MANAGE) test
 
-deps: requirements.txt
+py_deps: requirements.txt	
 	$(PIP) install -r requirements.txt
+
+deps:
+	$(APT) mysql-client libmysqlclient-dev libgdal-dev python3-gdal
+	$(MAKE) py_deps
+
 
 test_db:
 	mysql -e 'create database cheapies;' -u root	
