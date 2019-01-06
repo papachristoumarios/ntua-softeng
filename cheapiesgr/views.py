@@ -15,6 +15,7 @@ from django.contrib.gis.measure import Distance
 from geopy.distance import distance as geopy_distance
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.gis.measure import D
+from django.http import HttpResponse
 from django import template
 from nominatim import Nominatim
 from geopy.geocoders import Nominatim as geonom
@@ -36,10 +37,6 @@ def handle_uploaded_file(f, category_name):
 
 def default_map(request):
     return render(request, 'map_default.html', {})
-
-
-def profile(request):
-    return render(request, 'profile.html', {})
 
 
 def privacy(request):
@@ -64,6 +61,7 @@ def product(request):
     registration = Registration.objects.get(pk=product_id)
 
     if request.method == 'POST':
+        h = FavoritesForm(request.POST)
         f = ReviewForm(request.POST)
         q = QuestionForm(request.POST)
         if f.is_valid():
@@ -92,10 +90,20 @@ def product(request):
             )
 
             question.save()
+
+        elif h.is_valid():
+            if (Favorite.objects.filter(volunteer=request.user, registration=registration).count() == 0):
+                fav = Favorite(
+                volunteer=request.user,
+                registration=registration
+                )
+                fav.save()
+
         return redirect('product/?productId={}'.format(product_id))
     else:
         f = ReviewForm()
         q = QuestionForm()
+        h = FavoritesForm()
 
 
     return render(request, 'product.html', {
@@ -107,6 +115,7 @@ def product(request):
         'distance': distance(product.location, client_loc),
         'form' : f,
         'qform' : q,
+        'favform' : h
     })
 
 
@@ -261,20 +270,35 @@ def search(request):
     })
 
 
+@login_required(login_url='/signin')
 def report(request):
-    return render(request, 'report.html', {})
+    product_id = request.GET.get('productId', 1)
+
+    if request.method == 'POST':
+        f = AnswerForm(request.POST)
+        if f.is_valid():
+            report_text = f.cleaned_data['answer']
+            report = Report(
+                report_text=report_text,
+                volunteer=request.user
+                )
+
+            report.save()
+            messages.success(
+                request, 'Καταχωρήθηκε αναφορά')
+            return redirect('/product/?productId={}'.format(product_id))
+    else:
+        f = AnswerForm()
+    return render(request, 'report.html', {'form': f})
 
 
-def newproduct1(request):
-    return render(request, 'newproduct1.html', {})
+@login_required(login_url='/signin')
+def remove_favorite(request):
+    fav_id = request.GET.get('favId')
+    favorite = Favorite.objects.get(pk=int(fav_id))
+    favorite.delete()
+    return redirect('/profile')
 
-
-def newproduct2(request):
-    return render(request, 'newproduct2.html', {})
-
-
-def newproduct3(request):
-    return render(request, 'newproduct3.html', {})
 
 @login_required(login_url='/signin')
 def addproduct(request):
@@ -288,8 +312,7 @@ def addproduct(request):
             new_shop_city = f.cleaned_data['new_shop_city']
             new_shop_street = f.cleaned_data['new_shop_street']
             new_shop_number = f.cleaned_data['new_shop_number']
-            category_id = f.cleaned_data['category']
-            category = Category.objects.get(pk=category_id)
+            category = f.cleaned_data['category']
             date_of_registration = datetime.datetime.today().strftime('%Y-%m-%d')
             image_url = handle_uploaded_file(
                 request.FILES['img'], category.category_name)
@@ -309,8 +332,7 @@ def addproduct(request):
                 )
                 shop.save()
             else:
-                shop_id = f.cleaned_data['location']
-                shop = Shop.objects.get(pk=shop_id)
+                shop = f.cleaned_data['location']
 
 
             new_product = Registration(
@@ -400,3 +422,37 @@ def signin(request):
     else:
         f = UserLoginForm()
     return render(request, 'signin.html', {'form': f})
+
+
+def profile(request):
+    user = request.user
+    registered_products =  user.registration_set.all()
+    user_questions =  user.question_set.all()
+    user_answers = user.answer_set.all()
+    user_favorites = user.favorite_set.all()
+    if request.method == 'POST':
+        f = UserProfileForm(request.POST, username = user.username)
+        if f.is_valid():
+            username = user.username
+            old_password = f.cleaned_data['old_password']
+            new_password = f.cleaned_data['new_password']
+            new_password_repeat = f.cleaned_data['new_password_repeat']
+            u = authenticate(username=username, password=old_password)
+            if u is not None:
+                u.set_password(new_password)
+                u.save()
+                login(request, u)
+                messages.success(request, 'H αλλαγή πραγματοποιήθηκε με επιτυχία!')
+                return render(request, 'index.html', {})
+            else:
+                print("Authentication failed")
+
+
+    else:
+        f = UserProfileForm(username = user.username)
+    return render(request, 'profile.html', {'form': f, 'user': user,
+                                            'products' : registered_products,
+                                            'questions' : user_questions,
+                                            'answers' : user_answers,
+                                            'favorites' : user_favorites
+                                            })

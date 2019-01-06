@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from .models import Category, Shop, Volunteer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
 
 
 def get_categories():
@@ -161,10 +162,11 @@ class AddProductForm(forms.Form):
     )
 
 
-    location = forms.ChoiceField(
+    location = forms.ModelChoiceField(
         required=True,
         widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
-        choices=get_shops()
+        queryset=Shop.objects.all(),
+        empty_label='Άλλο'
     )
 
     new_shop_name = forms.CharField(
@@ -188,10 +190,11 @@ class AddProductForm(forms.Form):
         widget=forms.FileInput(attrs={'accept':'image/*'})
     )
 
-    category = forms.ChoiceField(
+    category = forms.ModelChoiceField(
         required=True,
         widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
-        choices=get_categories()
+        queryset=Category.objects.all(),
+        initial=0
     )
 
 class ReviewForm(forms.Form):
@@ -222,3 +225,58 @@ class AnswerForm(forms.Form):
         required=True,
         widget=forms.Textarea(attrs={'placeholder': 'Απαντήστε','class' : 'form-control','id': 'answer'}),
     )
+
+
+class FavoritesForm(forms.Form):
+    """ Add to favorites """
+    pass
+
+class UserProfileForm(forms.Form):
+    """User Profile Form"""
+
+
+    old_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+                                        'placeholder': 'Πληκτρολογήστε τον (παλαιό) κωδικό σας',
+                                        'class': 'form-control',
+                                        'id': 'pwd_old'})
+    )
+
+
+    new_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+                                        'placeholder': 'Πληκτρολογήστε τον νέο σας κωδικό',
+                                        'class': 'form-control',
+                                        'id': 'pwd'})
+    )
+
+    new_password_repeat = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+                                        'placeholder': 'Επαναλάβετε τον νέο σας κωδικό',
+                                        'class': 'form-control',
+                                        'id': 'new_pwd_rep'})
+    )
+
+    def __init__(self,*args,**kwargs):
+        self.user = kwargs.pop('username')
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+
+
+    def clean_old_password(self):
+        username = self.user
+        password = self.cleaned_data.get('old_password')
+        user = authenticate(username=username, password=password)
+
+        if user is None:
+            raise ValidationError("Λάθος κωδικός πρόσβασης",code='wrong_password')
+        return password
+
+    def clean_new_password_repeat(self):
+        password1 = self.cleaned_data.get('new_password')
+        password2 = self.cleaned_data.get('new_password_repeat')
+        if password1 != password2:
+            raise ValidationError("Οι κωδικοί δεν ταιριάζουν", code='passwords_not_match')
+        return password1

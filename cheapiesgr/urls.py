@@ -2,9 +2,6 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'newproduct1', views.newproduct1, name='newproduct1'),
-    url(r'newproduct2', views.newproduct2, name='newproduct2'),
-    url(r'newproduct3', views.newproduct3, name='newproduct3'),
     url(r'addproduct', views.addproduct, name='addproduct'),
     url(r'answer', views.answer, name='answer'),
     url(r'map', views.default_map, name='map'),
@@ -15,6 +12,7 @@ urlpatterns = [
     url(r'privacy', views.privacy, name='privacy'),
     url(r'profile', views.profile, name='profile'),
     url(r'search', views.search, name='search'),
+    url(r'removeFavorite', views.remove_favorite, name='removeFavorite'),
     url(r'report', views.report, name='report'),
     url(r'userauthentication', views.user_auth, name='userauthentication'),
     url(r'', views.index, name='index'),

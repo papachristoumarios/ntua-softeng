@@ -22,14 +22,21 @@
             </div>
 
             <div class="row text-center">
+              <div class="col-12 col-lg-12">
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    {{ favform }}
+                  </div>
 
-            <div class="col-12 col-lg-6">
-              <a href="#" class="card-link"><i class="fas fa-heart"></i> &nbsp; Προσθήκη στα αγαπημένα</a>
-            </div>
-            <div class="col-12 col-lg-6">
-
-              <a href="#" class="card-link"><i class="fas fa-plus"></i> &nbsp; Προσθήκη στη wishlist</a>
-            </div>
+                  <div class="form-group text-center fullw">
+                    <button class="btn btn-link" type="submit" name="add_to_fav" value="add_to_fav"><i class="fas fa-heart"></i> &nbsp; Προσθήκη στα αγαπημένα</button>
+                  </div>
+                </form>
+                <div class="text-center">
+                <a href="/report/?productId={{ product.id }}"><i class="fas fa-flag"></i> &nbsp; Αναφορά Προϊόντος</a>
+              </div>
+              </div>
             </div>
 
 
