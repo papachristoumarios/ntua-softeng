@@ -34,4 +34,7 @@ screenshotButton.onclick = video.onclick = function() {
   canvas.getContext('2d').drawImage(video, 0, 0);
   // Other browsers will fall back to image/png
   img.src = canvas.toDataURL('image/png');
+
+  document.getElementById("img_url").value = canvas.toDataURL('image/png');
+  document.getElementById("shot").value = True;
 };
