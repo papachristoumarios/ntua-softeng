@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'el_pagination',
     'rest_framework',
     'rest_framework.authtoken',
-
+    'django_extensions',
 ]
 
 # AUTH_USER_MODEL = 'cheapiesgr.Volunteer'
@@ -149,6 +149,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+GRAPH_MODELS = {
+          'all_applications': True,
+            'group_models': True}
 
 STATIC_URL = '/static/'
 
