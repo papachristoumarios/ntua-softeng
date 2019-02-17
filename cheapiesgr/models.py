@@ -22,7 +22,6 @@ class Shop(models.Model):
         geography=True, blank=True, null=True,
         verbose_name=_('location'))
 
-    # update the manager
     objects = GeoManager()
 
     def __str__(self):
@@ -42,9 +41,6 @@ class Category(models.Model):
     category_description = models.CharField(
         max_length=200, verbose_name=_('category_description'))
     image = models.ImageField()
-
-#   Ref for images: https://www.youtube.com/watch?v=-bjsz18pR54
-#                   https://www.youtube.com/watch?v=PIvlcmnayOE
 
     def __str__(self):
         return self.category_description

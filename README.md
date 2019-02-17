@@ -20,7 +20,7 @@ _This repository hosts the [Software Engineering](https://courses.softlab.ntua.g
 
 
 
-## Team
+## :mens: Team
 
 This project was curated by "mycoderocks" team comprising of (alphabetical order):
  * [Dimitris Christou](https://github.com/christou-dimitris) (AM: 03115058, iochrist1997@gmail.com)
@@ -34,19 +34,36 @@ This project was curated by "mycoderocks" team comprising of (alphabetical order
 
 ## :nut_and_bolt: Setup/Usage
 
-### Setup MySQL database
+The project comes with a Makefile for as a **build automation tool** for automating various tasks in the repository. Below there are some steps you need to get started using the project
+
+An overview of available options can be obtained via
+
+```bash
+make help
+```
+
+
+
+### Step 1. Install Dependencies
+
+You will need to install the dependencies required in order to have a functional project. This part comprises of both system-level dependencies (MySQL and GDAL) as well as Python dependencies. Install them via
+
+``` bash
+make deps 
+```
+
+
+
+### Step 2. Setup MySQL database
 
 The web application uses MySQL as a database for holding data.
 
-1. Setup MySQL
-```bash
-sudo apt-get install mysql-client libmysqlclient-dev
-```
-2. Login into mysql from the command line and create the database
+1. Login into mysql from the command line and create the database
 ```sql
 create database cheapies character set utf8;
 ```
-3. Create a `database.cnf` file containing the following information
+2. Create a `database.cnf` file containing the following information
+
 ```
 [client]
 database = cheapies
@@ -55,61 +72,17 @@ password = password
 default-character-set = utf8
 ```
 
-### Install requirements
+3. __Optional__ if you are in a testing environment (e.g. Travis CI) you can fake a database via `make test_db`.
 
-Install the requirements with pip:
-
-```bash
-pip3 install -r requirements.txt
-```
-
-### Install  libmaxminddb C library, so that geoip2 can leverage the C library’s faster speed.
-
-Add the PPA to your APT sources:
+4. Make the needed migrations and compile messages with
 
 ```bash
-sudo add-apt-repository ppa:maxmind/ppa
-```
-Install the packages:
-
-```bash
-sudo apt update
-sudo apt install libmaxminddb0 libmaxminddb-dev mmdb-bin
+make migrate
 ```
 
-### Run the development webserver
 
-Run webserver with:
 
-```bash
-python3 manage.py runserver
-```
-
-Make the migrations with:
-
-```
-python3 manage.py makemigrations
-```
-
-Migrate with:
-
-```
-python3 manage.py migrate
-```
-
-Compile messages to Greek with:
-
-```bash
-python3 manage.py compilemessages
-```
-
-Run tests with:
-
-```bash
-python3 manage.py test
-```
-
-### Populate the database with data
+### Step 3. Populate the database with data
 
 There is a Makefile inside the root directory designated to fill in the database with data using
 crawled data from the Internet as well as the OSM Nominatim API. You can use it with:
@@ -119,9 +92,22 @@ make data
 ```
 
 Clean uneeded data
+
 ```bash
 make clean
 ```
+
+### 
+
+### Run the development webserver
+
+Then you can run the webserver with
+
+```bash
+python3 manage.py runserver
+```
+
+
 
 ### Building a Docker Image
 
@@ -130,12 +116,13 @@ This project can be dockerized. The configuration is located at `Dockerfile` and
 1. Build the docker image using `docker-compose`
 ```bash
 export DOCKER_HOST=127.0.0.1
-sudo docker-compose build
 ```
 2. Run the image with
 ```bash
 sudo docker-compose up
 ```
+
+Or use the `make dockerize` from the provided Makefile
 
 
 
@@ -147,6 +134,7 @@ sudo docker-compose up
   * MySQL v14.14
   * Django REST Framework
   * Google Maps Geocoding API
+
 * Front-end
   * Bootstrap v4.1.3
   * Tachyons v4.1
@@ -154,12 +142,22 @@ sudo docker-compose up
   * Mapbox v0.5
   * jQuery
   * slick.js
+
 * Deployment
   * Gunicorn
   * nginx
   * Docker
+
 * Continuous Integration & Unit Testing
+
   * Travis CI
+  * Selenium (Browser-based testing)
+  * Locust.io (RESTful API Testing)
+
+* Build Automation
+
+  * GNU Make
+
 
 
 ## :newspaper: Guidelines
@@ -214,7 +212,7 @@ When creating a view, let's say `example` you should notice the following things
 
 
 
-### Contributing Workflow
+## :heavy_plus_sign: Contributing Workflow
 
 We are using the [Git Branch Workflow](https://es.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow). In the future we will migrate to [fork & pull-request](https://gist.github.com/Chaser324/ce0505fbed06b947d962) workflow. The project status is kept inside [GitHub Projects](https://github.com/papachristoumarios/ntua-softeng/projects) following the [Kanban System](https://en.wikipedia.org/wiki/Kanban)
 

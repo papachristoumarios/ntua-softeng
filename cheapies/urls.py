@@ -21,7 +21,7 @@ from django.utils.translation import gettext_lazy as _
 admin.site.site_title = _('My Site Management')
 admin.site.site_header = _('My Site Administration')
 urlpatterns = i18n_patterns(
-    path('admin/', admin.site.urls),
+    path('admin', admin.site.urls),
     path('observatory/api', include('api.urls')),
     path('', include('cheapiesgr.urls')),
     prefix_default_language=False

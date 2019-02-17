@@ -162,26 +162,8 @@ msgstr "Απαντήσεις"
 
 #, fuzzy
 #~| msgid "category"
-#~ msgid "category_name"
+#~ msgid "Category_name"
 #~ msgstr "Κατηγορία"
 
 #~ msgid "My Index Title"
 #~ msgstr "Διαχείριση cheapies"
-
-#~ msgid "category2_description"
-#~ msgstr "Περιγραφή Κατηγορίας2"
-
-#~ msgid "category2"
-#~ msgstr "Κατηγορία 2"
-
-#~ msgid "category2s"
-#~ msgstr "Κατηγορίες 2"
-
-#~ msgid "category1_description"
-#~ msgstr "Περιγραφή κατηγορίας 1"
-
-#~ msgid "category1"
-#~ msgstr "Κατηγορία 1"
-
-#~ msgid "category1s"
-#~ msgstr "Κατηγορίες 1"

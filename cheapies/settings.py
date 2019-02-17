@@ -28,6 +28,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'vaary-tka#uea+lwiijfm)as*hr@@fs2t-&w^&=e+1=(4=@#z&'
 
+# HTTPS/SSL
+#SECURE_SSL_REDIRECT = True
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -50,7 +53,8 @@ INSTALLED_APPS = [
     'el_pagination',
     'rest_framework',
     'rest_framework.authtoken',
-
+    'django_extensions',
+    'sslserver'
 ]
 
 # AUTH_USER_MODEL = 'cheapiesgr.Volunteer'
@@ -149,6 +153,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+GRAPH_MODELS = {
+          'all_applications': True,
+            'group_models': True}
 
 STATIC_URL = '/static/'
 

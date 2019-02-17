@@ -4,8 +4,8 @@ MEDIA=cheapiesgr/static/media
 GEN_DATA=etc/fixtures/generate_data.py
 SHELL := /bin/bash
 DOCKER_COMPOSE=docker-compose
-
-PYTHON=python3
+APT=apt-get install -y
+PYTHON=python
 MANAGE=$(PYTHON) manage.py
 PIP=pip3
 
@@ -17,6 +17,7 @@ help:
 	@echo "deploy  Run deployment routine"
 	@echo "tests   Run tests"
 	@echo "dockerize Dockerize application"
+	@echo "runsslserver Run ssl dev server"
 
 data: download_data populate_db
 
@@ -44,8 +45,13 @@ migrate:
 test:
 	$(MANAGE) test
 
-deps: requirements.txt
+py_deps: requirements.txt
 	$(PIP) install -r requirements.txt
+
+deps:
+	$(APT) mysql-client libmysqlclient-dev libgdal-dev python3-gdal
+	$(MAKE) py_deps
+
 
 test_db:
 	mysql -e 'create database cheapies;' -u root
@@ -60,3 +66,13 @@ deploy:
 dockerize: Dockerfile docker-compose.yml
 	$(DOCKER_COMPOSE) build
 	$(DOCKER_COMPOSE) up
+
+certificate_gen:
+	openssl genrsa -des3 -out server.key 1024
+	openssl req -new -key server.key -out server.csr
+	cp server.key server.key.org
+	openssl rsa -in server.key.org -out server.key
+	openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+
+runsslserver:
+	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
