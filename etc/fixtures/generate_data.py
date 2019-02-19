@@ -39,6 +39,7 @@ def generate_product_data(n, d):
                 'model' : 'cheapiesgr.registration',
                 'pk' : pk,
                 'fields' : {
+                    'tags' : json.dumps(['lipsum'])
                     'price' : pr,
                     'product_description' : ', '.join(q[2:-1]),
                     'shop' : random.randint(1, 5),
