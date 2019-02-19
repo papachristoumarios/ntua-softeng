@@ -66,7 +66,7 @@ class Registration(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     withdrawn = models.BooleanField(default=False)
-    tags = models.CharField(max_length=10000, verbose_name=_('tags'))
+    tags = models.CharField(max_length=10000, default='[]', verbose_name=_('tags'))
 
     def __str__(self):
         return self.product_description
