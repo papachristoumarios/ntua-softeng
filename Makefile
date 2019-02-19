@@ -1,7 +1,7 @@
 # Makefile for various tasks
 
 MEDIA=cheapiesgr/static/media
-GEN_DATA=etc/fixtures/generate_data.py 
+GEN_DATA=etc/fixtures/generate_data.py
 SHELL := /bin/bash
 DOCKER_COMPOSE=docker-compose
 APT=apt-get install -y
@@ -19,13 +19,13 @@ help:
 	@echo "dockerize Dockerize application"
 	@echo "runsslserver Run ssl dev server"
 
-data: download_data populate_db 
+data: download_data populate_db
 
 download_data:
 	wget -O supermarket-data.zip https://pithos.okeanos.grnet.gr/public/eYYbrUY7m4WOzsywBNG175
 	mkdir -p $(MEDIA)
 	unzip -qq supermarket-data.zip -d cheapiesgr/static/media
-	
+
 clean:
 	rm -rf supermarket-data.zip
 	rm -rf products.json user.json categories.json shop.json
@@ -39,13 +39,13 @@ populate_db: supermarket-data.zip
 migrate:
 	$(MANAGE) makemigrations
 	$(MANAGE) migrate
-	$(MANAGE) makemessages	
+	$(MANAGE) makemessages
 	$(MANAGE) compilemessages
 
 test:
 	$(MANAGE) test
 
-py_deps: requirements.txt	
+py_deps: requirements.txt
 	$(PIP) install -r requirements.txt
 
 deps:
@@ -54,11 +54,11 @@ deps:
 
 
 test_db:
-	mysql -e 'create database cheapies;' -u root	
+	mysql -e 'create database cheapies;' -u root
 	./test_database_config.sh >database.cnf
-	
+
 deploy:
-	$(MAKE) deps
+	$(MAKE) py_deps
 	$(MAKE) test_db
 	$(MAKE) migrate
 	$(MAKE) data
@@ -76,4 +76,3 @@ certificate_gen:
 
 runsslserver:
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
-
