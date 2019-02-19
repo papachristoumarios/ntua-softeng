@@ -66,9 +66,17 @@ class Registration(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     withdrawn = models.BooleanField(default=False)
+    tags = models.CharField(max_length=10000, verbose_name=_('tags'))
 
     def __str__(self):
         return self.product_description
+
+    def get_tags(self):
+        return json.loads(self.tags)
+
+    def set_tags(self, tags):
+        self.tags = json.dumps(tags, ensure_ascii=True)
+        self.save()
 
     @property
     def location(self):
