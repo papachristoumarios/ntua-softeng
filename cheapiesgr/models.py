@@ -9,6 +9,7 @@ class Volunteer(models.Model):
     ''' Volunteer is a profile model for a user '''
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     confirmed_email = models.BooleanField(default=False)
+    auth_token = models.CharField(max_length=20, default='')
 
     class Meta:
         db_table = 'volunteer'
