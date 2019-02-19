@@ -18,3 +18,4 @@ selenium
 bs4
 django-sslserver
 django_extensions
+locustio

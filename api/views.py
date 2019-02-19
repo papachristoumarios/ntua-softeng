@@ -8,11 +8,10 @@ from rest_framework.authtoken.models import Token
 
 AUTH_TOKEN_LABEL = 'X-OBSERVATORY-AUTH'
 
-def unicode_response(data, status_code=202):
+def unicode_response(data):
     """ Returns unicode response """
     return HttpResponse(json.dumps(data, ensure_ascii=False),
-                        content_type="application/json",
-                        status_code=status_code)
+                        content_type="application/json")
 
 @csrf_exempt
 @require_http_methods(['POST'])
@@ -23,10 +22,13 @@ def logout_user(request):
         user.auth_token.delete()
         return unicode_response({'message' : 'OK'})
     except:
-        return unicode_response({'message' : 'Token not associated with user'}, status_code=403)
+        return unicode_response({'message' : 'Token not associated with user'})
 
+@csrf_exempt
 def product(request):
     return None
+
+@csrf_exempt
 
 def shop(request):
     return None
