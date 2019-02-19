@@ -15,6 +15,11 @@ def unicode_response(data):
 
 @csrf_exempt
 @require_http_methods(['POST'])
+def create_user(request):
+    return None
+
+@csrf_exempt
+@require_http_methods(['POST'])
 def logout_user(request):
     token = request.POST[AUTH_TOKEN_LABEL]
     try:
@@ -29,7 +34,6 @@ def product(request):
     return None
 
 @csrf_exempt
-
 def shop(request):
     return None
 
