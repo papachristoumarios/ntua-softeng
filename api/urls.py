@@ -4,8 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'login', obtain_auth_token, name='login'),
-    url(r'logout', views.logout, name='logout'),
-    url(r'products', views.get_products, name='products'),
-    url(r'shops', views.get_shops, name='shops'),
-    url(r'prices', views.get_prices, name='prices'),
+    url(r'logout', views.logout_user, name='logout'),
+    url(r'products', views.product, name='products'),
+    url(r'shops', views.shop, name='shops'),
+    url(r'prices', views.price, name='prices'),
 ]
