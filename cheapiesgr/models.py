@@ -72,6 +72,14 @@ class Category(models.Model):
         verbose_name_plural = _('categories')
         db_table = 'category'
 
+class Price(models.Model):
+    price = models.DecimalField(max_digits=10, decimal_places=2,
+                                verbose_name=_('price'))
+    date_from = models.DateField()
+    date_to = models.DateField()
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    registration = models.ForeignKey(Registraton, on_delete=models.CASCADE)
+
 
 class Registration(models.Model):
     name = models.CharField(

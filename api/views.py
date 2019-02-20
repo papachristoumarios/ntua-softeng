@@ -31,6 +31,10 @@ def authenticate_token(request):
     except:
         return False
 
+def is_superuser(request):
+    user = Token.objects.get(key=request.POST[AUTH_TOKEN_LABEL]).user
+    return user.is_superuser
+
 def query_api(request, objects, list_label):
     # Get arguments
     start = int(request.GET.get('start', 0))
@@ -95,6 +99,18 @@ def create_or_update_shop(request, shop_id):
     except:
         return unicode_response({'message' : 'Parameters not valid'}, status=400)
 
+def remove_shop(request, shop_id):
+    try:
+        shop = Shop.objects.get(id=shop_id)
+        if is_superuser(request):
+            shop.delete()
+        else:
+            shop.withdrawn = True
+            shop.save()
+    except:
+        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def create_user(request):
@@ -116,6 +132,7 @@ def product(request):
     return None
 
 @csrf_exempt
+@require_http_methods(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def shop(request, shop_id='all'):
     if request.method == 'GET':
         if shop_id == 'all':
@@ -129,7 +146,15 @@ def shop(request, shop_id='all'):
         elif not authenticate_token(request):
             return unicode_response({'message' : 'Forbidden'}, status=403)
         else:
-            return create_or_update_shop(request, shop_id)
+            return create_or_update_shop(request, int(shop_id))
+    elif request.method == 'DELETE':
+        if shop_id == 'all':
+            return unicode_response({'message' : 'Invalid Request'}, status=400)
+        elif not authenticate_token(request):
+            return unicode_response({'message' : 'Forbidden'}, status=403)
+        else:
+            return remove_shop(request, int(shop_id))
+
 
 
 def price(request):
