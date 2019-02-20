@@ -1,3 +1,4 @@
+import json
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Manager as GeoManager
@@ -35,7 +36,7 @@ class Shop(models.Model):
         return self.location
 
 
-    def serialize(self) :
+    def serialize(self):
         data = {
             'id' : self.id,
             'name' : self.name,
