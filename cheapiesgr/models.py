@@ -102,6 +102,20 @@ class Registration(models.Model):
     def location(self):
         return self.shop.location
 
+    def serialize(self):
+        data = {
+            'id' : self.id,
+            'name' : self.name,
+            'description' : self.product_description,
+            'category' : self.category,
+            'tags' : json.loads(self.tags),
+            'withdrawn' : self.withdrawn,
+            'extraData' : {
+                'volunteer' : self.voluneer.user.id
+            }
+        }
+        return data
+
     @property
     def stars(self):
         r = self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
