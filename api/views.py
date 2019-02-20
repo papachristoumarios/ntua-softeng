@@ -123,7 +123,6 @@ def patch_shop(request, shop_id):
         if 'withdrawn' in data:
             shop.withdrawn = data['withdrawn']
         if 'lng' in data or 'lat' in data:
-            print(shop.location)
             lat = data.get('lat', shop.location.y)
             lon = data.get('lng', shop.location.x)
             shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
@@ -179,6 +178,27 @@ def remove_product(request, product_id):
             registration.withdrawn = True
             registration.save()
             return unicode_response({'message' : 'Withdrawal successfull'})
+    except:
+        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+
+
+def patch_product(request, product_id):
+    try:
+        registration = Registration.objects.get(pk=product_id)
+        data = get_request_data(request)
+        if 'name' in data:
+            registration.name = data['name']
+        if 'description' in data:
+            registration.product_description = data['description']
+        if 'category' in data:
+            category = Category.objects.filter(category_name=data['category'])
+            registration.category = category
+        if 'tags' in data:
+            registration.tags = json.dumps(data['tags'])
+        if 'withdrawn' in data:
+            registration.withdrawn = data['withdrawn']
+        registration.save()
+        return unicode_response({'message' : 'Product patched sucessfully'}, status=200)
     except:
         return unicode_response({'message' : 'Parameters not valid'}, status=400)
 
