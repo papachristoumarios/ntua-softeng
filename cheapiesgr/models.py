@@ -125,6 +125,14 @@ class Registration(models.Model):
         return data
 
     @property
+    def prices(self):
+        return self.price_set.all()
+
+    @property
+    def prices_list(self):
+        return self.price_set.values_list('price', flat=True)
+
+    @property
     def stars(self):
         r = self.rating_set.all().aggregate(models.Avg('stars'))['stars__avg']
         if r is None:
