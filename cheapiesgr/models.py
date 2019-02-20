@@ -74,6 +74,8 @@ class Category(models.Model):
 
 
 class Registration(models.Model):
+    name = models.CharField(
+        max_length=1000, verbose_name=_('name'))
     product_description = models.CharField(
         max_length=10000, verbose_name=_('product_discription'))
     price = models.DecimalField(max_digits=10, decimal_places=2,
