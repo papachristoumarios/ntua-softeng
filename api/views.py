@@ -55,15 +55,9 @@ def query_api(request, objects, list_label):
     elif sort == 'id|ASC':
         sort_result = status_result.order_by('id')
     elif sort == 'name|ASC':
-        if list_label == 'shops':
-            sort_result = status_result.order_by('name')
-        elif list_label == 'products':
-            sort_result = status_result.order_by('product_description')
+        sort_result = status_result.order_by('name')
     elif sort == 'name|DESC':
-        if list_label == 'shops':
-            sort_result = status_result.order_by('-name')
-        elif list_label == 'products':
-            sort_result = status_result.order_by('-product_description')
+        sort_result = status_result.order_by('-name')
     else:
         return unicode_response({'message' : 'Invalid sort criterion'}, status=400)
 
