@@ -150,6 +150,12 @@ class UserLoginForm(forms.Form):
 
 class AddProductForm(forms.Form):
 
+    name = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια όνομα για το προϊόν','class' : 'form-control','id': 'name'}),
+    )
+
+
     description = forms.CharField(
         required=True,
         widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια περιγραφή για το προϊόν','class' : 'form-control','id': 'description'}),

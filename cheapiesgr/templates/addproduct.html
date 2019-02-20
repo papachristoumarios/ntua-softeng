@@ -13,6 +13,11 @@
       <form enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <div class="form-group">
+          <label for="product_name"><i class="fas fa-shopping-basket"></i> &nbsp; Όνομα Προϊόντος</label>
+          {{ form.name }}
+
+        </div>
+        <div class="form-group">
           <label for="product_dsr"><i class="fas fa-shopping-basket"></i> &nbsp; Περιγραφή Προϊόντος</label>
           {{ form.description }}
 
