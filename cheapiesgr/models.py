@@ -21,8 +21,11 @@ class Shop(models.Model):
     location = gis_models.PointField(
         geography=True, blank=True, null=True,
         verbose_name=_('location'))
-
+    tags = models.CharField(max_length=500, default='[]') # Tags array as json
     objects = GeoManager()
+
+    def get_tags(self):
+        return json.loads(self.tags)
 
     def __str__(self):
         return self.name
@@ -73,10 +76,6 @@ class Registration(models.Model):
 
     def get_tags(self):
         return json.loads(self.tags)
-
-    def set_tags(self, tags):
-        self.tags = json.dumps(tags, ensure_ascii=True)
-        self.save()
 
     @property
     def location(self):
