@@ -44,7 +44,10 @@ class Shop(models.Model):
             'lng' : self.location.x,
             'lat' : self.location.y,
             'tags' : json.loads(str(self.tags)),
-            'withdrawn' : self.withdrawn
+            'withdrawn' : self.withdrawn,
+            'extraData' : {
+                'city' : self.city
+            }
         }
 
         return data
