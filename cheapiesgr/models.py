@@ -72,15 +72,6 @@ class Category(models.Model):
         verbose_name_plural = _('categories')
         db_table = 'category'
 
-class Price(models.Model):
-    price = models.DecimalField(max_digits=10, decimal_places=2,
-                                verbose_name=_('price'))
-    date_from = models.DateField()
-    date_to = models.DateField()
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    registration = models.ForeignKey(Registraton, on_delete=models.CASCADE)
-
-
 class Registration(models.Model):
     name = models.CharField(
         max_length=1000, verbose_name=_('name'))
@@ -103,9 +94,6 @@ class Registration(models.Model):
     def __str__(self):
         return self.product_description
 
-    def get_tags(self):
-        return json.loads(self.tags)
-
     @property
     def location(self):
         return self.shop.location
@@ -115,22 +103,22 @@ class Registration(models.Model):
             'id' : self.id,
             'name' : self.name,
             'description' : self.product_description,
-            'category' : self.category,
+            'category' : str(self.category),
             'tags' : json.loads(self.tags),
             'withdrawn' : self.withdrawn,
             'extraData' : {
-                'volunteer' : self.voluneer.user.id
+                'prices' : self.prices_list
             }
         }
         return data
 
     @property
     def prices(self):
-        return self.price_set.all()
+        return self.registrationprice_set.all()
 
     @property
     def prices_list(self):
-        return self.price_set.values_list('price', flat=True)
+        return [float(p) for p in self.registrationprice_set.values_list('price', flat=True)]
 
     @property
     def stars(self):
@@ -159,6 +147,15 @@ class Registration(models.Model):
     class Meta:
         verbose_name = _('registration')
         verbose_name_plural = _('registrations')
+
+
+class RegistrationPrice(models.Model):
+    price = models.DecimalField(max_digits=10, decimal_places=2,
+                                verbose_name=_('price'))
+    date_from = models.DateField()
+    date_to = models.DateField()
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
 
 
 class Rating(models.Model):
