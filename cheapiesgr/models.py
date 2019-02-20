@@ -22,6 +22,7 @@ class Shop(models.Model):
         geography=True, blank=True, null=True,
         verbose_name=_('location'))
     tags = models.CharField(max_length=500, default='[]') # Tags array as json
+    withdrawn = models.BooleanField(default=False)
     objects = GeoManager()
 
     def get_tags(self):
@@ -32,6 +33,20 @@ class Shop(models.Model):
 
     def get_location(self):
         return self.location
+
+
+    def serialize(self) :
+        data = {
+            'id' : self.id,
+            'name' : self.name,
+            'address' : self.address,
+            'lng' : self.location.x,
+            'lat' : self.location.y,
+            'tags' : json.loads(str(self.tags)),
+            'withdrawn' : self.withdrawn
+        }
+
+        return data
 
     class Meta:
         verbose_name = _('shop')
