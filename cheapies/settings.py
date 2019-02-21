@@ -29,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'vaary-tka#uea+lwiijfm)as*hr@@fs2t-&w^&=e+1=(4=@#z&'
 
 # HTTPS/SSL
-#SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

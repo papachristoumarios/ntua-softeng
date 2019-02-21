@@ -58,7 +58,7 @@ test_db:
 	./test_database_config.sh >database.cnf
 
 deploy:
-	$(MAKE) deps
+	$(MAKE) py_deps
 	$(MAKE) test_db
 	$(MAKE) migrate
 	$(MAKE) data

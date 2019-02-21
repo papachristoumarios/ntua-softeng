@@ -322,6 +322,7 @@ def addproduct(request):
         f = AddProductForm(request.POST, request.FILES)
         if f.is_valid():
             price = f.cleaned_data['price']
+            name = f.cleaned_data['name']
             product_description = f.cleaned_data['description']
             new_shop_name = f.cleaned_data['new_shop_name']
             new_shop_city = f.cleaned_data['new_shop_city']
@@ -364,7 +365,8 @@ def addproduct(request):
                 volunteer=request.user,
                 shop=shop,
                 category=category,
-                image_url=image_url
+                image_url=image_url,
+                name=name
             )
 
             new_product.save()
