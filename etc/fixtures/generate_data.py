@@ -49,8 +49,18 @@ def generate_product_data(n, d):
                     'image_url' : img_url
                 }
             }
+            price = {
+                'model' : 'cheapiesgr.registrationprice',
+                'pk' : pk,
+                'fields' : {
+                    'date_from' : '1971-01-01',
+                    'date_to' : '2200-01-01',
+                    'shop' : random.randint(1, 5),
+                    'registration' : pk
+                }
+            }
             pk += 1
-            output.extend([registration])
+            output.extend([price, registration])
 
     return output
 

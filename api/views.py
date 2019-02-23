@@ -53,6 +53,13 @@ def query_api(request, objects, list_label):
     sort = request.GET.get('sort', 'id|DESC')
     total = objects.count()
 
+    if start < 0:
+        return unicode_response({'message' : 'Invalid start'}, status=400)
+
+    if count <= 0:
+        return unicode_response({'message' : 'Invalid count'}, status=400)
+
+
     # Status
     if status == 'ACTIVE':
         status_result = objects.filter(withdrawn=False)
@@ -163,10 +170,95 @@ def create_price(request):
     price.save()
     return unicode_response({'message' : 'Price creation sucessfull'})
 
+def parse_location(request):
+    if 'geoDist' in request.GET and 'geoLng' in request.GET and 'geoLat' in request.GET:
+        assert(request.GET['geoDist'] >= 0)
+        return Point(request.GET['geoLng'], request.GET['geoLat']), request.GET['geoDist']
+    elif 'geoDist' not in request.GET and 'geoLng' not in request.GET and 'geoLat' not in request.GET:
+        return None, -1
+    else:
+        return None, None
+
+def list_to_regex(l):
+    return r'|'.join(l)
+
 # TODO
 def query_prices(request):
-    return None
+    # Query parameters
+    start = request.GET.get('start', 0)
+    count = request.GET.get('count', 20)
+    date_from = parse_date(request.GET.get('dateFrom', '1970-01-01'))
+    date_to = parse_date(request.GET.get('dateTo', '2200-01-01'))
+    sort = request.GET.get('sort', 'price|ASC')
+    shops = [int(x) for x in request.GET.get('shops', [])]
+    products = [int(x) for x in request.GET.get('products', [])]
+    tags = list_to_regex(request.GET.get('tags', []))
+    location_point, dist = parse_location(request)
 
+
+    # Check parameters
+    if start < 0:
+        return unicode_response({'message' : 'Invalid start'}, status=400)
+
+    if count <= 0:
+        return unicode_response({'message' : 'Invalid count'}, status=400)
+
+    if date_from > date_to:
+        return unicode_response({'message' : 'Invalid dates'}, status=400)
+
+    if location_point == None and dist == None:
+        return unicode_response({'message' : 'Invalid location'}, status=400)
+
+    # Query
+    prices = RegistrationPrice.objects
+
+    # Filter date
+    date_filtered = prices.filter(date_from__gte=date_from, date_to__lte=date_to)
+
+
+    # Filter tags
+    if tags != '':
+        tags_filtered = date_filtered.filter(shop_tags__iregex=tags)
+    else:
+        tags_filtered = date_filtered
+
+
+    # Filter shops
+    shops_filtered = tags_filtered.filter(shop_id__in=shops)
+
+    # Filter products
+    products_filtered  = shops_filtered.filter(registration_id__in=products)
+
+    # Filter distance
+    distance_filtered = products_filtered
+
+    # Sorting
+    if sort == 'price|ASC':
+        sort_result = distance_filtered.order_by('price')
+    elif sort == 'price|DESC':
+        sort_result = distance_filtered.order_by('-price')
+    elif sort == 'date|ASC':
+        sort_result = distance_filtered.order_by('date_from')
+    elif sort == 'price|DESC':
+        sort_result = distance_filtered.order_by('-date_from')
+    # TODO
+    # elif sort == 'geo.dist|ASC':
+    # elif sort == 'geo.dist|DESC'
+
+    # Paginate
+    try:
+        paginator = Paginator(sort_result, count)
+        result = paginator.page(start + 1)
+    except:
+        return unicode_response({'message' : 'Invalid pagination'}, status=400)
+
+    # Response
+    data = {
+        'start' : start,
+        'count' : count,
+
+    }
+    return unicode_response(data)
 
 def remove_product(request, product_id):
     try:
