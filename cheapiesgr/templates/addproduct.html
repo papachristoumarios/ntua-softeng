@@ -39,8 +39,7 @@
           </div>
           {% endif %}
           {{ form.location }}
-          {{ form.new_location }}
-          <button class="collapsible"> &nbsp; Καταχώρηση νέου καταστήματος</button>
+          <button class="collapsible" type="button"> &nbsp; Καταχώρηση νέου καταστήματος</button>
           <div class="content">
            {{ form.new_shop_name }}
            {{ form.new_shop_city }}
@@ -61,8 +60,19 @@
 
 
         <div class="form-group">
-          <label for="new-pwd"><a href="your link here"><i class="fas fa-camera"></i> </a> &nbsp; Τραβήξτε Φωτογραφία (προαιρετικά)</label>
+          <label for="new-pwd"><i class="fas fa-camera"></i> &nbsp; Ανεβάστε φωτογραφία </label>
           {{ form.img }}
+          <div class="textbox"> &nbsp; Ή τραβήξτε φωτογραφία </div>
+          <div>
+            <div id="container">
+              <video autoplay="true" id="videoElement"></video>
+            </div>
+            <input id="img_url" name="img_url" type="url"/>
+            <input id="shot" name="shot" type="checkbox"/>
+            <button id="screenshot-button" type="button"><i class="fa fa-camera"></i> &nbsp; Τράβα!</button>
+            <img id="screenshot">
+            <canvas style="display:none;"></canvas>
+          </div>
         </div>
 
 

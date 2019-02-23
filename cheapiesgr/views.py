@@ -21,6 +21,9 @@ from nominatim import Nominatim
 from geopy.geocoders import Nominatim as geonom
 import random
 import os
+import re
+from base64 import b64decode
+from django.core.files.base import ContentFile
 nom = Nominatim()
 
 
@@ -299,37 +302,45 @@ def remove_favorite(request):
     favorite.delete()
     return redirect('/profile')
 
+def decode_base64(data, altchars=b'+/'):
+    """Decode base64, padding being optional.
+
+    :param data: Base64 data as an ASCII byte string
+    :returns: The decoded byte string.
+
+    """
+    data = re.sub(rb'[^a-zA-Z0-9%s]+' % altchars, b'', data)  # normalize
+    missing_padding = len(data) % 4
+    if missing_padding:
+        data += b'='* (4 - missing_padding)
+    return b64decode(data, altchars)
+
 
 @login_required(login_url='/signin')
 def addproduct(request):
     if request.method == 'POST':
         f = AddProductForm(request.POST, request.FILES)
         if f.is_valid():
-
             price = f.cleaned_data['price']
             name = f.cleaned_data['name']
             product_description = f.cleaned_data['description']
-            new_location = f.cleaned_data['new_location']
             new_shop_name = f.cleaned_data['new_shop_name']
             new_shop_city = f.cleaned_data['new_shop_city']
             new_shop_street = f.cleaned_data['new_shop_street']
             new_shop_number = f.cleaned_data['new_shop_number']
             category = f.cleaned_data['category']
             date_of_registration = datetime.datetime.today().strftime('%Y-%m-%d')
-            image_url = handle_uploaded_file(
-                request.FILES['img'], category.category_name)
+            took_photo = f.cleaned_data['shot']
+            print(took_photo)
+            if (took_photo):
+                img_url = f.cleaned_data['img_url']
+                url_decoded = decode_base64(img_url.encode())
+                content = ContentFile(url_decoded)
+                image_url = handle_uploaded_file(content,category.category_name)
+            else:
+                image_url = handle_uploaded_file(request.FILES['img'], category.category_name)
 
-            if len(new_location) > 0:
-                print('Adding a new shop at', new_location)
-                query = nom.query(new_location)[0]
-                shop = Shop(
-                    name=new_location,
-                    address=query['display_name'],
-                    city=query['display_name'],
-                    location='POINT({} {})'.format(query['lon'], query['lat']),
-                )
-                shop.save()
-            elif len(new_shop_name) > 0:
+            if len(new_shop_name) > 0:
                 print('Adding a new shop named', new_shop_name)
                 geolocator = geonom(user_agent="cheapiesgr")
                 location = geolocator.geocode(new_shop_street+" "+new_shop_number+" "+new_shop_city)

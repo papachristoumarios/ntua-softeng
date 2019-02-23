@@ -174,10 +174,6 @@ class AddProductForm(forms.Form):
         empty_label='Άλλο'
     )
 
-    new_location = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Νέο κατάστημα','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_location'}),
-    )
     new_shop_name = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Όνομα καταστήματος','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_name'}),
@@ -195,10 +191,19 @@ class AddProductForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Αριθμός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_number'})
     )
 
-
+    shot = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'id':'shot'})
+    )
 
     img = forms.FileField(
+        required=False,
         widget=forms.FileInput(attrs={'accept':'image/*'})
+    )
+
+    img_url = forms.URLField(
+        required=False,
+        widget=forms.URLInput(attrs={'id':'img_url'})
     )
 
     category = forms.ModelChoiceField(
