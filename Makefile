@@ -76,3 +76,6 @@ certificate_gen:
 
 runsslserver:
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
+
+build:
+	$(PYTHON) setup.py sdist	
