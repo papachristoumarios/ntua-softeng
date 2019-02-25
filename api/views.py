@@ -256,7 +256,7 @@ def query_prices(request):
     data = {
         'start' : start,
         'count' : count,
-
+        
     }
     return unicode_response(data)
 

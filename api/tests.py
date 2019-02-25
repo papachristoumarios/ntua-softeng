@@ -20,18 +20,18 @@ class APITestcase(TestCase):
         usr.save()
         volunteer = Volunteer(user=usr, confirmed_email=True)
         volunteer.save()
-
-
-    def test_login_logout(self):
         login_response = self.client.post('/observatory/api/login/',
-                                      {'username' : 'test',
-                                      'password' : 'test'},
-                                      format='json')
+        {'username' : 'test',
+        'password' : 'test'},
+        format='json')
         login_response = decode_response(login_response)
         assert('token' in login_response)
-        token = login_response['token']
+        self.token = login_response['token']
+        self.header = { AUTH_TOKEN_LABEL : self.token }
 
-        logout_response = self.client.post('/observatory/api/logout/',
-                                            { AUTH_TOKEN_LABEL : token })
+    def test_login_logout(self):
+        print(self.header)
+
+        logout_response = self.client.post('/observatory/api/logout/', **self.header)
         logout_response = decode_response(logout_response)
         assert(logout_response['message'] == 'OK')
