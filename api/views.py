@@ -16,13 +16,26 @@ from django.http import QueryDict
 
 AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
 
+
 def unicode_response(data, status=200):
     """ Returns unicode response """
     if status == 200:
-        return HttpResponse(json.dumps(data, indent=4, sort_keys=True, ensure_ascii=False),
-                            content_type="application/json", status=status)
+        return HttpResponse(
+            json.dumps(
+                data,
+                indent=4,
+                sort_keys=True,
+                ensure_ascii=False),
+            content_type="application/json",
+            status=status)
     else:
-        return HttpResponse(json.dumps(data, indent=4, ensure_ascii=False), status=status)
+        return HttpResponse(
+            json.dumps(
+                data,
+                indent=4,
+                ensure_ascii=False),
+            status=status)
+
 
 def build_list_from_queryset(query_set):
     """ Returns a list of serialized objects """
@@ -30,6 +43,7 @@ def build_list_from_queryset(query_set):
     for x in query_set:
         result.append(x.serialize())
     return result
+
 
 def build_list_from_price_queryset(query_set, location_point):
     """ Returns a list of serialized RegistrationPrice objects """
@@ -39,18 +53,21 @@ def build_list_from_price_queryset(query_set, location_point):
 
     return result
 
+
 def authenticate_token(request):
     """ Authenicate a user via token """
     try:
         user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
         return True
-    except:
+    except BaseException:
         return False
+
 
 def is_superuser(request):
     """ Returns true if user is superuser """
     user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
     return user.is_superuser
+
 
 def get_request_data(request):
     """ Returns request data from body """
@@ -69,11 +86,10 @@ def query_shops_and_products(request, objects, list_label):
     total = objects.count()
 
     if start < 0:
-        return unicode_response({'message' : 'Invalid start'}, status=400)
+        return unicode_response({'message': 'Invalid start'}, status=400)
 
     if count <= 0:
-        return unicode_response({'message' : 'Invalid count'}, status=400)
-
+        return unicode_response({'message': 'Invalid count'}, status=400)
 
     # Status
     if status == 'ACTIVE':
@@ -83,7 +99,7 @@ def query_shops_and_products(request, objects, list_label):
     elif status == 'ALL':
         status_result = objects
     else:
-        return unicode_response({'message' : 'Invalid status'}, status=400)
+        return unicode_response({'message': 'Invalid status'}, status=400)
 
     # Sort
     if sort == 'id|DESC':
@@ -95,24 +111,24 @@ def query_shops_and_products(request, objects, list_label):
     elif sort == 'name|DESC':
         sort_result = status_result.order_by('-name')
     else:
-        return unicode_response({'message' : 'Invalid sort criterion'}, status=400)
-
+        return unicode_response(
+            {'message': 'Invalid sort criterion'}, status=400)
 
     # Paginate
     try:
         paginator = Paginator(sort_result, count)
         result = paginator.page(start + 1)
-    except:
-        return unicode_response({'message' : 'Invalid pagination'}, status=400)
-
+    except BaseException:
+        return unicode_response({'message': 'Invalid pagination'}, status=400)
 
     data = {
-        'start' : start,
-        'count' : count,
-        'total' : total,
-        list_label : build_list_from_queryset(result)
+        'start': start,
+        'count': count,
+        'total': total,
+        list_label: build_list_from_queryset(result)
     }
     return data
+
 
 def create_or_update_shop(request, shop_id):
     """ Implements POST /shops/<id> and PUT /shops/<id> """
@@ -142,9 +158,11 @@ def create_or_update_shop(request, shop_id):
             lon = data.get('lng', shop.location.x)
             shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
             shop.save()
-        return unicode_response({'message' : 'Shop created sucessfully'}, status=200)
-    except:
-        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+        return unicode_response(
+            {'message': 'Shop created sucessfully'}, status=200)
+    except BaseException:
+        return unicode_response(
+            {'message': 'Parameters not valid'}, status=400)
 
 
 def patch_shop(request, shop_id):
@@ -165,9 +183,11 @@ def patch_shop(request, shop_id):
             lon = data.get('lng', shop.location.x)
             shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
         shop.save()
-        return unicode_response({'message' : 'Shop patched sucessfully'}, status=200)
-    except:
-        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+        return unicode_response(
+            {'message': 'Shop patched sucessfully'}, status=200)
+    except BaseException:
+        return unicode_response(
+            {'message': 'Parameters not valid'}, status=400)
 
 
 def remove_shop(request, shop_id):
@@ -176,14 +196,15 @@ def remove_shop(request, shop_id):
         shop = Shop.objects.get(id=shop_id)
         if is_superuser(request):
             shop.delete()
-            return unicode_response({'message' : 'Removal successfull'})
+            return unicode_response({'message': 'Removal successfull'})
         else:
             shop.withdrawn = True
             shop.save()
-            return unicode_response({'message' : 'Withdrawal successfull'})
+            return unicode_response({'message': 'Withdrawal successfull'})
 
-    except:
-        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+    except BaseException:
+        return unicode_response(
+            {'message': 'Parameters not valid'}, status=400)
 
 
 def parse_date(date_str):
@@ -205,17 +226,23 @@ def create_price(request):
         registration_id=int(request.POST['productId'])
     )
     price.save()
-    return unicode_response({'message' : 'Price creation sucessfull'})
+    return unicode_response({'message': 'Price creation sucessfull'})
+
 
 def parse_location(request):
     """ Parse location for geodesic query """
     if 'geoDist' in request.GET and 'geoLng' in request.GET and 'geoLat' in request.GET:
         assert(float(request.GET['geoDist']) >= 0)
-        return Point(float(request.GET['geoLng']), float(request.GET['geoLat']), srid=4326), float(request.GET['geoDist'])
+        return Point(
+            float(
+                request.GET['geoLng']), float(
+                request.GET['geoLat']), srid=4326), float(
+            request.GET['geoDist'])
     elif 'geoDist' not in request.GET and 'geoLng' not in request.GET and 'geoLat' not in request.GET:
         return None, -1
     else:
         return None, None
+
 
 def list_to_regex(l):
     return r'|'.join(l)
@@ -237,26 +264,30 @@ def query_prices(request):
 
     # Check parameters
     if start < 0:
-        return unicode_response({'message' : 'Invalid start'}, status=400)
+        return unicode_response({'message': 'Invalid start'}, status=400)
 
     if count <= 0:
-        return unicode_response({'message' : 'Invalid count'}, status=400)
+        return unicode_response({'message': 'Invalid count'}, status=400)
 
     if date_from > date_to:
-        return unicode_response({'message' : 'Invalid dates'}, status=400)
+        return unicode_response({'message': 'Invalid dates'}, status=400)
 
-    if location_point == None and dist == None:
-        return unicode_response({'message' : 'Invalid location'}, status=400)
+    if location_point is None and dist is None:
+        return unicode_response({'message': 'Invalid location'}, status=400)
 
     prices = RegistrationPrice.objects
 
     # Filter date
-    date_filtered = prices.filter(date_from__gte=date_from, date_to__lte=date_to)
+    date_filtered = prices.filter(
+        date_from__gte=date_from,
+        date_to__lte=date_to)
 
     # Filter distance
-    if location_point != None and dist != None:
+    if location_point is not None and dist is not None:
         degrees = dist * 1 / 111.325
-        distance_filtered = date_filtered.filter(shop__location__distance_lte=(location_point, degrees))
+        distance_filtered = date_filtered.filter(
+            shop__location__distance_lte=(
+                location_point, degrees))
 
     # Filter products
     products_filtered = date_filtered.filter(registration_id__in=products)
@@ -265,7 +296,9 @@ def query_prices(request):
     shops_filtered = products_filtered.filter(shop_id__in=shops)
 
     # Filter tags
-    tags_filtered = products_filtered.filter(registration__tags__iregex=tags) | products_filtered.filter(shop__tags__iregex=tags)
+    tags_filtered = products_filtered.filter(
+        registration__tags__iregex=tags) | products_filtered.filter(
+        shop__tags__iregex=tags)
 
     # Sorting
     if sort == 'price|ASC':
@@ -277,23 +310,27 @@ def query_prices(request):
     elif sort == 'date|DESC':
         sort_result = tags_filtered.order_by('-date_from')
     elif sort == 'geo.dist|ASC':
-        sort_result = tags_filtered.annotate(distance=Distance("shop__location", location_point)).order_by('distance')
+        sort_result = tags_filtered.annotate(distance=Distance(
+            "shop__location", location_point)).order_by('distance')
     elif sort == 'geo.dist|DESC':
-        sort_result = tags_filtered.annotate(distance=Distance("shop__location", location_point)).order_by('-distance')
+        sort_result = tags_filtered.annotate(
+            distance=Distance(
+                "shop__location",
+                location_point)).order_by('-distance')
 
     # Paginate
     try:
         paginator = Paginator(sort_result, count)
         result = paginator.page(start + 1)
-    except:
-        return unicode_response({'message' : 'Invalid pagination'}, status=400)
+    except BaseException:
+        return unicode_response({'message': 'Invalid pagination'}, status=400)
 
     # Response
     data = {
-        'start' : start,
-        'count' : count,
-        'total' : sort_result.count(),
-        'prices' : build_list_from_price_queryset(result, location_point)
+        'start': start,
+        'count': count,
+        'total': sort_result.count(),
+        'prices': build_list_from_price_queryset(result, location_point)
 
     }
     return unicode_response(data)
@@ -320,7 +357,8 @@ def create_or_update_product(request, product_id):
                 volunteer=user,
             )
             registration.save()
-            return unicode_response({'message' : 'Product created sucessfully'}, status=200)
+            return unicode_response(
+                {'message': 'Product created sucessfully'}, status=200)
         elif request.method == 'PUT':
             registration = Registration.objects.get(pk=product_id)
             registration.name = data['name']
@@ -331,9 +369,11 @@ def create_or_update_product(request, product_id):
             category = Category.objects.get(category_name=data['category'])
             registration.category = category
             registration.save()
-            return unicode_response({'message' : 'Product put sucessfully'}, status=200)
-    except:
-        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+            return unicode_response(
+                {'message': 'Product put sucessfully'}, status=200)
+    except BaseException:
+        return unicode_response(
+            {'message': 'Parameters not valid'}, status=400)
 
 
 def remove_product(request, product_id):
@@ -342,13 +382,14 @@ def remove_product(request, product_id):
         registration = Registration.objects.get(id=product_id)
         if is_superuser(request):
             registration.delete()
-            return unicode_response({'message' : 'Removal successfull'})
+            return unicode_response({'message': 'Removal successfull'})
         else:
             registration.withdrawn = True
             registration.save()
-            return unicode_response({'message' : 'Withdrawal successfull'})
-    except:
-        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+            return unicode_response({'message': 'Withdrawal successfull'})
+    except BaseException:
+        return unicode_response(
+            {'message': 'Parameters not valid'}, status=400)
 
 
 def patch_product(request, product_id):
@@ -368,9 +409,11 @@ def patch_product(request, product_id):
         if 'withdrawn' in data:
             registration.withdrawn = data['withdrawn']
         registration.save()
-        return unicode_response({'message' : 'Product patched sucessfully'}, status=200)
-    except:
-        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+        return unicode_response(
+            {'message': 'Product patched sucessfully'}, status=200)
+    except BaseException:
+        return unicode_response(
+            {'message': 'Parameters not valid'}, status=400)
 
 
 # TODO Implement
@@ -378,6 +421,7 @@ def patch_product(request, product_id):
 @require_http_methods(['POST'])
 def create_user(request):
     return None
+
 
 @csrf_exempt
 @require_http_methods(['POST'])
@@ -387,9 +431,11 @@ def logout_user(request):
     try:
         user = Token.objects.get(key=token).user
         user.auth_token.delete()
-        return unicode_response({'message' : 'OK'})
-    except:
-        return unicode_response({'message' : 'Token not associated with user'}, status=400)
+        return unicode_response({'message': 'OK'})
+    except BaseException:
+        return unicode_response(
+            {'message': 'Token not associated with user'}, status=400)
+
 
 @csrf_exempt
 @require_http_methods(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
@@ -397,29 +443,31 @@ def shop(request, shop_id='all'):
     """ Endpoint handler for /shops """
     if request.method == 'GET':
         if shop_id == 'all':
-            return unicode_response(query_shops_and_products(request, Shop.objects.all(), 'shops'))
+            return unicode_response(
+                query_shops_and_products(
+                    request, Shop.objects.all(), 'shops'))
         else:
             shop = Shop.objects.get(pk=int(shop_id))
             return unicode_response(shop.serialize())
     elif request.method in ['POST', 'PUT']:
         if shop_id == 'all':
-            return unicode_response({'message' : 'Invalid Request'}, status=400)
+            return unicode_response({'message': 'Invalid Request'}, status=400)
         elif not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return create_or_update_shop(request, int(shop_id))
     elif request.method == 'PATCH':
         if shop_id == 'all':
-            return unicode_response({'message' : 'Invalid Request'}, status=400)
+            return unicode_response({'message': 'Invalid Request'}, status=400)
         elif not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return patch_shop(request, int(shop_id))
     elif request.method == 'DELETE':
         if shop_id == 'all':
-            return unicode_response({'message' : 'Invalid Request'}, status=400)
+            return unicode_response({'message': 'Invalid Request'}, status=400)
         elif not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return remove_shop(request, int(shop_id))
 
@@ -430,30 +478,34 @@ def product(request, product_id='all'):
     """ Endpoint handler for /products """
     if request.method == 'GET':
         if product_id == 'all':
-            return unicode_response(query_shops_and_products(request, Registration.objects.all(), 'products'))
+            return unicode_response(
+                query_shops_and_products(
+                    request,
+                    Registration.objects.all(),
+                    'products'))
         else:
             registration = Registration.objects.get(pk=int(product_id))
             return unicode_response(registration.serialize())
     elif request.method in ['POST', 'PUT']:
         if product_id == 'all':
-            return unicode_response({'message' : 'Invalid Request'}, status=400)
+            return unicode_response({'message': 'Invalid Request'}, status=400)
         elif not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return create_or_update_product(request, int(product_id))
     elif request.method in ['PATCH']:
         if product_id == 'all':
-            return unicode_response({'message' : 'Invalid Request'}, status=400)
+            return unicode_response({'message': 'Invalid Request'}, status=400)
         elif not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return patch_product(request, int(product_id))
     elif request.method == 'DELETE':
         print(request.META)
         if product_id == 'all':
-            return unicode_response({'message' : 'Invalid Request'}, status=400)
+            return unicode_response({'message': 'Invalid Request'}, status=400)
         elif not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return remove_product(request, int(product_id))
 
@@ -464,7 +516,7 @@ def price(request):
     """ Endpoint handler for /prices """
     if request.method == 'POST':
         if not authenticate_token(request):
-            return unicode_response({'message' : 'Forbidden'}, status=403)
+            return unicode_response({'message': 'Forbidden'}, status=403)
         else:
             return create_price(request)
     elif request.method == 'GET':
