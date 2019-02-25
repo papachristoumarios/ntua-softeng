@@ -29,7 +29,7 @@ class APITestcase(TestCase):
         self.token = login_response['token']
         self.header = { AUTH_TOKEN_LABEL : self.token }
 
-    def test_login_logout(self):
+    def logout(self):
         print(self.header)
 
         logout_response = self.client.post('/observatory/api/logout/', **self.header)

@@ -101,17 +101,31 @@ def query_api(request, objects, list_label):
 
 def create_or_update_shop(request, shop_id):
     try:
-        Shop.objects.update_or_create(
-            id=shop_id,
-            name=request.POST['name'],
-            address=request.POST['address'],
-            location='POINT({} {})'.format(
-                request.POST['lng'],
-                request.POST['lat']
-            ),
-            tags=json.dumps(request.POST['tags'], ensure_ascii=True)
-        )
-
+        data = get_request_data(request)
+        if request.method == 'POST':
+            shop = Shop(
+                id=shop_id,
+                name=data['name'],
+                address=data['address'],
+                city=data['address'],
+                location='SRID=4326;POINT({} {})'.format(
+                    data['lng'],
+                    data['lat']
+                ),
+                tags=json.dumps(data['tags'], ensure_ascii=True)
+            )
+            shop.save()
+        elif request.method == 'PUT':
+            shop = Shop.objects.get(pk=shop_id)
+            shop.name = data['name']
+            shop.address = data['address']
+            shop.city = data['address']
+            shop.tags = json.dumps(data['tags'])
+            shop.withdrawn = data['withdrawn']
+            lat = data.get('lat', shop.location.y)
+            lon = data.get('lng', shop.location.x)
+            shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
+            shop.save()
         return unicode_response({'message' : 'Shop created sucessfully'}, status=200)
     except:
         return unicode_response({'message' : 'Parameters not valid'}, status=400)
@@ -256,9 +270,46 @@ def query_prices(request):
     data = {
         'start' : start,
         'count' : count,
-        
+
     }
     return unicode_response(data)
+
+
+def create_or_update_product(request, product_id):
+    try:
+        user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
+        data = get_request_data(request)
+        if request.method == 'POST':
+            # TODO Remove price and shop
+            category = Category.objects.get(category_name=data['category'])
+            shop = Shop.objects.order_by('?').first()
+            registration = Registration(
+                id=product_id,
+                name=data['name'],
+                product_description=data['description'],
+                category=category,
+                shop=shop,
+                tags=json.dumps(data['tags'], ensure_ascii=True),
+                price=0,
+                withdrawn=data['withdrawn'],
+                volunteer=user,
+            )
+            registration.save()
+            return unicode_response({'message' : 'Product created sucessfully'}, status=200)
+        elif request.method == 'PUT':
+            registration = Registration.objects.get(pk=product_id)
+            registration.name = data['name']
+            registration.product_description = data['description']
+            registration.tags = json.dumps(data['tags'], ensure_ascii=True)
+            registration.withdrawn = data['withdrawn']
+            registration.volunteer = user
+            category = Category.objects.get(category_name=data['category'])
+            registration.category = category
+            registration.save()
+            return unicode_response({'message' : 'Product put sucessfully'}, status=200)
+    except:
+        return unicode_response({'message' : 'Parameters not valid'}, status=400)
+
 
 def remove_product(request, product_id):
     try:
@@ -283,7 +334,7 @@ def patch_product(request, product_id):
         if 'description' in data:
             registration.product_description = data['description']
         if 'category' in data:
-            category = Category.objects.filter(category_name=data['category'])
+            category = Category.objects.get(category_name=data['category'])
             registration.category = category
         if 'tags' in data:
             registration.tags = json.dumps(data['tags'])
@@ -351,7 +402,6 @@ def product(request, product_id='all'):
         if product_id == 'all':
             return unicode_response(query_api(request, Registration.objects.all(), 'products'))
         else:
-            print('klein')
             registration = Registration.objects.get(pk=int(product_id))
             return unicode_response(registration.serialize())
     elif request.method in ['POST', 'PUT']:

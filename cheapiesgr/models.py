@@ -1,4 +1,5 @@
 import json
+import datetime
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Manager as GeoManager
@@ -84,7 +85,7 @@ class Registration(models.Model):
     image_url = models.CharField(max_length=500, null=True,
                                  verbose_name=_('image_url'))
 
-    date_of_registration = models.DateField()
+    date_of_registration = models.DateField(default=datetime.date.today)
     volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
