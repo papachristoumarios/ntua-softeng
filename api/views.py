@@ -25,12 +25,14 @@ def unicode_response(data, status=200):
         return HttpResponse(json.dumps(data, indent=4, ensure_ascii=False), status=status)
 
 def build_list_from_queryset(query_set):
+    """ Returns a list of serialized objects """
     result = []
     for x in query_set:
         result.append(x.serialize())
     return result
 
 def build_list_from_price_queryset(query_set, location_point):
+    """ Returns a list of serialized RegistrationPrice objects """
     result = []
     for x in query_set:
         result.append(x.serialize(location_point))
@@ -38,6 +40,7 @@ def build_list_from_price_queryset(query_set, location_point):
     return result
 
 def authenticate_token(request):
+    """ Authenicate a user via token """
     try:
         user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
         return True
@@ -45,16 +48,19 @@ def authenticate_token(request):
         return False
 
 def is_superuser(request):
+    """ Returns true if user is superuser """
     user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
     return user.is_superuser
 
 def get_request_data(request):
+    """ Returns request data from body """
     temp = dict(QueryDict(request.body))
     data = dict([(key, val[0]) for key, val in temp.items()])
     return data
 
 
-def query_api(request, objects, list_label):
+def query_shops_and_products(request, objects, list_label):
+    """ Implements GET /products and GET /prices """
     # Get arguments
     start = int(request.GET.get('start', 0))
     count = int(request.GET.get('count', 20))
@@ -109,6 +115,7 @@ def query_api(request, objects, list_label):
     return data
 
 def create_or_update_shop(request, shop_id):
+    """ Implements POST /shops/<id> and PUT /shops/<id> """
     try:
         data = get_request_data(request)
         if request.method == 'POST':
@@ -141,6 +148,7 @@ def create_or_update_shop(request, shop_id):
 
 
 def patch_shop(request, shop_id):
+    """ Implements PATCH /shops/<id> """
     try:
         shop = Shop.objects.get(pk=shop_id)
         data = get_request_data(request)
@@ -163,6 +171,7 @@ def patch_shop(request, shop_id):
 
 
 def remove_shop(request, shop_id):
+    """ Implements DELETE /shops/<id> """
     try:
         shop = Shop.objects.get(id=shop_id)
         if is_superuser(request):
@@ -178,6 +187,7 @@ def remove_shop(request, shop_id):
 
 
 def parse_date(date_str):
+    """ Parse a date """
     if date_str == '-1':
         return -1
     else:
@@ -186,6 +196,7 @@ def parse_date(date_str):
 
 
 def create_price(request):
+    """ Implement POST /price """
     price = RegistrationPrice(
         date_from=parse_date(request.POST['dateFrom']),
         date_to=parse_date(request.POST['dateTo']),
@@ -197,6 +208,7 @@ def create_price(request):
     return unicode_response({'message' : 'Price creation sucessfull'})
 
 def parse_location(request):
+    """ Parse location for geodesic query """
     if 'geoDist' in request.GET and 'geoLng' in request.GET and 'geoLat' in request.GET:
         assert(float(request.GET['geoDist']) >= 0)
         return Point(float(request.GET['geoLng']), float(request.GET['geoLat']), srid=4326), float(request.GET['geoDist'])
@@ -208,8 +220,9 @@ def parse_location(request):
 def list_to_regex(l):
     return r'|'.join(l)
 
-# TODO
+
 def query_prices(request):
+    """ Implements GET /prices """
     # Query parameters
     start = request.GET.get('start', 0)
     count = request.GET.get('count', 20)
@@ -287,6 +300,7 @@ def query_prices(request):
 
 
 def create_or_update_product(request, product_id):
+    """ Implements POST /products/<id> and PUT /products/<id> """
     try:
         user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
         data = get_request_data(request)
@@ -323,6 +337,7 @@ def create_or_update_product(request, product_id):
 
 
 def remove_product(request, product_id):
+    """ Implements DELETE /products/<id> """
     try:
         registration = Registration.objects.get(id=product_id)
         if is_superuser(request):
@@ -337,6 +352,7 @@ def remove_product(request, product_id):
 
 
 def patch_product(request, product_id):
+    """ Implements PATCH /products/<id> """
     try:
         registration = Registration.objects.get(pk=product_id)
         data = get_request_data(request)
@@ -366,6 +382,7 @@ def create_user(request):
 @csrf_exempt
 @require_http_methods(['POST'])
 def logout_user(request):
+    """ Implements POST /logout """
     token = request.META[AUTH_TOKEN_LABEL]
     try:
         user = Token.objects.get(key=token).user
@@ -377,9 +394,10 @@ def logout_user(request):
 @csrf_exempt
 @require_http_methods(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def shop(request, shop_id='all'):
+    """ Endpoint handler for /shops """
     if request.method == 'GET':
         if shop_id == 'all':
-            return unicode_response(query_api(request, Shop.objects.all(), 'shops'))
+            return unicode_response(query_shops_and_products(request, Shop.objects.all(), 'shops'))
         else:
             shop = Shop.objects.get(pk=int(shop_id))
             return unicode_response(shop.serialize())
@@ -409,9 +427,10 @@ def shop(request, shop_id='all'):
 @csrf_exempt
 @require_http_methods(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def product(request, product_id='all'):
+    """ Endpoint handler for /products """
     if request.method == 'GET':
         if product_id == 'all':
-            return unicode_response(query_api(request, Registration.objects.all(), 'products'))
+            return unicode_response(query_shops_and_products(request, Registration.objects.all(), 'products'))
         else:
             registration = Registration.objects.get(pk=int(product_id))
             return unicode_response(registration.serialize())
@@ -442,6 +461,7 @@ def product(request, product_id='all'):
 @csrf_exempt
 @require_http_methods(['GET', 'POST'])
 def price(request):
+    """ Endpoint handler for /prices """
     if request.method == 'POST':
         if not authenticate_token(request):
             return unicode_response({'message' : 'Forbidden'}, status=403)
