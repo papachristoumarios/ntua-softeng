@@ -42,6 +42,7 @@ def generate_product_data(n, d):
                     'tags' : '[]',
                     'price' : pr,
                     'product_description' : ', '.join(q[2:-1]),
+                    'name' : ', '.join(q[2:-1]),
                     'shop' : random.randint(1, 5),
                     'volunteer' : random.randint(1, 5),
                     'category' : i + 1,
