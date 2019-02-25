@@ -1,5 +1,7 @@
 import datetime
 import json
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, HttpResponse
@@ -26,6 +28,13 @@ def build_list_from_queryset(query_set):
     result = []
     for x in query_set:
         result.append(x.serialize())
+    return result
+
+def build_list_from_price_queryset(query_set, location_point):
+    result = []
+    for x in query_set:
+        result.append(x.serialize(location_point))
+
     return result
 
 def authenticate_token(request):
@@ -169,8 +178,11 @@ def remove_shop(request, shop_id):
 
 
 def parse_date(date_str):
-    format_str = '%Y-%m-%d'
-    return datetime.datetime.strptime(date_str, format_str)
+    if date_str == '-1':
+        return -1
+    else:
+        format_str = '%Y-%m-%d'
+        return datetime.datetime.strptime(date_str, format_str)
 
 
 def create_price(request):
@@ -186,8 +198,8 @@ def create_price(request):
 
 def parse_location(request):
     if 'geoDist' in request.GET and 'geoLng' in request.GET and 'geoLat' in request.GET:
-        assert(request.GET['geoDist'] >= 0)
-        return Point(request.GET['geoLng'], request.GET['geoLat']), request.GET['geoDist']
+        assert(float(request.GET['geoDist']) >= 0)
+        return Point(float(request.GET['geoLng']), float(request.GET['geoLat']), srid=4326), float(request.GET['geoDist'])
     elif 'geoDist' not in request.GET and 'geoLng' not in request.GET and 'geoLat' not in request.GET:
         return None, -1
     else:
@@ -201,14 +213,14 @@ def query_prices(request):
     # Query parameters
     start = request.GET.get('start', 0)
     count = request.GET.get('count', 20)
-    date_from = parse_date(request.GET.get('dateFrom', '1970-01-01'))
-    date_to = parse_date(request.GET.get('dateTo', '2200-01-01'))
+    date_from = parse_date(request.GET.get('dateFrom', '1969-01-01'))
+    date_to = parse_date(request.GET.get('dateTo', '2300-01-01'))
     sort = request.GET.get('sort', 'price|ASC')
-    shops = [int(x) for x in request.GET.get('shops', [])]
-    products = [int(x) for x in request.GET.get('products', [])]
-    tags = list_to_regex(request.GET.get('tags', []))
+    shops = [int(x) for x in request.GET.getlist('shops', [])]
+    products = [int(x) for x in request.GET.getlist('products', [])]
+    tags = list_to_regex(request.GET.getlist('tags', []))
     location_point, dist = parse_location(request)
-
+    print(products)
 
     # Check parameters
     if start < 0:
@@ -223,41 +235,38 @@ def query_prices(request):
     if location_point == None and dist == None:
         return unicode_response({'message' : 'Invalid location'}, status=400)
 
-    # Query
     prices = RegistrationPrice.objects
 
     # Filter date
     date_filtered = prices.filter(date_from__gte=date_from, date_to__lte=date_to)
 
-
-    # Filter tags
-    if tags != '':
-        tags_filtered = date_filtered.filter(shop_tags__iregex=tags)
-    else:
-        tags_filtered = date_filtered
-
-
-    # Filter shops
-    shops_filtered = tags_filtered.filter(shop_id__in=shops)
+    # Filter distance
+    if location_point != None and dist != None:
+        degrees = dist * 1 / 111.325
+        distance_filtered = date_filtered.filter(shop__location__distance_lte=(location_point, degrees))
 
     # Filter products
-    products_filtered  = shops_filtered.filter(registration_id__in=products)
+    products_filtered = date_filtered.filter(registration_id__in=products)
 
-    # Filter distance
-    distance_filtered = products_filtered
+    # Filter shops
+    shops_filtered = products_filtered.filter(shop_id__in=shops)
+
+    # Filter tags
+    tags_filtered = products_filtered.filter(registration__tags__iregex=tags) | products_filtered.filter(shop__tags__iregex=tags)
 
     # Sorting
     if sort == 'price|ASC':
-        sort_result = distance_filtered.order_by('price')
+        sort_result = tags_filtered.order_by('price')
     elif sort == 'price|DESC':
-        sort_result = distance_filtered.order_by('-price')
+        sort_result = tags_filtered.order_by('-price')
     elif sort == 'date|ASC':
-        sort_result = distance_filtered.order_by('date_from')
-    elif sort == 'price|DESC':
-        sort_result = distance_filtered.order_by('-date_from')
-    # TODO
-    # elif sort == 'geo.dist|ASC':
-    # elif sort == 'geo.dist|DESC'
+        sort_result = tags_filtered.order_by('date_from')
+    elif sort == 'date|DESC':
+        sort_result = tags_filtered.order_by('-date_from')
+    elif sort == 'geo.dist|ASC':
+        sort_result = tags_filtered.annotate(distance=Distance("shop__location", location_point)).order_by('distance')
+    elif sort == 'geo.dist|DESC':
+        sort_result = tags_filtered.annotate(distance=Distance("shop__location", location_point)).order_by('-distance')
 
     # Paginate
     try:
@@ -270,6 +279,8 @@ def query_prices(request):
     data = {
         'start' : start,
         'count' : count,
+        'total' : sort_result.count(),
+        'prices' : build_list_from_price_queryset(result, location_point)
 
     }
     return unicode_response(data)
@@ -346,7 +357,7 @@ def patch_product(request, product_id):
         return unicode_response({'message' : 'Parameters not valid'}, status=400)
 
 
-
+# TODO Implement
 @csrf_exempt
 @require_http_methods(['POST'])
 def create_user(request):

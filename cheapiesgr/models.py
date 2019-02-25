@@ -6,6 +6,13 @@ from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
+def decode_tags(tags):
+    result = json.loads(tags)
+    if isinstance(result, list):
+        return result
+    else:
+        return [result]
+
 
 class Volunteer(models.Model):
     ''' Volunteer is a profile model for a user '''
@@ -27,9 +34,6 @@ class Shop(models.Model):
     withdrawn = models.BooleanField(default=False)
     objects = GeoManager()
 
-    def get_tags(self):
-        return json.loads(self.tags)
-
     def __str__(self):
         return self.name
 
@@ -44,7 +48,7 @@ class Shop(models.Model):
             'address' : self.address,
             'lng' : self.location.x,
             'lat' : self.location.y,
-            'tags' : json.loads(str(self.tags)),
+            'tags' : decode_tags(str(self.tags)),
             'withdrawn' : self.withdrawn,
             'extraData' : {
                 'city' : self.city
@@ -105,7 +109,7 @@ class Registration(models.Model):
             'name' : self.name,
             'description' : self.product_description,
             'category' : str(self.category),
-            'tags' : json.loads(self.tags),
+            'tags' : decode_tags(self.tags),
             'withdrawn' : self.withdrawn,
             'extraData' : {
                 'prices' : self.prices_list
@@ -157,6 +161,25 @@ class RegistrationPrice(models.Model):
     date_to = models.DateField()
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
+
+    def serialize(self, point):
+        if point == None:
+            distance = -1
+        else:
+            distance = self.shop.location.distance(point) * 100
+        data = {
+            'price' : float(self.price),
+            'date' : str(self.date_from),
+            'productName' : self.registration.name,
+            'productId' : self.registration.id,
+            'productTags' : decode_tags(self.registration.tags),
+            'shopId' : self.shop.id,
+            'shopName' : self.shop.name,
+            'shopTags' : decode_tags(self.shop.tags),
+            'shopAddress' : self.shop.address,
+            'shopDist' : distance
+        }
+        return data
 
 
 class Rating(models.Model):
