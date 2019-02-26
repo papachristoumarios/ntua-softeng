@@ -82,8 +82,6 @@ class Registration(models.Model):
         max_length=1000, verbose_name=_('name'))
     product_description = models.CharField(
         max_length=10000, verbose_name=_('product_discription'))
-    price = models.DecimalField(max_digits=10, decimal_places=2,
-                                verbose_name=_('price'))
     image = models.ImageField(blank=True, null=True,
                               verbose_name=_('image'))
     image_url = models.CharField(max_length=500, null=True,
@@ -91,7 +89,6 @@ class Registration(models.Model):
 
     date_of_registration = models.DateField(default=datetime.date.today)
     volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     withdrawn = models.BooleanField(default=False)
     tags = models.CharField(max_length=10000, default='[]', verbose_name=_('tags'))
