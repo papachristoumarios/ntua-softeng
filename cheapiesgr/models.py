@@ -20,6 +20,8 @@ class Volunteer(models.Model):
     confirmed_email = models.BooleanField(default=False)
 
     class Meta:
+        verbose_name = _('volunteer')
+        verbose_name_plural = _('volunteers')
         db_table = 'volunteer'
 
 
@@ -63,8 +65,8 @@ class Shop(models.Model):
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=200,
-                                     verbose_name=('category_name'))
+    category_name = models.CharField(
+        max_length=200, verbose_name=_('category_name'))
     category_description = models.CharField(
         max_length=200, verbose_name=_('category_description'))
     image = models.ImageField()
