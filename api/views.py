@@ -141,7 +141,7 @@ def create_or_update_shop(request, shop_id):
 				address=data['address'],
 				city=data['address'],
 				location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
-				tags=json.dumps(data['tags'], ensure_ascii=True)
+				tags=json.dumps(data['tags'], ensure_ascii=False)
 			)
 			shop.save()
 		elif request.method == 'PUT':
@@ -149,7 +149,7 @@ def create_or_update_shop(request, shop_id):
 			shop.name = data['name']
 			shop.address = data['address']
 			shop.city = data['address']
-			shop.tags = json.dumps(data['tags'])
+			shop.tags = json.dumps(data['tags'], ensure_ascii=False)
 			shop.withdrawn = data['withdrawn']
 			lat = data.get('lat', shop.location.y)
 			lon = data.get('lng', shop.location.x)
@@ -345,16 +345,14 @@ def create_or_update_product(request, product_id):
 			except:
 				category = Category(category_name=data['category'])
 				category.save()
-			shop = Shop.objects.order_by('?').first()
 			registration = Registration(
 				id=product_id,
 				name=data['name'],
 				product_description=data['description'],
 				category=category,
-				shop=shop,
-				tags=json.dumps(data['tags'], ensure_ascii=True),
+				tags=json.dumps(data['tags'], ensure_ascii=False),
 				price=0,
-				withdrawn=data['withdrawn'],
+				withdrawn=data.get('withdrawn', False),
 				volunteer=user,
 			)
 			registration.save()
@@ -364,7 +362,7 @@ def create_or_update_product(request, product_id):
 			registration = Registration.objects.get(pk=product_id)
 			registration.name = data['name']
 			registration.product_description = data['description']
-			registration.tags = json.dumps(data['tags'], ensure_ascii=True)
+			registration.tags = json.dumps(data['tags'], ensure_ascii=False)
 			registration.withdrawn = data['withdrawn']
 			registration.volunteer = user
 			try:
@@ -410,7 +408,7 @@ def patch_product(request, product_id):
 			category = Category.objects.get(category_name=data['category'])
 			registration.category = category
 		if 'tags' in data:
-			registration.tags = json.dumps(data['tags'])
+			registration.tags = json.dumps(data['tags'], ensure_ascii=False)
 		if 'withdrawn' in data:
 			registration.withdrawn = data['withdrawn']
 		registration.save()
