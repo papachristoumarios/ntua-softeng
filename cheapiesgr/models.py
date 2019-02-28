@@ -96,9 +96,6 @@ class Registration(models.Model):
     def __str__(self):
         return self.product_description
 
-    @property
-    def location(self):
-        return self.shop.location
 
     def serialize(self):
         data = {
@@ -117,6 +114,14 @@ class Registration(models.Model):
     @property
     def prices(self):
         return self.registrationprice_set.all()
+
+    @property
+    def num_of_prices(self):
+        return self.registration_set.all().count()
+
+    @property
+    def locations(self):
+        return [x.shop.location for x in self.prices]
 
     @property
     def prices_list(self):

@@ -231,8 +231,8 @@ def search(request):
 
         reg_data = Registration.objects.filter(
             product_description__contains=search_text,
-            price__gte=pmin,
-            price__lte=pmax)
+            price__price__gte=pmin,
+            price__price__lte=pmax)
 
         if category != 'Όλες':
             reg_data = reg_data.filter(category__category_name=category)
@@ -241,10 +241,12 @@ def search(request):
             reg_data = reg_data[:limit]
 
         if orderby == 'price':
-            reg_data = reg_data.order_by('price')
+            reg_data = reg_data.order_by('price__price')
 
-    distances = [distance(r.location, client_loc) for r in reg_data]
-    results = [(r, d) for r, d in zip(reg_data, distances)]
+    distances = [distance(s, client_loc) for s in r.locations for r in reg_data]
+    reg_data_all = [r for r in reg_data for j in range(r.num_of_prices)]
+    reg_prices = [p for p in r.prices_list for r in reg_data]
+    results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, reg_prices)]
 
     if orderby == 'rating':
         results = order_by_rating(results)
