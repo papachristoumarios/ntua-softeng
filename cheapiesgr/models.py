@@ -68,7 +68,7 @@ class Category(models.Model):
     category_name = models.CharField(
         max_length=200, verbose_name=_('category_name'))
     category_description = models.CharField(
-        max_length=200, verbose_name=_('category_description'))
+        max_length=200, default='', verbose_name=_('category_description'))
     image = models.ImageField()
 
     def __str__(self):
@@ -93,7 +93,6 @@ class Registration(models.Model):
 
     date_of_registration = models.DateField(default=datetime.date.today)
     volunteer = models.ForeignKey(User, on_delete=models.CASCADE)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     withdrawn = models.BooleanField(default=False)
     tags = models.CharField(max_length=10000, default='[]', verbose_name=_('tags'))
