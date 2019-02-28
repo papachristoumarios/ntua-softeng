@@ -28,6 +28,22 @@ class APITestcase(TestCase):
         assert('token' in login_response)
         self.token = login_response['token']
         self.header = { AUTH_TOKEN_LABEL : self.token }
+        self.client.credentials(HTTP_X_OBSERVATORY_AUTH=self.token)
+
+    def test_product(self):
+        product_id = '124'
+        product = {
+            'name' : 'foo',
+            'description' : 'foo',
+            'category' : 'laptop',
+            'tags' : ['a', 'b'],
+            'withdrawn' : False
+        }
+
+        response = self.client.post('/product/{}'.format(product_id), product)
+
+        print(decode_response)
+
 
     def logout(self):
         print(self.header)
