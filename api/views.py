@@ -16,6 +16,7 @@ from django.http import QueryDict
 
 AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
 
+
 def parse_withdrawn(data):
 	if data['withdrawn'] in [True, 'true']:
 		return True
@@ -228,7 +229,14 @@ def create_price(request):
 		registration_id=int(request.POST['productId'])
 	)
 	price.save()
-	return unicode_response(price.serialize(post=True))
+	prices = price.serialize_interval()
+	data = {
+		'start' : 0,
+		'count' : -1,
+  		'total' : len(prices),
+		'prices' : prices
+	}
+	return unicode_response(data)
 
 
 def parse_location(request):

@@ -78,4 +78,10 @@ runsslserver:
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
 
 build:
-	$(PYTHON) setup.py sdist	
+	$(PYTHON) setup.py sdist
+
+exam:
+	$(PYTHON) manage.py reset_db
+	$(PYTHON) manage.py migrate
+	$(PYTHON) manage.py createsuperuser --username admin --email admin@example.com
+	$(PYTHON) manage.py runserver	

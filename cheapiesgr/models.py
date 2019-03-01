@@ -1,10 +1,18 @@
 import json
 import datetime
+import copy
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+
+def daterange(start_date, end_date):
+    for n in range(int ((end_date - start_date).days) + 1):
+        yield start_date + datetime.timedelta(days=n)
+
+def stringify_date(date):
+    return str(date.strftime("%Y-%m-%d"))
 
 def decode_tags(tags):
     result = json.loads(tags)
@@ -163,33 +171,35 @@ class RegistrationPrice(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
 
-    def serialize(self, point=None, post=False):
-        if post:
-            data = {
-                'id' : self.id,
-                'price' : self.price,
-                'dateFrom' : str(self.date_from),
-                'dateTo' : str(self.date_to),
-                'productId' : self.registration.id,
-                'shopId' : self.shop.id
-            }
+    def serialize_interval(self, point=None):
+        data = self.serialize(point=point)
+
+        result = []
+
+        for date in daterange(self.date_from, self.date_to):
+            temp = copy.deepcopy(data)
+            temp['date'] = stringify_date(date)
+            result.append(temp)
+
+        return result
+
+
+    def serialize(self, point=None):
+        if point == None:
+            distance = -1
         else:
-            if point == None:
-                distance = -1
-            else:
-                distance = self.shop.location.distance(point) * 100
-            data = {
-                'price' : float(self.price),
-                'date' : str(self.date_from),
-                'productName' : self.registration.name,
-                'productId' : self.registration.id,
-                'productTags' : decode_tags(self.registration.tags),
-                'shopId' : self.shop.id,
-                'shopName' : self.shop.name,
-                'shopTags' : decode_tags(self.shop.tags),
-                'shopAddress' : self.shop.address,
-                'shopDist' : distance
-            }
+            distance = self.shop.location.distance(point) * 100
+        data = {
+            'price' : float(self.price),
+            'productName' : self.registration.name,
+            'productId' : self.registration.id,
+            'productTags' : decode_tags(self.registration.tags),
+            'shopId' : self.shop.id,
+            'shopName' : self.shop.name,
+            'shopTags' : decode_tags(self.shop.tags),
+            'shopAddress' : self.shop.address,
+            'shopDist' : distance
+        }
         return data
 
 
