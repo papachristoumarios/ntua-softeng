@@ -16,6 +16,11 @@ from django.http import QueryDict
 
 AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
 
+def parse_withdrawn(data):
+	if data['withdrawn'] in [True, 'true']:
+		return True
+	else:
+		return False
 
 def unicode_response(data, status=200):
 	""" Returns unicode response """
@@ -136,16 +141,16 @@ def create_or_update_shop(request, shop_id):
 		data = get_request_data(request)
 		if request.method == 'POST':
 			shop = Shop(
-				id=shop_id,
 				name=data['name'],
 				address=data['address'],
 				city=data['address'],
+				withdrawn=parse_withdrawn(data),
 				location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
 				tags=json.dumps(data['tags'], ensure_ascii=False)
 			)
 			shop.save()
 		elif request.method == 'PUT':
-			shop = Shop.objects.get(pk=shop_id)
+			shop = Shop.objects.get(pk=int(shop_id))
 			shop.name = data['name']
 			shop.address = data['address']
 			shop.city = data['address']
@@ -335,48 +340,49 @@ def query_prices(request):
 
 def create_or_update_product(request, product_id):
 	""" Implements POST /products/<id> and PUT /products/<id> """
-	try:
-		user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
-		data = get_request_data(request)
-		if request.method == 'POST':
-			# TODO Remove price and shop
-			try:
-				category = Category.objects.get(category_name=data['category'])
-			except:
-				category = Category(category_name=data['category'])
-				category.save()
-			registration = Registration(
-				id=product_id,
-				name=data['name'],
-				product_description=data['description'],
-				category=category,
-				tags=json.dumps(data['tags'], ensure_ascii=False),
-				price=0,
-				withdrawn=data.get('withdrawn', False),
-				volunteer=user,
-			)
-			registration.save()
-			return unicode_response(
-				{'message': 'Product created sucessfully'}, status=200)
-		elif request.method == 'PUT':
-			registration = Registration.objects.get(pk=product_id)
-			registration.name = data['name']
-			registration.product_description = data['description']
-			registration.tags = json.dumps(data['tags'], ensure_ascii=False)
-			registration.withdrawn = data['withdrawn']
-			registration.volunteer = user
-			try:
-				category = Category.objects.get(category_name=data['category'])
-			except:
-				category = Category(category_name=data['category'])
-				category.save()
-			registration.category = category
-			registration.save()
-			return unicode_response(
-				{'message': 'Product put sucessfully'}, status=200)
-	except BaseException:
+	# try:
+	user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
+	data = get_request_data(request)
+	print(request.body.decode('iso-8859-1'))
+	print(data)
+	if request.method == 'POST':
+		# TODO Remove price and shop
+		try:
+			category = Category.objects.get(category_name=data['category'])
+		except:
+			category = Category(category_name=data['category'])
+			category.save()
+		registration = Registration(
+			name=data['name'],
+			product_description=data['description'],
+			category=category,
+			tags=json.dumps(data['tags'], ensure_ascii=False),
+			withdrawn=parse_withdrawn(data),
+			price=0,
+			volunteer=user,
+		)
+		registration.save()
 		return unicode_response(
-			{'message': 'Parameters not valid'}, status=400)
+			{'message': 'Product created sucessfully'}, status=200)
+	elif request.method == 'PUT':
+		registration = Registration.objects.get(pk=int(product_id))
+		registration.name = data['name']
+		registration.product_description = data['description']
+		registration.tags = json.dumps(data['tags'], ensure_ascii=False)
+		registration.withdrawn = data['withdrawn']
+		registration.volunteer = user
+		try:
+			category = Category.objects.get(category_name=data['category'])
+		except:
+			category = Category(category_name=data['category'])
+			category.save()
+		registration.category = category
+		registration.save()
+		return unicode_response(
+			{'message': 'Product put sucessfully'}, status=200)
+# except BaseException:
+	# 	return unicode_response(
+	# 		{'message': 'Parameters not valid'}, status=400)
 
 
 def remove_product(request, product_id):
@@ -453,12 +459,10 @@ def shop(request, shop_id='all'):
 			shop = Shop.objects.get(pk=int(shop_id))
 			return unicode_response(shop.serialize())
 	elif request.method in ['POST', 'PUT']:
-		if shop_id == 'all':
-			return unicode_response({'message': 'Invalid Request'}, status=400)
-		elif not authenticate_token(request):
+		if not authenticate_token(request):
 			return unicode_response({'message': 'Forbidden'}, status=403)
 		else:
-			return create_or_update_shop(request, int(shop_id))
+			return create_or_update_shop(request, shop_id)
 	elif request.method == 'PATCH':
 		if shop_id == 'all':
 			return unicode_response({'message': 'Invalid Request'}, status=400)
@@ -490,12 +494,10 @@ def product(request, product_id='all'):
 			registration = Registration.objects.get(pk=int(product_id))
 			return unicode_response(registration.serialize())
 	elif request.method in ['POST', 'PUT']:
-		if product_id == 'all':
-			return unicode_response({'message': 'Invalid Request'}, status=400)
-		elif not authenticate_token(request):
+		if not authenticate_token(request):
 			return unicode_response({'message': 'Forbidden'}, status=403)
 		else:
-			return create_or_update_product(request, int(product_id))
+			return create_or_update_product(request, product_id)
 	elif request.method in ['PATCH']:
 		if product_id == 'all':
 			return unicode_response({'message': 'Invalid Request'}, status=400)
