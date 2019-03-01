@@ -88,4 +88,4 @@ exam:
 	@echo "Create Superuser"
 	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', '1234')" | $(PYTHON) manage.py shell
 	@echo "Start web application"
-	$(PYTHON) manage.py runserver
+	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
