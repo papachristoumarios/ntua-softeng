@@ -81,7 +81,11 @@ build:
 	$(PYTHON) setup.py sdist
 
 exam:
+	@echo "Resetting DB"
 	$(PYTHON) manage.py reset_db
+	@echo "Migrations"
 	$(PYTHON) manage.py migrate
-	$(PYTHON) manage.py createsuperuser --username admin --email admin@example.com
-	$(PYTHON) manage.py runserver	
+	@echo "Create Superuser"
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', '1234')" | $(PYTHON) manage.py shell
+	@echo "Start web application"
+	$(PYTHON) manage.py runserver
