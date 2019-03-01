@@ -137,34 +137,34 @@ def query_shops_and_products(request, objects, list_label):
 
 def create_or_update_shop(request, shop_id):
 	""" Implements POST /shops/<id> and PUT /shops/<id> """
-	try:
-		data = get_request_data(request)
-		if request.method == 'POST':
-			shop = Shop(
-				name=data['name'],
-				address=data['address'],
-				city=data['address'],
-				withdrawn=parse_withdrawn(data),
-				location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
-				tags=json.dumps(data['tags'], ensure_ascii=False)
-			)
-			shop.save()
-		elif request.method == 'PUT':
-			shop = Shop.objects.get(pk=int(shop_id))
-			shop.name = data['name']
-			shop.address = data['address']
-			shop.city = data['address']
-			shop.tags = json.dumps(data['tags'], ensure_ascii=False)
-			shop.withdrawn = data['withdrawn']
-			lat = data.get('lat', shop.location.y)
-			lon = data.get('lng', shop.location.x)
-			shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
-			shop.save()
-		return unicode_response(
-			{'message': 'Shop created sucessfully'}, status=200)
-	except BaseException:
-		return unicode_response(
-			{'message': 'Parameters not valid'}, status=400)
+	# try:
+	data = get_request_data(request)
+	if request.method == 'POST':
+		shop = Shop(
+			name=data['name'],
+			address=data['address'],
+			city=data['address'],
+			withdrawn=parse_withdrawn(data),
+			location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
+			tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False)
+		)
+		shop.save()
+		return unicode_response(shop.serialize(), status=200)
+	elif request.method == 'PUT':
+		shop = Shop.objects.get(pk=int(shop_id))
+		shop.name = data['name']
+		shop.address = data['address']
+		shop.city = data['address']
+		shop.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
+		shop.withdrawn = data['withdrawn']
+		lat = data.get('lat', shop.location.y)
+		lon = data.get('lng', shop.location.x)
+		shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
+		shop.save()
+		return unicode_response(shop.serialize(), status=200)
+	# except BaseException:
+	# 	return unicode_response(
+	# 		{'message': 'Parameters not valid'}, status=400)
 
 
 def patch_shop(request, shop_id):
@@ -228,7 +228,7 @@ def create_price(request):
 		registration_id=int(request.POST['productId'])
 	)
 	price.save()
-	return unicode_response({'message': 'Price creation sucessfull'})
+	return unicode_response(price.serialize(post=True))
 
 
 def parse_location(request):
@@ -343,9 +343,8 @@ def create_or_update_product(request, product_id):
 	# try:
 	user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
 	data = get_request_data(request)
-	print(request.body.decode('iso-8859-1'))
-	print(data)
 	if request.method == 'POST':
+
 		# TODO Remove price and shop
 		try:
 			category = Category.objects.get(category_name=data['category'])
@@ -356,19 +355,18 @@ def create_or_update_product(request, product_id):
 			name=data['name'],
 			product_description=data['description'],
 			category=category,
-			tags=json.dumps(data['tags'], ensure_ascii=False),
+			tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False),
 			withdrawn=parse_withdrawn(data),
 			price=0,
 			volunteer=user,
 		)
 		registration.save()
-		return unicode_response(
-			{'message': 'Product created sucessfully'}, status=200)
+		return unicode_response(registration.serialize(), status=200)
 	elif request.method == 'PUT':
 		registration = Registration.objects.get(pk=int(product_id))
 		registration.name = data['name']
 		registration.product_description = data['description']
-		registration.tags = json.dumps(data['tags'], ensure_ascii=False)
+		registration.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
 		registration.withdrawn = data['withdrawn']
 		registration.volunteer = user
 		try:
@@ -378,8 +376,7 @@ def create_or_update_product(request, product_id):
 			category.save()
 		registration.category = category
 		registration.save()
-		return unicode_response(
-			{'message': 'Product put sucessfully'}, status=200)
+		return unicode_response(registration.serialize(), status=200)
 # except BaseException:
 	# 	return unicode_response(
 	# 		{'message': 'Parameters not valid'}, status=400)

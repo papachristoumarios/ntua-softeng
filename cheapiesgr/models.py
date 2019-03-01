@@ -48,8 +48,8 @@ class Shop(models.Model):
             'id' : self.id,
             'name' : self.name,
             'address' : self.address,
-            'lng' : self.location.x,
-            'lat' : self.location.y,
+            'lng' : float(self.location.x),
+            'lat' : float(self.location.y),
             'tags' : decode_tags(str(self.tags)),
             'withdrawn' : self.withdrawn,
             'extraData' : {
@@ -72,7 +72,7 @@ class Category(models.Model):
     image = models.ImageField()
 
     def __str__(self):
-        return self.category_description
+        return self.category_name
 
     class Meta:
         verbose_name = _('category')
@@ -163,23 +163,33 @@ class RegistrationPrice(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
 
-    def serialize(self, point):
-        if point == None:
-            distance = -1
+    def serialize(self, point=None, post=False):
+        if post:
+            data = {
+                'id' : self.id,
+                'price' : self.price,
+                'dateFrom' : str(self.date_from),
+                'dateTo' : str(self.date_to),
+                'productId' : self.registration.id,
+                'shopId' : self.shop.id
+            }
         else:
-            distance = self.shop.location.distance(point) * 100
-        data = {
-            'price' : float(self.price),
-            'date' : str(self.date_from),
-            'productName' : self.registration.name,
-            'productId' : self.registration.id,
-            'productTags' : decode_tags(self.registration.tags),
-            'shopId' : self.shop.id,
-            'shopName' : self.shop.name,
-            'shopTags' : decode_tags(self.shop.tags),
-            'shopAddress' : self.shop.address,
-            'shopDist' : distance
-        }
+            if point == None:
+                distance = -1
+            else:
+                distance = self.shop.location.distance(point) * 100
+            data = {
+                'price' : float(self.price),
+                'date' : str(self.date_from),
+                'productName' : self.registration.name,
+                'productId' : self.registration.id,
+                'productTags' : decode_tags(self.registration.tags),
+                'shopId' : self.shop.id,
+                'shopName' : self.shop.name,
+                'shopTags' : decode_tags(self.shop.tags),
+                'shopAddress' : self.shop.address,
+                'shopDist' : distance
+            }
         return data
 
 
