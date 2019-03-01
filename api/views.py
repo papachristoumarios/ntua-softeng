@@ -51,11 +51,12 @@ def build_list_from_queryset(query_set):
 	return result
 
 
-def build_list_from_price_queryset(query_set, location_point):
+def build_list_from_price_queryset(query_set, location_point, date_from, date_to):
 	""" Returns a list of serialized RegistrationPrice objects """
 	result = []
 	for x in query_set:
-		result.append(x.serialize(location_point))
+		temp = x.serialize_interval(point=location_point, date_from=date_from, date_to=date_to)
+		result.extend(temp)
 
 	return result
 
@@ -138,34 +139,33 @@ def query_shops_and_products(request, objects, list_label):
 
 def create_or_update_shop(request, shop_id):
 	""" Implements POST /shops/<id> and PUT /shops/<id> """
-	# try:
-	data = get_request_data(request)
-	if request.method == 'POST':
-		shop = Shop(
-			name=data['name'],
-			address=data['address'],
-			city=data['address'],
-			withdrawn=parse_withdrawn(data),
-			location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
-			tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False)
-		)
-		shop.save()
+	try:
+		data = get_request_data(request)
+		if request.method == 'POST':
+			shop = Shop(
+				name=data['name'],
+				address=data['address'],
+				city=data['address'],
+				withdrawn=parse_withdrawn(data),
+				location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
+				tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False)
+			)
+			shop.save()
+		elif request.method == 'PUT':
+			shop = Shop.objects.get(pk=int(shop_id))
+			shop.name = data['name']
+			shop.address = data['address']
+			shop.city = data['address']
+			shop.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
+			shop.withdrawn = data['withdrawn']
+			lat = data.get('lat', shop.location.y)
+			lon = data.get('lng', shop.location.x)
+			shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
+			shop.save()
 		return unicode_response(shop.serialize(), status=200)
-	elif request.method == 'PUT':
-		shop = Shop.objects.get(pk=int(shop_id))
-		shop.name = data['name']
-		shop.address = data['address']
-		shop.city = data['address']
-		shop.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
-		shop.withdrawn = data['withdrawn']
-		lat = data.get('lat', shop.location.y)
-		lon = data.get('lng', shop.location.x)
-		shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
-		shop.save()
-		return unicode_response(shop.serialize(), status=200)
-	# except BaseException:
-	# 	return unicode_response(
-	# 		{'message': 'Parameters not valid'}, status=400)
+	except BaseException:
+		return unicode_response(
+			{'message': 'Parameters not valid'}, status=400)
 
 
 def patch_shop(request, shop_id):
@@ -186,8 +186,7 @@ def patch_shop(request, shop_id):
 			lon = data.get('lng', shop.location.x)
 			shop.location = 'SRID=4326;POINT({} {})'.format(lon, lat)
 		shop.save()
-		return unicode_response(
-			{'message': 'Shop patched sucessfully'}, status=200)
+		return unicode_response(shop.serialze())
 	except BaseException:
 		return unicode_response(
 			{'message': 'Parameters not valid'}, status=400)
@@ -203,7 +202,7 @@ def remove_shop(request, shop_id):
 		else:
 			shop.withdrawn = True
 			shop.save()
-			return unicode_response({'message': 'Withdrawal successfull'})
+			return unicode_response(shop.serialze())
 
 	except BaseException:
 		return unicode_response(
@@ -261,16 +260,15 @@ def list_to_regex(l):
 def query_prices(request):
 	""" Implements GET /prices """
 	# Query parameters
-	start = request.GET.get('start', 0)
-	count = request.GET.get('count', 20)
+	start = int(request.GET.get('start', 0))
+	count = int(request.GET.get('count', 20))
 	date_from = parse_date(request.GET.get('dateFrom', '1969-01-01'))
-	date_to = parse_date(request.GET.get('dateTo', '2300-01-01'))
+	date_to = parse_date(request.GET.get('dateTo', '2300-01-01')) + datetime.timedelta(days=1)
 	sort = request.GET.get('sort', 'price|ASC')
 	shops = [int(x) for x in request.GET.getlist('shops', [])]
 	products = [int(x) for x in request.GET.getlist('products', [])]
 	tags = list_to_regex(request.GET.getlist('tags', []))
 	location_point, dist = parse_location(request)
-	print(products)
 
 	# Check parameters
 	if start < 0:
@@ -292,8 +290,11 @@ def query_prices(request):
 		date_from__gte=date_from,
 		date_to__lte=date_to)
 
+	date_to = date_to - datetime.timedelta(days=1)
+
+
 	# Filter distance
-	if location_point is not None and dist is not None:
+	if location_point is not None:
 		degrees = dist * 1 / 111.325
 		distance_filtered = date_filtered.filter(
 			shop__location__distance_lte=(
@@ -306,9 +307,12 @@ def query_prices(request):
 	shops_filtered = products_filtered.filter(shop_id__in=shops)
 
 	# Filter tags
-	tags_filtered = products_filtered.filter(
-		registration__tags__iregex=tags) | products_filtered.filter(
-		shop__tags__iregex=tags)
+	if tags != '':
+		tags_filtered = products_filtered.filter(
+			registration__tags__iregex=tags) | products_filtered.filter(
+			shop__tags__iregex=tags)
+	else:
+		tags_filtered = products_filtered
 
 	# Sorting
 	if sort == 'price|ASC':
@@ -328,19 +332,22 @@ def query_prices(request):
 				"shop__location",
 				location_point)).order_by('-distance')
 
+	list_result = build_list_from_price_queryset(sort_result, location_point, date_from, date_to)
+
 	# Paginate
 	try:
-		paginator = Paginator(sort_result, count)
+		paginator = Paginator(list_result, count)
 		result = paginator.page(start + 1)
 	except BaseException:
 		return unicode_response({'message': 'Invalid pagination'}, status=400)
+
 
 	# Response
 	data = {
 		'start': start,
 		'count': count,
 		'total': sort_result.count(),
-		'prices': build_list_from_price_queryset(result, location_point)
+		'prices': list(result)
 
 	}
 	return unicode_response(data)
@@ -348,46 +355,45 @@ def query_prices(request):
 
 def create_or_update_product(request, product_id):
 	""" Implements POST /products/<id> and PUT /products/<id> """
-	# try:
-	user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
-	data = get_request_data(request)
-	if request.method == 'POST':
+	try:
+		user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
+		data = get_request_data(request)
+		if request.method == 'POST':
 
-		# TODO Remove price and shop
-		try:
-			category = Category.objects.get(category_name=data['category'])
-		except:
-			category = Category(category_name=data['category'])
-			category.save()
-		registration = Registration(
-			name=data['name'],
-			product_description=data['description'],
-			category=category,
-			tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False),
-			withdrawn=parse_withdrawn(data),
-			price=0,
-			volunteer=user,
-		)
-		registration.save()
+			# TODO Remove price and shop
+			try:
+				category = Category.objects.get(category_name=data['category'])
+			except:
+				category = Category(category_name=data['category'])
+				category.save()
+			registration = Registration(
+				name=data['name'],
+				product_description=data['description'],
+				category=category,
+				tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False),
+				withdrawn=parse_withdrawn(data),
+				price=0,
+				volunteer=user,
+			)
+			registration.save()
+		elif request.method == 'PUT':
+			registration = Registration.objects.get(pk=int(product_id))
+			registration.name = data['name']
+			registration.product_description = data['description']
+			registration.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
+			registration.withdrawn = data['withdrawn']
+			registration.volunteer = user
+			try:
+				category = Category.objects.get(category_name=data['category'])
+			except:
+				category = Category(category_name=data['category'])
+				category.save()
+			registration.category = category
+			registration.save()
 		return unicode_response(registration.serialize(), status=200)
-	elif request.method == 'PUT':
-		registration = Registration.objects.get(pk=int(product_id))
-		registration.name = data['name']
-		registration.product_description = data['description']
-		registration.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
-		registration.withdrawn = data['withdrawn']
-		registration.volunteer = user
-		try:
-			category = Category.objects.get(category_name=data['category'])
-		except:
-			category = Category(category_name=data['category'])
-			category.save()
-		registration.category = category
-		registration.save()
-		return unicode_response(registration.serialize(), status=200)
-# except BaseException:
-	# 	return unicode_response(
-	# 		{'message': 'Parameters not valid'}, status=400)
+	except BaseException:
+		return unicode_response(
+			{'message': 'Parameters not valid'}, status=400)
 
 
 def remove_product(request, product_id):
@@ -400,7 +406,7 @@ def remove_product(request, product_id):
 		else:
 			registration.withdrawn = True
 			registration.save()
-			return unicode_response({'message': 'Withdrawal successfull'})
+			return unicode_response(shop.serialize())
 	except BaseException:
 		return unicode_response(
 			{'message': 'Parameters not valid'}, status=400)
@@ -423,8 +429,7 @@ def patch_product(request, product_id):
 		if 'withdrawn' in data:
 			registration.withdrawn = data['withdrawn']
 		registration.save()
-		return unicode_response(
-			{'message': 'Product patched sucessfully'}, status=200)
+		return unicode_response(registration.serialze())
 	except BaseException:
 		return unicode_response(
 			{'message': 'Parameters not valid'}, status=400)
