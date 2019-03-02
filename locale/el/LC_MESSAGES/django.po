@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-05 18:46+0200\n"
+"POT-Creation-Date: 2019-03-02 14:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,115 +26,135 @@ msgstr "Διαχείριση cheapies"
 msgid "My Site Administration"
 msgstr "Διαχείριση cheapies"
 
-#: cheapiesgr/models.py:18
+#: cheapiesgr/models.py:27 cheapiesgr/models.py:82
 #, fuzzy
 #| msgid "username"
 msgid "name"
 msgstr "Όνομα χρήστη"
 
-#: cheapiesgr/models.py:19
+#: cheapiesgr/models.py:28
 msgid "address"
 msgstr "Διεύθυνση"
 
-#: cheapiesgr/models.py:20
+#: cheapiesgr/models.py:29
 msgid "city"
 msgstr "Πόλη"
 
-#: cheapiesgr/models.py:23
+#: cheapiesgr/models.py:32
 msgid "location"
 msgstr "Τοποθεσία"
 
-#: cheapiesgr/models.py:35
+#: cheapiesgr/models.py:61
 msgid "shop"
 msgstr "Κατάστημα"
 
-#: cheapiesgr/models.py:36
+#: cheapiesgr/models.py:62
 msgid "shops"
 msgstr "Καταστήματα"
 
-#: cheapiesgr/models.py:43
+#: cheapiesgr/models.py:69
 msgid "category_description"
 msgstr "Περιγραφή Κατηγορίας"
 
-#: cheapiesgr/models.py:53
+#: cheapiesgr/models.py:76
 msgid "category"
 msgstr "Κατηγορία"
 
-#: cheapiesgr/models.py:54
+#: cheapiesgr/models.py:77
 #, fuzzy
 #| msgid "categorys"
 msgid "categories"
 msgstr "Κατηγορίες"
 
-#: cheapiesgr/models.py:60
+#: cheapiesgr/models.py:84
 msgid "product_discription"
 msgstr "Περιγραφή Προϊόντος"
 
-#: cheapiesgr/models.py:62
-msgid "price"
-msgstr "Τιμή"
-
-#: cheapiesgr/models.py:64
+#: cheapiesgr/models.py:86
 msgid "image"
 msgstr "Εικόνα"
 
-#: cheapiesgr/models.py:66
+#: cheapiesgr/models.py:88
 #, fuzzy
 #| msgid "image"
 msgid "image_url"
 msgstr "Εικόνα"
 
-#: cheapiesgr/models.py:106
+#: cheapiesgr/models.py:94
+msgid "tags"
+msgstr ""
+
+#: cheapiesgr/models.py:155
 msgid "registration"
 msgstr "Καταχώρηση"
 
-#: cheapiesgr/models.py:107
+#: cheapiesgr/models.py:156
 msgid "registrations"
 msgstr "Καταχωρήσεις"
 
-#: cheapiesgr/models.py:111
+#: cheapiesgr/models.py:161
+msgid "price"
+msgstr "Τιμή"
+
+#: cheapiesgr/models.py:188
 msgid "stars"
 msgstr "Αστέρια"
 
-#: cheapiesgr/models.py:113
+#: cheapiesgr/models.py:190
 msgid "validity_of_this_rate"
 msgstr "Εγκυρότητα αυτής της κριτικής"
 
-#: cheapiesgr/models.py:115
+#: cheapiesgr/models.py:192
 msgid "rate_explanation"
 msgstr "Επεξήγηση βαθμολογίας"
 
-#: cheapiesgr/models.py:131
+#: cheapiesgr/models.py:208
 msgid "rating"
 msgstr "Βαθμολογία"
 
-#: cheapiesgr/models.py:132
+#: cheapiesgr/models.py:209
 msgid "ratings"
 msgstr "Βαθμολογίες"
 
-#: cheapiesgr/models.py:137
+#: cheapiesgr/models.py:214
 msgid "question_text"
 msgstr "Κείμενο Ερώτησης"
 
-#: cheapiesgr/models.py:149
+#: cheapiesgr/models.py:226
 msgid "question"
 msgstr "Ερώτηση"
 
-#: cheapiesgr/models.py:150
+#: cheapiesgr/models.py:227
 msgid "questions"
 msgstr "Ερωτήσεις"
 
-#: cheapiesgr/models.py:155
+#: cheapiesgr/models.py:232 cheapiesgr/models.py:246
 msgid "answer_text"
 msgstr "Κείμενο Απάντησης"
 
-#: cheapiesgr/models.py:163
+#: cheapiesgr/models.py:240
 msgid "answer"
 msgstr "Απάντηση"
 
-#: cheapiesgr/models.py:164
+#: cheapiesgr/models.py:241
 msgid "answers"
 msgstr "Απαντήσεις"
+
+#: cheapiesgr/models.py:253
+msgid "report"
+msgstr ""
+
+#: cheapiesgr/models.py:254
+msgid "reports"
+msgstr ""
+
+#: cheapiesgr/models.py:261
+msgid "favorite"
+msgstr ""
+
+#: cheapiesgr/models.py:262
+msgid "favorites"
+msgstr ""
 
 #~ msgid "username"
 #~ msgstr "Όνομα χρήστη"

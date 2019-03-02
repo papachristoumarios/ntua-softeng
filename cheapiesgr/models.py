@@ -164,6 +164,10 @@ class RegistrationPrice(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
 
+    @property
+    def location(self):
+        return self.shop.location
+
     def serialize(self, point):
         if point == None:
             distance = -1
