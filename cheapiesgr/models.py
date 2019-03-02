@@ -92,8 +92,6 @@ class Registration(models.Model):
         max_length=1000, verbose_name=_('name'))
     product_description = models.CharField(
         max_length=10000, verbose_name=_('product_discription'))
-    price = models.DecimalField(max_digits=10, decimal_places=2,
-                                verbose_name=_('price'))
     image = models.ImageField(blank=True, null=True,
                               verbose_name=_('image'))
     image_url = models.CharField(max_length=500, null=True,

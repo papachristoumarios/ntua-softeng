@@ -18,7 +18,7 @@ AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
 
 
 def parse_withdrawn(data):
-	if data['withdrawn'] in [True, 'true']:
+	if data.get('withdrawn', False) in [True, 'true']:
 		return True
 	else:
 		return False
@@ -372,7 +372,6 @@ def create_or_update_product(request, product_id):
 				category=category,
 				tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False),
 				withdrawn=parse_withdrawn(data),
-				price=0,
 				volunteer=user,
 			)
 			registration.save()
