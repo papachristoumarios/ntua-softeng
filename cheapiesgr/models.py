@@ -87,7 +87,7 @@ class Category(models.Model):
 
 class Registration(models.Model):
     name = models.CharField(
-        max_length=1000, verbose_name=_('name'))
+        max_length=1000, verbose_name=_('name'), null=True)
     product_description = models.CharField(
         max_length=10000, verbose_name=_('product_discription'))
     image = models.ImageField(blank=True, null=True,
@@ -104,9 +104,6 @@ class Registration(models.Model):
     def __str__(self):
         return self.product_description
 
-    @property
-    def location(self):
-        return self.shop.location
 
     def serialize(self):
         data = {
@@ -125,6 +122,14 @@ class Registration(models.Model):
     @property
     def prices(self):
         return self.registrationprice_set.all()
+
+    @property
+    def num_of_prices(self):
+        return self.registration_set.all().count()
+
+    @property
+    def locations(self):
+        return [x.shop.location for x in self.prices]
 
     @property
     def prices_list(self):
@@ -200,7 +205,7 @@ class RegistrationPrice(models.Model):
             'shopDist' : distance
         }
         return data
-        
+
     class Meta:
     	verbose_name = _('registrationprice')
     	verbose_name_plural = _('registrationprices')

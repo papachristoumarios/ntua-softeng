@@ -30,7 +30,10 @@ def generate_product_data(n, d):
         for j, p in enumerate(products[:n]):
             q = p.split(', ')
             img_url = 'media/supermarket_crawlers/{}/images/{}.jpg'.format(category, j)
-
+            if (len(', '.join(q[2:-1])) > 1000):
+                prname = ', '.join(q[2:-1])[:1000]
+            else:
+                prname = ', '.join(q[2:-1])
             try:
                 pr = float(q[1])
             except:
@@ -40,10 +43,9 @@ def generate_product_data(n, d):
                 'pk' : pk,
                 'fields' : {
                     'tags' : '[]',
-                    'price' : pr,
                     'product_description' : ', '.join(q[2:-1]),
-                    'name' : ', '.join(q[2:-1]),
-                    'shop' : random.randint(1, 5),
+                    'name' : prname,
+                    'withdrawn' : False,
                     'volunteer' : random.randint(1, 5),
                     'category' : i + 1,
                     'date_of_registration' : '2018-11-27',
@@ -54,8 +56,9 @@ def generate_product_data(n, d):
                 'model' : 'cheapiesgr.registrationprice',
                 'pk' : pk,
                 'fields' : {
-                    'date_from' : '1971-01-01',
-                    'date_to' : '2200-01-01',
+                    'price' : pr,
+                    'date_from' : '2019-01-01',
+                    'date_to' : '2020-01-01',
                     'shop' : random.randint(1, 5),
                     'registration' : pk
                 }
@@ -66,9 +69,8 @@ def generate_product_data(n, d):
     return output
 
 def generate_categories_data(n, d):
-    # Generate data on categories and (sub)-sub-categories
-    output = []
 
+    output = []
     categories = glob.glob(os.path.join(os.path.abspath(d), '*/'))
 
     for i, c in enumerate(categories[:n]):
@@ -79,7 +81,6 @@ def generate_categories_data(n, d):
             'fields' : {
                 'category_description' : os.path.split(c[:-1])[1],
                 'category_name' : os.path.split(c[:-1])[1],
-                # 'image' : random.choice(img_path)
             }
         }
 

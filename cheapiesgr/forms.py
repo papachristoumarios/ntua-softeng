@@ -152,13 +152,18 @@ class AddProductForm(forms.Form):
 
     name = forms.CharField(
         required=True,
-        widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια όνομα για το προϊόν','class' : 'form-control','id': 'name'}),
+        widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε μια όνομα για το προϊόν','class' : 'form-control','id': 'name'}),
     )
 
 
     description = forms.CharField(
         required=True,
         widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια περιγραφή για το προϊόν','class' : 'form-control','id': 'description'}),
+    )
+
+    tags = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Δώστε ετικέτες για το προϊόν, χωρισμένες με κόμμα','class' : 'form-control','id': 'tags'}),
     )
 
     price = forms.FloatField(
@@ -168,7 +173,7 @@ class AddProductForm(forms.Form):
 
 
     location = forms.ModelChoiceField(
-        required=True,
+        required=False,
         widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
         queryset=Shop.objects.all(),
         empty_label='Άλλο'

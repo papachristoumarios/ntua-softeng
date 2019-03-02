@@ -169,8 +169,8 @@ def search(request):
         search_text = ''
         lat = request.session.get('lat', 0)
         lon = request.session.get('lon', 0)
-        reg_data = Registration.objects.filter(
-            category__id=category_id)[:limit]
+        price_data = RegistrationPrice.objects.filter(
+            registration__category__id=category_id)[:limit]
         client_loc = Point(lon, lat, srid=4326)
     else:
         search_text = request.POST.get('search')
@@ -229,22 +229,23 @@ def search(request):
         except TypeError:
             limit = -1
 
-        reg_data = Registration.objects.filter(
-            product_description__contains=search_text,
+        price_data = RegistrationPrice.objects.filter(
+            registration__product_description__contains=search_text,
             price__gte=pmin,
             price__lte=pmax)
 
         if category != 'Όλες':
-            reg_data = reg_data.filter(category__category_name=category)
+            price_data = price_data.filter(registration__category__category_name=category)
 
         if limit > 0:
-            reg_data = reg_data[:limit]
+            price_data = price_data[:limit]
 
         if orderby == 'price':
-            reg_data = reg_data.order_by('price')
+            price_data = price_data.order_by('price')
 
-    distances = [distance(r.location, client_loc) for r in reg_data]
-    results = [(r, d) for r, d in zip(reg_data, distances)]
+    distances = [distance(p.location, client_loc) for p in price_data]
+    reg_data_all = [p.registration for p in price_data]
+    results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, price_data)]
 
     if orderby == 'rating':
         results = order_by_rating(results)
@@ -321,17 +322,22 @@ def addproduct(request):
     if request.method == 'POST':
         f = AddProductForm(request.POST, request.FILES)
         if f.is_valid():
-            price = f.cleaned_data['price']
             name = f.cleaned_data['name']
             product_description = f.cleaned_data['description']
+            # Handle tags input
+            tags_string = f.cleaned_data['tags']
+            tags_list = tags_string.replace(" ","").split(",")
+            tags = json.dumps(tags_list,ensure_ascii=False)
+
+            price = f.cleaned_data['price']
             new_shop_name = f.cleaned_data['new_shop_name']
             new_shop_city = f.cleaned_data['new_shop_city']
             new_shop_street = f.cleaned_data['new_shop_street']
             new_shop_number = f.cleaned_data['new_shop_number']
             category = f.cleaned_data['category']
-            date_of_registration = datetime.datetime.today().strftime('%Y-%m-%d')
+            date_of_registration = datetime.datetime.today()
+
             took_photo = f.cleaned_data['shot']
-            print(took_photo)
             if (took_photo):
                 img_url = f.cleaned_data['img_url']
                 url_decoded = decode_base64(img_url.encode())
@@ -340,6 +346,7 @@ def addproduct(request):
             else:
                 image_url = handle_uploaded_file(request.FILES['img'], category.category_name)
 
+            # Check if a new shop was added
             if len(new_shop_name) > 0:
                 print('Adding a new shop named', new_shop_name)
                 geolocator = geonom(user_agent="cheapiesgr")
@@ -359,17 +366,26 @@ def addproduct(request):
 
 
             new_product = Registration(
+                name=name,
                 product_description=product_description,
-                price=price,
+                image_url=image_url,
                 date_of_registration=date_of_registration,
                 volunteer=request.user,
-                shop=shop,
                 category=category,
-                image_url=image_url,
-                name=name
+                withdrawn=False,
+                tags=tags
             )
-
             new_product.save()
+
+
+            new_price = RegistrationPrice(
+                price=price,
+                date_from = date_of_registration.strftime('%Y-%m-%d'),
+                date_to = date_of_registration.replace(year = date_of_registration.year + 1).strftime('%Y-%m-%d'),
+                shop=shop,
+                registration=new_product
+            )
+            new_price.save()
 
             messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
             return render(request, 'index.html', {})
@@ -377,7 +393,6 @@ def addproduct(request):
         f = AddProductForm()
     return render(request, 'addproduct.html', {'form': f})
 
-    return render(request, 'addproduct.html', {})
 
 
 def user_auth(request):
