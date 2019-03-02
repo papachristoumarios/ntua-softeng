@@ -128,12 +128,20 @@ class Registration(models.Model):
         return self.registration_set.all().count()
 
     @property
+    def shops(self):
+        return [x.shop.name for x in self.prices]
+
+    @property
     def locations(self):
         return [x.shop.location for x in self.prices]
 
     @property
     def prices_list(self):
         return [float(p) for p in self.registrationprice_set.values_list('price', flat=True)]
+
+    @property
+    def registration_info(self):
+        return list(zip(self.shops, self.locations, self.prices_list))
 
     @property
     def stars(self):
