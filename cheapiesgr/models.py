@@ -169,12 +169,15 @@ class RegistrationPrice(models.Model):
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
 
-    def serialize_interval(self, point=None):
+    def serialize_interval(self, point=None, date_from=None, date_to=None):
+        if date_from == None and date_to == None:
+            date_from = self.date_from
+            date_to = self.date_to
         data = self.serialize(point=point)
 
         result = []
 
-        for date in daterange(self.date_from, self.date_to):
+        for date in daterange(date_from, date_to):
             temp = copy.deepcopy(data)
             temp['date'] = stringify_date(date)
             result.append(temp)
