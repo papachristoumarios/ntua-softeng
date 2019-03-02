@@ -408,7 +408,7 @@ def remove_product(request, product_id):
 		else:
 			registration.withdrawn = True
 			registration.save()
-			return unicode_response(shop.serialize())
+			return unicode_response(registration.serialize())
 	except BaseException:
 		return unicode_response(
 			{'message': 'Parameters not valid'}, status=400)
