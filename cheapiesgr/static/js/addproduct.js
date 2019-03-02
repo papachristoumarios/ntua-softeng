@@ -17,6 +17,8 @@ const video = document.querySelector("#videoElement");
 const screenshotButton = document.querySelector('#screenshot-button');
 const img = document.querySelector('#screenshot');
 const canvas = document.createElement('canvas');
+const img_field = document.getElementById('img');
+var shot = false;
 
 if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({video: true})
@@ -35,6 +37,6 @@ screenshotButton.onclick = video.onclick = function() {
   // Other browsers will fall back to image/png
   img.src = canvas.toDataURL('image/png');
 
-  document.getElementById("img_url").value = canvas.toDataURL('image/png');
-  document.getElementById("shot").value = True;
+  shot = true;
+
 };

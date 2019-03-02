@@ -203,7 +203,7 @@ class AddProductForm(forms.Form):
 
     img = forms.FileField(
         required=False,
-        widget=forms.FileInput(attrs={'accept':'image/*'})
+        widget=forms.FileInput(attrs={'accept':'image/*;capture=camera'})
     )
 
     img_url = forms.URLField(
