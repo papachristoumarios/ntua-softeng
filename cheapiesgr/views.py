@@ -143,6 +143,7 @@ def order_by_rating(results):
 
 def apply_search_filters(results, dmax, rmin):
     results = filter(lambda x: x[0].stars >= rmin, results)
+    results = filter(lambda x: x[1] <= dmax, results)
     return list(results)
 
 
@@ -181,9 +182,11 @@ def search(request):
             request.session['lat'] = lat
             request.session['lon'] = lon
         except ValueError:
-            lat = lon = 0
+            lat = 37.979034
+            lon = 23.782915
         except TypeError:
-            lat = lon = 0
+            lat = 37.979034
+            lon = 23.782915
         finally:
             client_loc = Point(lon, lat, srid=4326)
 
@@ -228,7 +231,7 @@ def search(request):
             limit = -1
 
         price_data = RegistrationPrice.objects.filter(
-            registration__product_description__contains=search_text,
+            registration__name__contains=search_text,
             price__gte=pmin,
             price__lte=pmax)
 
@@ -241,7 +244,7 @@ def search(request):
         if orderby == 'price':
             price_data = price_data.order_by('price')
 
-    distances = [distance(p.shop.location, client_loc) for p in price_data]
+    distances = [distance(p.location, client_loc) for p in price_data]
     reg_data_all = [p.registration for p in price_data]
     results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, price_data)]
 
