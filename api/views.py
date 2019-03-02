@@ -141,6 +141,7 @@ def create_or_update_shop(request, shop_id):
 	""" Implements POST /shops/<id> and PUT /shops/<id> """
 	try:
 		data = get_request_data(request)
+		tags = QueryDict(request.body).get('tags')
 		if request.method == 'POST':
 			shop = Shop(
 				name=data['name'],
@@ -148,7 +149,7 @@ def create_or_update_shop(request, shop_id):
 				city=data['address'],
 				withdrawn=parse_withdrawn(data),
 				location='SRID=4326;POINT({} {})'.format(data['lng'],data['lat']),
-				tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False)
+				tags=tags
 			)
 			shop.save()
 		elif request.method == 'PUT':
@@ -156,7 +157,7 @@ def create_or_update_shop(request, shop_id):
 			shop.name = data['name']
 			shop.address = data['address']
 			shop.city = data['address']
-			shop.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
+			shop.tags = tags
 			shop.withdrawn = data['withdrawn']
 			lat = data.get('lat', shop.location.y)
 			lon = data.get('lng', shop.location.x)
@@ -173,12 +174,13 @@ def patch_shop(request, shop_id):
 	try:
 		shop = Shop.objects.get(pk=shop_id)
 		data = get_request_data(request)
+		tags = QueryDict(request.body).get('tags')
 		if 'name' in data:
 			shop.name = data['name']
 		if 'address' in data:
 			shop.address = data['address']
 		if 'tags' in data:
-			shop.tags = json.dumps(data['tags'])
+			shop.tags = tags
 		if 'withdrawn' in data:
 			shop.withdrawn = data['withdrawn']
 		if 'lng' in data or 'lat' in data:
@@ -417,6 +419,7 @@ def patch_product(request, product_id):
 	try:
 		registration = Registration.objects.get(pk=product_id)
 		data = get_request_data(request)
+		tags = QueryDict(request.body).get('tags')
 		if 'name' in data:
 			registration.name = data['name']
 		if 'description' in data:
@@ -425,7 +428,7 @@ def patch_product(request, product_id):
 			category = Category.objects.get(category_name=data['category'])
 			registration.category = category
 		if 'tags' in data:
-			registration.tags = json.dumps(data['tags'], ensure_ascii=False)
+			registration.tags = tags
 		if 'withdrawn' in data:
 			registration.withdrawn = data['withdrawn']
 		registration.save()
