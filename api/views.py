@@ -174,13 +174,12 @@ def patch_shop(request, shop_id):
 	try:
 		shop = Shop.objects.get(pk=shop_id)
 		data = get_request_data(request)
-		tags = QueryDict(request.body).get('tags')
 		if 'name' in data:
 			shop.name = data['name']
 		if 'address' in data:
 			shop.address = data['address']
 		if 'tags' in data:
-			shop.tags = tags
+			shop.tags = data.get('tags')
 		if 'withdrawn' in data:
 			shop.withdrawn = data['withdrawn']
 		if 'lng' in data or 'lat' in data:
@@ -419,7 +418,6 @@ def patch_product(request, product_id):
 	try:
 		registration = Registration.objects.get(pk=product_id)
 		data = get_request_data(request)
-		tags = QueryDict(request.body).get('tags')
 		if 'name' in data:
 			registration.name = data['name']
 		if 'description' in data:
@@ -428,11 +426,11 @@ def patch_product(request, product_id):
 			category = Category.objects.get(category_name=data['category'])
 			registration.category = category
 		if 'tags' in data:
-			registration.tags = tags
+			registration.tags = data.get('tags')
 		if 'withdrawn' in data:
 			registration.withdrawn = data['withdrawn']
 		registration.save()
-		return unicode_response(registration.serialze())
+		return unicode_response(registration.serialize())
 	except BaseException:
 		return unicode_response(
 			{'message': 'Parameters not valid'}, status=400)

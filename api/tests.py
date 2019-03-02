@@ -15,7 +15,7 @@ def urldump(data):
     return urllib.parse.urlencode(data)
 
 class APITestcase(TestCase):
-    #me poion tropo ginontai ta test????
+
     def setUp(self):
         self.factory = APIRequestFactory()
         self.client = APIClient()
@@ -46,7 +46,6 @@ class APITestcase(TestCase):
         self.products = [self.product]
         response = self.client.post('/observatory/api/products/', urldump(self.product), content_type='application/x-www-form-urlencoded')
         response = decode_response(response)
-        print(response)
         self.idd = response['id']
         response = self.client.get('/observatory/api/products/{}'.format(self.idd),format = 'json')
         response = decode_response(response)
@@ -86,14 +85,12 @@ class APITestcase(TestCase):
         assert(response['withdrawn'] == newproduct['withdrawn'])
 
         response = self.client.put('/observatory/api/products/{}'.format(self.idd), urldump(self.product), content_type='application/x-www-form-urlencoded')
-        
+
     def test_patch_product(self):
-        response = self.client.patch('/observatory/api/products/{}'.format(self.idd),urldump({'name':'foo2','category' : 'laptop2'}), content_type='application/x-www-form-urlencoded')
-        response = self.client.get('/observatory/api/products/{}'.format(self.idd), format = 'json')
+        patch_data = {'name':'foo2'}
+        response = self.client.patch('/observatory/api/products/{}'.format(self.idd), urldump(patch_data), content_type='application/x-www-form-urlencoded')
         response = decode_response(response)
         assert(response['name'] == 'foo2')
-        assert(response['description'] == 'laptop2')
-        response = self.client.put('/observatory/api/products/{}'.format(self.idd), urldump(self.product), content_type='application/x-www-form-urlencoded')
 
 
     def test_delete_product(self):
