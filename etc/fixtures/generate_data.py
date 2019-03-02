@@ -30,7 +30,10 @@ def generate_product_data(n, d):
         for j, p in enumerate(products[:n]):
             q = p.split(', ')
             img_url = 'media/supermarket_crawlers/{}/images/{}.jpg'.format(category, j)
-
+            if (len(', '.join(q[2:-1])) > 1000):
+                prname = ', '.join(q[2:-1])[:1000]
+            else:
+                prname = ', '.join(q[2:-1])
             try:
                 pr = float(q[1])
             except:
@@ -41,7 +44,7 @@ def generate_product_data(n, d):
                 'fields' : {
                     'tags' : '[]',
                     'product_description' : ', '.join(q[2:-1]),
-                    'name' : ', '.join(q[2:-1]),
+                    'name' : prname,
                     'withdrawn' : False,
                     'volunteer' : random.randint(1, 5),
                     'category' : i + 1,

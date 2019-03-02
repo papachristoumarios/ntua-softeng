@@ -79,7 +79,7 @@ class Category(models.Model):
 
 class Registration(models.Model):
     name = models.CharField(
-        max_length=10000, verbose_name=_('name'), default='')
+        max_length=1000, verbose_name=_('name'), null=True)
     product_description = models.CharField(
         max_length=10000, verbose_name=_('product_discription'))
     image = models.ImageField(blank=True, null=True,
