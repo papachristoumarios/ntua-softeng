@@ -166,7 +166,7 @@ class RegistrationPrice(models.Model):
 
     @property
     def location(self):
-        return shelf.shop.location
+        return self.shop.location
 
     def serialize(self, point):
         if point == None:
