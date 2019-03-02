@@ -1,5 +1,6 @@
 import json
 import datetime
+import ast
 import copy
 from django.db import models
 from django.contrib.gis.db import models as gis_models
@@ -15,11 +16,8 @@ def stringify_date(date):
     return str(date.strftime("%Y-%m-%d"))
 
 def decode_tags(tags):
-    result = json.loads(tags)
-    if isinstance(result, list):
-        return result
-    else:
-        return [result]
+    return ast.literal_eval(tags)
+
 
 
 class Volunteer(models.Model):

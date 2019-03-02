@@ -358,6 +358,7 @@ def create_or_update_product(request, product_id):
 	try:
 		user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
 		data = get_request_data(request)
+		tags = QueryDict(request.body).get('tags')
 		if request.method == 'POST':
 
 			# TODO Remove price and shop
@@ -370,7 +371,7 @@ def create_or_update_product(request, product_id):
 				name=data['name'],
 				product_description=data['description'],
 				category=category,
-				tags=json.dumps(request.POST.getlist('tags', []), ensure_ascii=False),
+				tags=tags,
 				withdrawn=parse_withdrawn(data),
 				volunteer=user,
 			)
@@ -379,7 +380,7 @@ def create_or_update_product(request, product_id):
 			registration = Registration.objects.get(pk=int(product_id))
 			registration.name = data['name']
 			registration.product_description = data['description']
-			registration.tags = json.dumps(data.getlist('tags', []), ensure_ascii=False)
+			registration.tags = tags
 			registration.withdrawn = data['withdrawn']
 			registration.volunteer = user
 			try:
