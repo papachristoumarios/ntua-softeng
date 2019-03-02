@@ -243,7 +243,7 @@ def search(request):
         if orderby == 'price':
             price_data = price_data.order_by('price')
 
-    distances = [distance(p.location, client_loc) for p in price_data]
+    distances = [distance(p.shop.location, client_loc) for p in price_data]
     reg_data_all = [p.registration for p in price_data]
     results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, price_data)]
 
