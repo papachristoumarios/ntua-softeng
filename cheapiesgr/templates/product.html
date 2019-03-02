@@ -106,17 +106,15 @@
               var cl_lon = parseFloat('{{ lon }}'.replace(',', '.'));
               var map = L.map('map').setView([cl_lat , cl_lon], 13);
 
-              var lats = [];
-              {% for x in '{{ product_loc_x }}' %}
-                var temp = parseFloat('{{ x }}'.replace(',','.'));
-                lats.push(temp);
-              {% endfor %}
-
-              var lons = [];
-              {% for x in '{{ product_loc_y }}' %}
-                var temp = parseFloat('{{ x }}'.replace(',','.'));
-                lons.push(temp);
-              {% endfor %}
+              {% for price in product.prices %}
+                  var plat = parseFloat('{{ price.shop.location.y }}'.replace(',', '.'));
+                  var plon = parseFloat('{{ price.shop.location.x }}'.replace(',', '.'));
+                  var price = '{{ price.price }}';
+                  var shop = '{{ price.shop.name }}';
+                  L.marker([plat, plon]).addTo(map)
+                    .bindPopup(shop + '\n' + price + ' \u20AC')
+                    .openPopup();
+                {% endfor %}
 
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -128,7 +126,7 @@
 
 
 
-              // Iteration Not Working 
+              // Iteration Not Working
               var shops = '{{ product_loc_y }}'.length;
 
               for (var i = 0; i < shops; i++) {

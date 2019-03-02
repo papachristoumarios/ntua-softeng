@@ -62,8 +62,6 @@ def product(request):
     registration = Registration.objects.get(pk=product_id)
     product_info = registration.registration_info
 
-    product_loc_x = [i.x for i in registration.locations]
-    product_loc_y = [i.y for i in registration.locations]
 
     if request.method == 'POST':
         h = FavoritesForm(request.POST)
@@ -115,7 +113,7 @@ def product(request):
         'lat': lat,
         'lon': lon,
         'product': registration,
-        'info' : product_info,
+        #'info' : product_info,
         #'distance': distance(product.location, client_loc),
         'form' : f,
         'qform' : q,
