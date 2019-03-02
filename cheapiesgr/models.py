@@ -162,10 +162,10 @@ class Registration(models.Model):
 class RegistrationPrice(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2,
                                 verbose_name=_('price'))
-    date_from = models.DateField()
-    date_to = models.DateField()
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
+    date_from = models.DateField(verbose_name=_('datefrom'))
+    date_to = models.DateField(verbose_name=_('dateto'))
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name=_('shop'))
+    registration = models.ForeignKey(Registration, on_delete=models.CASCADE, verbose_name=_('registration'))
 
     def serialize_interval(self, point=None, date_from=None, date_to=None):
         if date_from == None and date_to == None:
@@ -200,6 +200,10 @@ class RegistrationPrice(models.Model):
             'shopDist' : distance
         }
         return data
+        
+    class Meta:
+    	verbose_name = _('registrationprice')
+    	verbose_name_plural = _('registrationprices')
 
 
 class Rating(models.Model):
