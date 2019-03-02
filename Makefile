@@ -77,9 +77,6 @@ certificate_gen:
 runsslserver:
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
 
-build:
-	$(PYTHON) setup.py sdist
-
 exam:
 	@echo "Resetting DB"
 	$(PYTHON) manage.py reset_db
