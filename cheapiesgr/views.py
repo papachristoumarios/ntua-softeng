@@ -169,8 +169,8 @@ def search(request):
         search_text = ''
         lat = request.session.get('lat', 0)
         lon = request.session.get('lon', 0)
-        reg_data = Registration.objects.filter(
-            category__id=category_id)[:limit]
+        price_data = RegistrationPrice.objects.filter(
+            registration__category__id=category_id)[:limit]
         client_loc = Point(lon, lat, srid=4326)
     else:
         search_text = request.POST.get('search')
@@ -229,24 +229,23 @@ def search(request):
         except TypeError:
             limit = -1
 
-        reg_data = Registration.objects.filter(
-            product_description__contains=search_text,
-            price__price__gte=pmin,
-            price__price__lte=pmax)
+        price_data = RegistrationPrice.objects.filter(
+            registration__product_description__contains=search_text,
+            price__gte=pmin,
+            price__lte=pmax)
 
         if category != 'Όλες':
-            reg_data = reg_data.filter(category__category_name=category)
+            price_data = price_data.filter(registration__category__category_name=category)
 
         if limit > 0:
-            reg_data = reg_data[:limit]
+            price_data = price_data[:limit]
 
         if orderby == 'price':
-            reg_data = reg_data.order_by('price__price')
+            price_data = price_data.order_by('price')
 
-    distances = [distance(s, client_loc) for s in r.locations for r in reg_data]
-    reg_data_all = [r for r in reg_data for j in range(r.num_of_prices)]
-    reg_prices = [p for p in r.prices_list for r in reg_data]
-    results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, reg_prices)]
+    distances = [distance(p.location, client_loc) for p in price_data]
+    reg_data_all = [p.registration for p in price_data]
+    results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, price_data)]
 
     if orderby == 'rating':
         results = order_by_rating(results)

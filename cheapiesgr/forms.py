@@ -162,7 +162,7 @@ class AddProductForm(forms.Form):
     )
 
     tags = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Δώστε ετικέτες για το προϊόν, χωρισμένες με κόμμα','class' : 'form-control','id': 'tags'}),
     )
 
@@ -173,7 +173,7 @@ class AddProductForm(forms.Form):
 
 
     location = forms.ModelChoiceField(
-        required=True,
+        required=False,
         widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
         queryset=Shop.objects.all(),
         empty_label='Άλλο'
