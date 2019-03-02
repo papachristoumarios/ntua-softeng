@@ -102,31 +102,40 @@
         <div class="full-card">
           <div id='map'>
             <script>
-              var lat = parseFloat('{{ lat }}'.replace(',', '.'));
-              var lon = parseFloat('{{ lon }}'.replace(',', '.'));
-              var plats = '{{ product_loc_x }}';
-              var plons = '{{ product_loc_y }}';
-              var shops = plats.length;
-              var map = L.map('map').setView([lat , lon], 13);
+              var cl_lat = parseFloat('{{ lat }}'.replace(',', '.'));
+              var cl_lon = parseFloat('{{ lon }}'.replace(',', '.'));
+              var map = L.map('map').setView([cl_lat , cl_lon], 13);
+
+              var lats = [];
+              {% for x in '{{ product_loc_x }}' %}
+                var temp = parseFloat('{{ x }}'.replace(',','.'));
+                lats.push(temp);
+              {% endfor %}
+
+              var lons = [];
+              {% for x in '{{ product_loc_y }}' %}
+                var temp = parseFloat('{{ x }}'.replace(',','.'));
+                lons.push(temp);
+              {% endfor %}
 
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               }).addTo(map);
 
-              L.marker([lat, lon]).addTo(map)
+              L.marker([cl_lat, cl_lon]).addTo(map)
                 .bindPopup('Η τοποθεσία σας')
                 .openPopup();
 
 
-              // Iteration Not Working - breaks map
-              
-              // for (var i = 0; i < shops; i++) {
-              //   var plat = parseFloat(plats[i].replace(',', '.'));
-              //   var plon = parseFloat(plons[i].replace(',', '.'));
-              //   L.marker([parseFloat(plats[0].replace(',', '.')), parseFloat(plons[0].replace(',', '.')).addTo(map)
-              //      .bindPopup('Κατάστημα: --- Timi')
-              //      .openPopup();
-              // }
+
+              // Iteration Not Working 
+              var shops = '{{ product_loc_y }}'.length;
+
+              for (var i = 0; i < shops; i++) {
+                L.marker([lats[i],lons[i]]).addTo(map)
+                   .bindPopup('Κατάστημα: --- Timi')
+                   .openPopup();
+              }
 
 
             </script>
