@@ -62,6 +62,9 @@ def product(request):
     registration = Registration.objects.get(pk=product_id)
     product_info = registration.registration_info
 
+    product_loc_x = [i.x for i in registration.locations]
+    product_loc_y = [i.y for i in registration.locations]
+
     if request.method == 'POST':
         h = FavoritesForm(request.POST)
         f = ReviewForm(request.POST)

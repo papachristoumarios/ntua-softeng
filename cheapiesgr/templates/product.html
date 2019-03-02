@@ -56,6 +56,9 @@
             <h5>
               Τιμή
             </h5>
+            {% for x in product.prices_list %}
+              {{ x }}
+            {% endfor %}
             <p>
               {{ product.price }} &euro;
             </p>
@@ -99,10 +102,11 @@
         <div class="full-card">
           <div id='map'>
             <script>
-              var lat = parseFloat('{{ lat }}'.replace(',', '.'))
-              var lon = parseFloat('{{ lon }}'.replace(',', '.'))
-              var plat = parseFloat('{{ plat }}'.replace(',', '.'))
-              var plon = parseFloat('{{ plon }}'.replace(',', '.'))
+              var lat = parseFloat('{{ lat }}'.replace(',', '.'));
+              var lon = parseFloat('{{ lon }}'.replace(',', '.'));
+              var plats = '{{ product_loc_x }}';
+              var plons = '{{ product_loc_y }}';
+              var shops = plats.length;
               var map = L.map('map').setView([lat , lon], 13);
 
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -113,9 +117,17 @@
                 .bindPopup('Η τοποθεσία σας')
                 .openPopup();
 
-              L.marker([plat, plon]).addTo(map)
-                .bindPopup('Κατάστημα: {{ product.shop.name }}')
-                .openPopup();
+
+              // Iteration Not Working - breaks map
+              
+              // for (var i = 0; i < shops; i++) {
+              //   var plat = parseFloat(plats[i].replace(',', '.'));
+              //   var plon = parseFloat(plons[i].replace(',', '.'));
+              //   L.marker([parseFloat(plats[0].replace(',', '.')), parseFloat(plons[0].replace(',', '.')).addTo(map)
+              //      .bindPopup('Κατάστημα: --- Timi')
+              //      .openPopup();
+              // }
+
 
             </script>
 
