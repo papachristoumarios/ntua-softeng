@@ -230,7 +230,7 @@ def search(request):
             limit = -1
 
         price_data = RegistrationPrice.objects.filter(
-            registration__product_description__contains=search_text,
+            registration__name__contains=search_text,
             price__gte=pmin,
             price__lte=pmax)
 
