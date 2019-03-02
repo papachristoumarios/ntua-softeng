@@ -1,17 +1,23 @@
 import json
 import datetime
+import ast
+import copy
 from django.db import models
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
+def daterange(start_date, end_date):
+    for n in range(int ((end_date - start_date).days) + 1):
+        yield start_date + datetime.timedelta(days=n)
+
+def stringify_date(date):
+    return str(date.strftime("%Y-%m-%d"))
+
 def decode_tags(tags):
-    result = json.loads(tags)
-    if isinstance(result, list):
-        return result
-    else:
-        return [result]
+    return ast.literal_eval(tags)
+
 
 
 class Volunteer(models.Model):
@@ -20,6 +26,8 @@ class Volunteer(models.Model):
     confirmed_email = models.BooleanField(default=False)
 
     class Meta:
+        verbose_name = _('volunteer')
+        verbose_name_plural = _('volunteers')
         db_table = 'volunteer'
 
 
@@ -46,8 +54,8 @@ class Shop(models.Model):
             'id' : self.id,
             'name' : self.name,
             'address' : self.address,
-            'lng' : self.location.x,
-            'lat' : self.location.y,
+            'lng' : float(self.location.x),
+            'lat' : float(self.location.y),
             'tags' : decode_tags(str(self.tags)),
             'withdrawn' : self.withdrawn,
             'extraData' : {
@@ -63,14 +71,14 @@ class Shop(models.Model):
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=200,
-                                     verbose_name=('category_name'))
+    category_name = models.CharField(
+        max_length=200, verbose_name=_('category_name'))
     category_description = models.CharField(
-        max_length=200, verbose_name=_('category_description'))
+        max_length=200, default='', verbose_name=_('category_description'))
     image = models.ImageField()
 
     def __str__(self):
-        return self.category_description
+        return self.category_name
 
     class Meta:
         verbose_name = _('category')
@@ -79,7 +87,7 @@ class Category(models.Model):
 
 class Registration(models.Model):
     name = models.CharField(
-        max_length=1000, verbose_name=_('name'))
+        max_length=1000, verbose_name=_('name'), null=True)
     product_description = models.CharField(
         max_length=10000, verbose_name=_('product_discription'))
     image = models.ImageField(blank=True, null=True,
@@ -159,23 +167,34 @@ class Registration(models.Model):
 class RegistrationPrice(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2,
                                 verbose_name=_('price'))
-    date_from = models.DateField()
-    date_to = models.DateField()
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    registration = models.ForeignKey(Registration, on_delete=models.CASCADE)
+    date_from = models.DateField(verbose_name=_('datefrom'))
+    date_to = models.DateField(verbose_name=_('dateto'))
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name=_('shop'))
+    registration = models.ForeignKey(Registration, on_delete=models.CASCADE, verbose_name=_('registration'))
 
-    @property
-    def location(self):
-        return self.shop.location
+    def serialize_interval(self, point=None, date_from=None, date_to=None):
+        if date_from == None and date_to == None:
+            date_from = self.date_from
+            date_to = self.date_to
+        data = self.serialize(point=point)
 
-    def serialize(self, point):
+        result = []
+
+        for date in daterange(date_from, date_to):
+            temp = copy.deepcopy(data)
+            temp['date'] = stringify_date(date)
+            result.append(temp)
+
+        return result
+
+
+    def serialize(self, point=None):
         if point == None:
             distance = -1
         else:
             distance = self.shop.location.distance(point) * 100
         data = {
             'price' : float(self.price),
-            'date' : str(self.date_from),
             'productName' : self.registration.name,
             'productId' : self.registration.id,
             'productTags' : decode_tags(self.registration.tags),
@@ -186,6 +205,10 @@ class RegistrationPrice(models.Model):
             'shopDist' : distance
         }
         return data
+
+    class Meta:
+    	verbose_name = _('registrationprice')
+    	verbose_name_plural = _('registrationprices')
 
 
 class Rating(models.Model):

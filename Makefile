@@ -77,5 +77,12 @@ certificate_gen:
 runsslserver:
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
 
-build:
-	$(PYTHON) setup.py sdist
+exam:
+	@echo "Resetting DB"
+	$(PYTHON) manage.py reset_db
+	@echo "Migrations"
+	$(PYTHON) manage.py migrate
+	@echo "Create Superuser"
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', '1234')" | $(PYTHON) manage.py shell
+	@echo "Start web application"
+	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key

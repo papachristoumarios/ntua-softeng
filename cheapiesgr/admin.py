@@ -11,4 +11,4 @@ class PointAdmin(admin.OSMGeoAdmin):
     default_zoom = 11  # Appropriate zoom
 
 
-admin.site.register([Shop, Volunteer, Registration, Category], PointAdmin)
+admin.site.register([Shop, Volunteer, Registration, Category, RegistrationPrice], PointAdmin)
