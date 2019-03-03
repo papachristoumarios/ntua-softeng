@@ -271,7 +271,7 @@ def query_prices(request):
 	count = int(request.GET.get('count', 20))
 	date_from = parse_date(request.GET.get('dateFrom', '1969-01-01'))
 	date_to = parse_date(request.GET.get('dateTo', '2300-01-01')) + datetime.timedelta(days=1)
-	sort = request.GET.get('sort', 'price|ASC')
+	sort_criteria = request.GET.getlist('sort', ['price|ASC'])
 	shops = [int(x) for x in request.GET.getlist('shops', [])]
 	products = [int(x) for x in request.GET.getlist('products', [])]
 	tags = list_to_regex(request.GET.getlist('tags', []))
@@ -321,23 +321,25 @@ def query_prices(request):
 	else:
 		tags_filtered = products_filtered
 
-	# Sorting
-	if sort == 'price|ASC':
-		sort_result = tags_filtered.order_by('price')
-	elif sort == 'price|DESC':
-		sort_result = tags_filtered.order_by('-price')
-	elif sort == 'date|ASC':
-		sort_result = tags_filtered.order_by('date_from')
-	elif sort == 'date|DESC':
-		sort_result = tags_filtered.order_by('-date_from')
-	elif sort == 'geo.dist|ASC':
-		sort_result = tags_filtered.annotate(distance=Distance(
-			"shop__location", location_point)).order_by('distance')
-	elif sort == 'geo.dist|DESC':
-		sort_result = tags_filtered.annotate(
-			distance=Distance(
-				"shop__location",
-				location_point)).order_by('-distance')
+	sort_result = tags_filtered
+	for sort in sort_criteria:
+		# Sorting
+		if sort == 'price|ASC':
+			sort_result = sort_result.order_by('price')
+		elif sort == 'price|DESC':
+			sort_result = sort_result.order_by('-price')
+		elif sort == 'date|ASC':
+			sort_result = sort_result.order_by('date_from')
+		elif sort == 'date|DESC':
+			sort_result = sort_result.order_by('-date_from')
+		elif sort == 'geo.dist|ASC':
+			sort_result = sort_result.annotate(distance=Distance(
+				"shop__location", location_point)).order_by('distance')
+		elif sort == 'geo.dist|DESC':
+			sort_result = sort_result.annotate(
+				distance=Distance(
+					"shop__location",
+					location_point)).order_by('-distance')
 
 	list_result = build_list_from_price_queryset(sort_result, location_point, date_from, date_to)
 
