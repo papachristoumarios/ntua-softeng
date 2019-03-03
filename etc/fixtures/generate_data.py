@@ -38,6 +38,7 @@ def generate_product_data(n, d):
                 pr = float(q[1])
             except:
                 pr = 10 * random.random()
+            user = random.randint(1, 5)
             registration = {
                 'model' : 'cheapiesgr.registration',
                 'pk' : pk,
@@ -46,7 +47,7 @@ def generate_product_data(n, d):
                     'product_description' : ', '.join(q[2:-1]),
                     'name' : prname,
                     'withdrawn' : False,
-                    'volunteer' : random.randint(1, 5),
+                    'volunteer' : user,
                     'category' : i + 1,
                     'date_of_registration' : '2018-11-27',
                     'image_url' : img_url
@@ -61,7 +62,7 @@ def generate_product_data(n, d):
                     'date_to' : '2020-01-01',
                     'shop' : random.randint(1, 5),
                     'registration' : pk,
-                    'volunteer' : random.randint(1,5)
+                    'volunteer' : user
                 }
             }
             pk += 1
