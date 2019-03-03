@@ -118,8 +118,6 @@ def product(request):
         'lat': lat,
         'lon': lon,
         'product': registration,
-        #'info' : product_info,
-        #'distance': distance(product.location, client_loc),
         'form' : f,
         'qform' : q,
         'favform' : h
