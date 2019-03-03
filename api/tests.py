@@ -12,7 +12,15 @@ def decode_response(response):
     return json.loads(response.content.decode('utf-8'))
 
 def urldump(data):
-    return urllib.parse.urlencode(data)
+    result = []
+    for key, val in data.items():
+        if isinstance(val, list):
+            for x in val:
+                result.append((key, x))
+        else:
+            result.append((key, val))
+
+    return urllib.parse.urlencode(result)
 
 class APITestcase(TestCase):
 
@@ -37,11 +45,11 @@ class APITestcase(TestCase):
         self.header = { AUTH_TOKEN_LABEL : self.token }
         self.client.credentials(HTTP_X_OBSERVATORY_AUTH=self.token)
         self.product = {
-            'name' : 'foo',
-            'description' : 'foo',
-            'category' : 'laptop',
-            'tags' : ['a', 'b'],
-            'withdrawn' : False
+            "name" : "foo",
+            "description" : "foo",
+            "category" : "laptop",
+            "tags" : ['a', 'b'],
+            "withdrawn" : False
         }
         self.products = [self.product]
         response = self.client.post('/observatory/api/products/', urldump(self.product), content_type='application/x-www-form-urlencoded')

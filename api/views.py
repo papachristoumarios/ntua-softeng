@@ -1,3 +1,4 @@
+import ast
 import datetime
 import json
 from django.contrib.gis.measure import D
@@ -141,7 +142,7 @@ def create_or_update_shop(request, shop_id):
 	""" Implements POST /shops/<id> and PUT /shops/<id> """
 	try:
 		data = get_request_data(request)
-		tags = QueryDict(request.body).get('tags')
+		tags = get_tags(request)
 		if request.method == 'POST':
 			shop = Shop(
 				name=data['name'],
@@ -179,7 +180,7 @@ def patch_shop(request, shop_id):
 		if 'address' in data:
 			shop.address = data['address']
 		if 'tags' in data:
-			shop.tags = data.get('tags')
+			shop.tags = get_tags(request)
 		if 'withdrawn' in data:
 			shop.withdrawn = data['withdrawn']
 		if 'lng' in data or 'lat' in data:
@@ -221,12 +222,15 @@ def parse_date(date_str):
 
 def create_price(request):
 	""" Implement POST /price """
+	user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
+
 	price = RegistrationPrice(
 		date_from=parse_date(request.POST['dateFrom']),
 		date_to=parse_date(request.POST['dateTo']),
 		price=request.POST['price'],
 		shop_id=int(request.POST['shopId']),
-		registration_id=int(request.POST['productId'])
+		registration_id=int(request.POST['productId']),
+		volunteer=user
 	)
 	price.save()
 	prices = price.serialize_interval()
@@ -257,6 +261,8 @@ def parse_location(request):
 def list_to_regex(l):
 	return r'|'.join(l)
 
+def get_tags(request):
+	return json.dumps(QueryDict(request.body).getlist('tags'), ensure_ascii=False)
 
 def query_prices(request):
 	""" Implements GET /prices """
@@ -359,7 +365,7 @@ def create_or_update_product(request, product_id):
 	try:
 		user = Token.objects.get(key=request.META[AUTH_TOKEN_LABEL]).user
 		data = get_request_data(request)
-		tags = QueryDict(request.body).get('tags')
+		tags = get_tags(request)
 		if request.method == 'POST':
 
 			# TODO Remove price and shop
@@ -393,8 +399,8 @@ def create_or_update_product(request, product_id):
 			registration.save()
 		return unicode_response(registration.serialize(), status=200)
 	except BaseException:
-		return unicode_response(
-			{'message': 'Parameters not valid'}, status=400)
+			return unicode_response(
+				{'message': 'Parameters not valid'}, status=400)
 
 
 def remove_product(request, product_id):
@@ -426,7 +432,7 @@ def patch_product(request, product_id):
 			category = Category.objects.get(category_name=data['category'])
 			registration.category = category
 		if 'tags' in data:
-			registration.tags = data.get('tags')
+			registration.tags = get_tags(request)
 		if 'withdrawn' in data:
 			registration.withdrawn = data['withdrawn']
 		registration.save()
