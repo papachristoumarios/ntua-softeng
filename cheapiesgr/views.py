@@ -234,10 +234,13 @@ def search(request):
         except TypeError:
             limit = -1
 
+        today = datetime.datetime.today().strftime('%Y-%m-%d')
+
         price_data = RegistrationPrice.objects.filter(
             registration__name__contains=search_text,
             price__gte=pmin,
-            price__lte=pmax)
+            price__lte=pmax,
+            date_to__gte=today)
 
         if category != 'Όλες':
             price_data = price_data.filter(registration__category__category_name=category)
