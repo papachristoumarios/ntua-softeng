@@ -90,7 +90,7 @@
                   var price = '{{ price.price }}';
                   var shop = '{{ price.shop.name }}';
                   L.marker([plat, plon]).addTo(map)
-                    .bindPopup('Καράστημα: ' + shop + ' Τιμή: ' + price + ' \u20AC')
+                    .bindPopup('Καράστημα: ' + shop + ' <strong>Τιμή: ' + price + ' \u20AC</strong>')
                     .openPopup();
                 {% endfor %}
 

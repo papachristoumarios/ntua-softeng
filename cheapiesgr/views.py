@@ -55,8 +55,8 @@ def index(request):
 def product(request):
 
     product_id = int(request.GET.get('productId', 0))
-    lat = request.session.get('lat', 0) # With Chrome it doesn't work
-    lon = request.session.get('lon', 0)
+    lat = request.session.get('lat', 37.979034) # With Chrome it doesn't work
+    lon = request.session.get('lon', 23.782915)
     client_loc = Point(lon, lat, srid=4326)
 
     registration = Registration.objects.get(pk=product_id)
@@ -170,8 +170,8 @@ def search(request):
         limit = 100
         pmax = sys.maxsize
         search_text = ''
-        lat = request.session.get('lat', 0)
-        lon = request.session.get('lon', 0)
+        lat = request.session.get('lat', 37.979034)
+        lon = request.session.get('lon', 23.782915)
         price_data = RegistrationPrice.objects.filter(
             registration__category__id=category_id)[:limit]
         client_loc = Point(lon, lat, srid=4326)
