@@ -107,7 +107,7 @@ def product(request):
                 )
                 fav.save()
 
-        return redirect('product/?productId={}'.format(product_id))
+        return redirect('/product/?productId={}'.format(product_id))
     else:
         f = ReviewForm()
         q = QuestionForm()
