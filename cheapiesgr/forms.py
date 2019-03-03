@@ -301,3 +301,34 @@ class UserProfileForm(forms.Form):
         if password1 != password2:
             raise ValidationError("Οι κωδικοί δεν ταιριάζουν", code='passwords_not_match')
         return password1
+
+class AddPriceForm(forms.Form):
+        price = forms.FloatField(
+            required=True,
+            widget=forms.TextInput(attrs={'placeholder': 'Δώστε τιμή για το προϊόν','class' : 'form-control','id': 'price'}),
+        )
+
+
+        location = forms.ModelChoiceField(
+            required=False,
+            widget=forms.Select(attrs={'placeholder': 'Δώστε κατάστημα (επιλέξτε άλλο αν δεν υπάρχει)','class' : 'form-control','id': 'location'}),
+            queryset=Shop.objects.all(),
+            empty_label='Άλλο'
+        )
+
+        new_shop_name = forms.CharField(
+            required=False,
+            widget=forms.TextInput(attrs={'placeholder': 'Όνομα καταστήματος','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_name'}),
+        )
+        new_shop_city = forms.CharField(
+            required=False,
+            widget=forms.TextInput(attrs={'placeholder': 'Πόλη','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_city'})
+        )
+        new_shop_street = forms.CharField(
+            required=False,
+            widget=forms.TextInput(attrs={'placeholder': 'Οδός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_street'})
+        )
+        new_shop_number = forms.CharField(
+            required=False,
+            widget=forms.TextInput(attrs={'placeholder': 'Αριθμός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_number'})
+        )

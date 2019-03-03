@@ -55,19 +55,20 @@ def index(request):
 def product(request):
 
     product_id = int(request.GET.get('productId', 0))
-    lat = request.session.get('lat', 0)
+    lat = request.session.get('lat', 0) # With Chrome it doesn't work
     lon = request.session.get('lon', 0)
     client_loc = Point(lon, lat, srid=4326)
 
-    product = Registration.objects.get(pk=product_id)
-    product_loc = product.location
     registration = Registration.objects.get(pk=product_id)
+    product_info = registration.registration_info
 
     if request.method == 'POST':
         h = FavoritesForm(request.POST)
         f = ReviewForm(request.POST)
         q = QuestionForm(request.POST)
         if f.is_valid():
+            if request.user.is_anonymous:
+                return redirect('/signin')
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
 
@@ -83,6 +84,8 @@ def product(request):
             messages.success(
                 request, 'Καταχωρήθηκε η κριτική!')
         elif q.is_valid():
+            if request.user.is_anonymous:
+                return redirect('/signin')
             question_text = q.cleaned_data['question']
 
 
@@ -95,6 +98,8 @@ def product(request):
             question.save()
 
         elif h.is_valid():
+            if request.user.is_anonymous:
+                return redirect('/signin')
             if (Favorite.objects.filter(volunteer=request.user, registration=registration).count() == 0):
                 fav = Favorite(
                 volunteer=request.user,
@@ -112,10 +117,7 @@ def product(request):
     return render(request, 'product.html', {
         'lat': lat,
         'lon': lon,
-        'product': product,
-        'plat': product_loc.y,
-        'plon': product_loc.x,
-        'distance': distance(product.location, client_loc),
+        'product': registration,
         'form' : f,
         'qform' : q,
         'favform' : h
@@ -145,6 +147,7 @@ def order_by_rating(results):
 
 def apply_search_filters(results, dmax, rmin):
     results = filter(lambda x: x[0].stars >= rmin, results)
+    results = filter(lambda x: x[1] <= dmax, results)
     return list(results)
 
 
@@ -183,9 +186,11 @@ def search(request):
             request.session['lat'] = lat
             request.session['lon'] = lon
         except ValueError:
-            lat = lon = 0
+            lat = 37.979034
+            lon = 23.782915
         except TypeError:
-            lat = lon = 0
+            lat = 37.979034
+            lon = 23.782915
         finally:
             client_loc = Point(lon, lat, srid=4326)
 
@@ -229,10 +234,13 @@ def search(request):
         except TypeError:
             limit = -1
 
+        today = datetime.datetime.today().strftime('%Y-%m-%d')
+
         price_data = RegistrationPrice.objects.filter(
-            registration__product_description__contains=search_text,
+            registration__name__contains=search_text,
             price__gte=pmin,
-            price__lte=pmax)
+            price__lte=pmax,
+            date_to__gte=today)
 
         if category != 'Όλες':
             price_data = price_data.filter(registration__category__category_name=category)
@@ -243,7 +251,7 @@ def search(request):
         if orderby == 'price':
             price_data = price_data.order_by('price')
 
-    distances = [distance(p.shop.location, client_loc) for p in price_data]
+    distances = [distance(p.location, client_loc) for p in price_data]
     reg_data_all = [p.registration for p in price_data]
     results = [(r, d, p) for r, d, p in zip(reg_data_all, distances, price_data)]
 
@@ -393,6 +401,54 @@ def addproduct(request):
         f = AddProductForm()
     return render(request, 'addproduct.html', {'form': f})
 
+
+@login_required(login_url='/signin')
+def addprice(request):
+    product_id = request.GET.get('productId', 1)
+    product = Registration.objects.get(pk=int(product_id))
+    if request.method == 'POST':
+        f = AddPriceForm(request.POST, request.FILES)
+        if f.is_valid():
+
+            price = f.cleaned_data['price']
+            new_shop_name = f.cleaned_data['new_shop_name']
+            new_shop_city = f.cleaned_data['new_shop_city']
+            new_shop_street = f.cleaned_data['new_shop_street']
+            new_shop_number = f.cleaned_data['new_shop_number']
+            date_of_registration = datetime.datetime.today()
+
+            # Check if a new shop was added
+            if len(new_shop_name) > 0:
+                print('Adding a new shop named', new_shop_name)
+                geolocator = geonom(user_agent="cheapiesgr")
+                location = geolocator.geocode(new_shop_street+" "+new_shop_number+" "+new_shop_city)
+                if str(type(location)) == "<class 'NoneType'>":
+                    print('Μη έγκυρη διεύθυνση.')
+                    return render(request, 'addprice.html',{'form':f, 'correct_address': False})
+                shop = Shop(
+                    name=new_shop_name,
+                    address=new_shop_street+" "+new_shop_number,
+                    city=new_shop_city,
+                    location='POINT({} {})'.format(location.longitude, location.latitude),
+                )
+                shop.save()
+            else:
+                shop = f.cleaned_data['location']
+
+            new_price = RegistrationPrice(
+                price=price,
+                date_from = date_of_registration.strftime('%Y-%m-%d'),
+                date_to = date_of_registration.replace(year = date_of_registration.year + 1).strftime('%Y-%m-%d'),
+                shop=shop,
+                registration=product
+            )
+            new_price.save()
+
+            messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
+            return render(request, 'index.html', {})
+    else:
+        f = AddPriceForm()
+    return render(request, 'addprice.html', {'form': f})
 
 
 def user_auth(request):

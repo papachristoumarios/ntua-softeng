@@ -137,7 +137,7 @@
             <div class="card" style="padding-bottom: 1.5rem;">
               <div class="card-body">
                 <div class="gallery text-center">
-                  <a href='/product/?productId={{ q.registration.id }}'>
+                  <a href='/product/?productId={{ ans.question.registration.id }}'>
                     {% if ans.question.registration.image_url != '' %}
                       {% load static %}
                       <td class="image"><img style="width: 30%;" src="{% static '' %}{{ ans.question.registration.image_url }}"></td>
@@ -164,7 +164,7 @@
             <div class="card" style="padding-bottom: 1.5rem;">
               <div class="card-body">
                 <div class="gallery text-center">
-                  <a href='/product/?productId={{ f.registration.id }}'>
+                  <a href='/product/?productId={{ fav.registration.id }}'>
                     {% if fav.registration.image_url != '' %}
                       {% load static %}
                       <td class="image"><img style="width: 30%;" src="{% static '' %}{{ fav.registration.image_url }}"></td>

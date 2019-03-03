@@ -54,25 +54,7 @@
               {{ product.product_description }}
             </p>
             <h5>
-              Τιμή
-            </h5>
-            <p>
-              {{ product.price }} &euro;
-            </p>
-            <h5>
-              Τοποθεσία
-            </h5>
-            <p>
-              Όνομα καταστήματος: {{ product.shop.name }}
-            </p>
-            <p>
-              Διεύθυνση καταστήματος: {{ product.shop.address }}
-            </p>
-            <p>
-              Απόσταση: {{ distance | floatformat:-2 }} km
-            </p>
-            <h5>
-              Ημερομηνία Καταχώρησης:
+              Ημερομηνία Πρώτης Καταχώρησης:
             </h5>
             <p>
               {{ product.date_of_registration }}
@@ -82,7 +64,6 @@
             </h5>
             <p>
               {{ product.stars }} <span class="fas fa-star checked"></span>
-
             </p>
 
 
@@ -99,23 +80,39 @@
         <div class="full-card">
           <div id='map'>
             <script>
-              var lat = parseFloat('{{ lat }}'.replace(',', '.'))
-              var lon = parseFloat('{{ lon }}'.replace(',', '.'))
-              var plat = parseFloat('{{ plat }}'.replace(',', '.'))
-              var plon = parseFloat('{{ plon }}'.replace(',', '.'))
-              var map = L.map('map').setView([lat , lon], 13);
+              var cl_lat = parseFloat('{{ lat }}'.replace(',', '.'));
+              var cl_lon = parseFloat('{{ lon }}'.replace(',', '.'));
+              var map = L.map('map').setView([cl_lat , cl_lon], 13);
+
+              {% for price in product.prices %}
+                  var plat = parseFloat('{{ price.shop.location.y }}'.replace(',', '.'));
+                  var plon = parseFloat('{{ price.shop.location.x }}'.replace(',', '.'));
+                  var price = '{{ price.price }}';
+                  var shop = '{{ price.shop.name }}';
+                  L.marker([plat, plon]).addTo(map)
+                    .bindPopup(shop + '\n' + price + ' \u20AC')
+                    .openPopup();
+                {% endfor %}
 
               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               }).addTo(map);
 
-              L.marker([lat, lon]).addTo(map)
+              L.marker([cl_lat, cl_lon]).addTo(map)
                 .bindPopup('Η τοποθεσία σας')
                 .openPopup();
 
-              L.marker([plat, plon]).addTo(map)
-                .bindPopup('Κατάστημα: {{ product.shop.name }}')
-                .openPopup();
+
+
+              // Iteration Not Working
+              var shops = '{{ product_loc_y }}'.length;
+
+              for (var i = 0; i < shops; i++) {
+                L.marker([lats[i],lons[i]]).addTo(map)
+                   .bindPopup('Κατάστημα: --- Timi')
+                   .openPopup();
+              }
+
 
             </script>
 
@@ -125,11 +122,34 @@
     </div>
   </div>
 
+  <!-- Prices -->
+  <div class="row" style="padding-bottom: 3rem;">
+    <div class="col-12">
+      <div class="container-fluid">
+        <div class="card my-auto fullw">
+        <table class="table table-hover">
+          <tbody>
+            {% for price in product.prices %}
+            <tr>
+              <td class="price text-right"> Κατάστημα: {{ price.shop.name }}</td>
+              <td class="price text-right"> Διεύθυνση: {{ price.shop.address }}</td>
+              <td class="price text-right"> Τιμή: {{ price.price }}&euro;</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="text-center"><a href="/addprice/?productId={{ product.id }}">Προσθήκη νέας τιμής</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- REVIEWS AND QUESTIONS -->
 
   <div class="row"  style="padding-bottom: 6rem;">
     <div class="col col-12">
-    <div class="container d-flex">
+    <div class="container-fluid d-flex">
 
       <div class="card my-auto fullw">
         <div class="card-header">
