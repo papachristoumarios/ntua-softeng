@@ -55,19 +55,20 @@ def index(request):
 def product(request):
 
     product_id = int(request.GET.get('productId', 0))
-    lat = request.session.get('lat', 0)
+    lat = request.session.get('lat', 0) # With Chrome it doesn't work
     lon = request.session.get('lon', 0)
     client_loc = Point(lon, lat, srid=4326)
 
     registration = Registration.objects.get(pk=product_id)
     product_info = registration.registration_info
 
-
     if request.method == 'POST':
         h = FavoritesForm(request.POST)
         f = ReviewForm(request.POST)
         q = QuestionForm(request.POST)
         if f.is_valid():
+            if request.user.is_anonymous:
+                return redirect('/signin')
             stars = f.cleaned_data['stars']
             rate_explanation = f.cleaned_data['rate_explanation']
 
@@ -83,6 +84,8 @@ def product(request):
             messages.success(
                 request, 'Καταχωρήθηκε η κριτική!')
         elif q.is_valid():
+            if request.user.is_anonymous:
+                return redirect('/signin')
             question_text = q.cleaned_data['question']
 
 
@@ -95,6 +98,8 @@ def product(request):
             question.save()
 
         elif h.is_valid():
+            if request.user.is_anonymous:
+                return redirect('/signin')
             if (Favorite.objects.filter(volunteer=request.user, registration=registration).count() == 0):
                 fav = Favorite(
                 volunteer=request.user,
