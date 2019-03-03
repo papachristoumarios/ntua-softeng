@@ -60,7 +60,8 @@ def generate_product_data(n, d):
                     'date_from' : '2019-01-01',
                     'date_to' : '2020-01-01',
                     'shop' : random.randint(1, 5),
-                    'registration' : pk
+                    'registration' : pk,
+                    'volunteer' : random.randint(1,5)
                 }
             }
             pk += 1

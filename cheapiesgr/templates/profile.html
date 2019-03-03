@@ -78,10 +78,10 @@
             <div class="card" style="padding-bottom: 1.5rem;">
               <div class="card-body">
                 <div class="gallery text-center">
-                  <a href='/product/?productId={{ p.id }}'>
-                    {% if p.image_url != '' %}
+                  <a href='/product/?productId={{ p.registration.id }}'>
+                    {% if p.registration.image_url != '' %}
                       {% load static %}
-                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ p.image_url }}"></td>
+                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ p.registration.image_url }}"></td>
                     {% else %}
                       <td class="image"><img style="width: 30%;" src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
                     {% endif %}
@@ -89,7 +89,7 @@
                 </div>
                 <div class="card-text" style="padding-top: 1rem;">
                   <div class="text center">
-                    {{ p.product_description}}
+                    {{ p.registration.product_description}}
                   </div>
                 </div>
               </div>
