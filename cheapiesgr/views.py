@@ -401,6 +401,54 @@ def addproduct(request):
     return render(request, 'addproduct.html', {'form': f})
 
 
+@login_required(login_url='/signin')
+def addprice(request):
+    product_id = request.GET.get('productId', 1)
+    product = Registration.objects.get(pk=int(product_id))
+    if request.method == 'POST':
+        f = AddPriceForm(request.POST, request.FILES)
+        if f.is_valid():
+
+            price = f.cleaned_data['price']
+            new_shop_name = f.cleaned_data['new_shop_name']
+            new_shop_city = f.cleaned_data['new_shop_city']
+            new_shop_street = f.cleaned_data['new_shop_street']
+            new_shop_number = f.cleaned_data['new_shop_number']
+            date_of_registration = datetime.datetime.today()
+
+            # Check if a new shop was added
+            if len(new_shop_name) > 0:
+                print('Adding a new shop named', new_shop_name)
+                geolocator = geonom(user_agent="cheapiesgr")
+                location = geolocator.geocode(new_shop_street+" "+new_shop_number+" "+new_shop_city)
+                if str(type(location)) == "<class 'NoneType'>":
+                    print('Μη έγκυρη διεύθυνση.')
+                    return render(request, 'addprice.html',{'form':f, 'correct_address': False})
+                shop = Shop(
+                    name=new_shop_name,
+                    address=new_shop_street+" "+new_shop_number,
+                    city=new_shop_city,
+                    location='POINT({} {})'.format(location.longitude, location.latitude),
+                )
+                shop.save()
+            else:
+                shop = f.cleaned_data['location']
+
+            new_price = RegistrationPrice(
+                price=price,
+                date_from = date_of_registration.strftime('%Y-%m-%d'),
+                date_to = date_of_registration.replace(year = date_of_registration.year + 1).strftime('%Y-%m-%d'),
+                shop=shop,
+                registration=product
+            )
+            new_price.save()
+
+            messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
+            return render(request, 'index.html', {})
+    else:
+        f = AddPriceForm()
+    return render(request, 'addprice.html', {'form': f})
+
 
 def user_auth(request):
     return render(request, 'user_auth.html', {})

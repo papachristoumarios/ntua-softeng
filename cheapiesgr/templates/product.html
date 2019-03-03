@@ -130,12 +130,15 @@
         <table class="table table-hover">
           <tbody>
             {% for price in product.prices %}
-            <td class="price text-right"> Κατάστημα: {{ price.shop.name }}</td>
-            <td class="price text-right"> Διεύθυνση: {{ price.shop.address }}</td>
-            <td class="price text-right"> Τιμή: {{ price.price }}&euro;</td>
+            <tr>
+              <td class="price text-right"> Κατάστημα: {{ price.shop.name }}</td>
+              <td class="price text-right"> Διεύθυνση: {{ price.shop.address }}</td>
+              <td class="price text-right"> Τιμή: {{ price.price }}&euro;</td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>
+        <div class="text-center"><a href="/addprice/?productId={{ product.id }}">Προσθήκη νέας τιμής</a></div>
         </div>
       </div>
     </div>

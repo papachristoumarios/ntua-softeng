@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'removeFavorite', views.remove_favorite, name='removeFavorite'),
     url(r'report', views.report, name='report'),
     url(r'userauthentication', views.user_auth, name='userauthentication'),
+    url(r'addprice', views.addprice, name='addprice'),
     url(r'', views.index, name='index'),
 ]
