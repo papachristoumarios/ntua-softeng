@@ -28,19 +28,17 @@
                   <div class="form-group">
                     {{ favform }}
                   </div>
-
                   <div class="form-group text-center fullw">
                     <button class="btn btn-link" type="submit" name="add_to_fav" value="add_to_fav"><i class="fas fa-heart"></i> &nbsp; Προσθήκη στα αγαπημένα</button>
                   </div>
                 </form>
-                <div class="text-center">
-                <a href="/report/?productId={{ product.id }}"><i class="fas fa-flag"></i> &nbsp; Αναφορά Προϊόντος</a>
-              </div>
+                <div class="text-center"><a href="/report/?productId={{ product.id }}"><i class="fas fa-flag"></i> &nbsp; Αναφορά Προϊόντος</a></div>
+                <br>
+                <div class="text-center"><a href="/addprice/?productId={{ product.id }}"><i class="fas fa-plus"></i> &nbsp; Προσθήκη νέας τιμής</a></div>
               </div>
             </div>
 
 
-            <h4>Χαρακτηριστικά</h4>
             <h5>
               Όνομα προϊόντος
             </h5>
@@ -122,53 +120,39 @@
     </div>
   </div>
 
-  <!-- Prices -->
-  <div class="row" style="padding-bottom: 3rem;">
-    <div class="col-12">
-      <div class="container-fluid">
-        <div class="card my-auto fullw">
-        <table class="table table-hover">
-          <tbody>
-            {% for price in product.prices %}
-            <tr>
-              <td class="price text-right"> Κατάστημα: {{ price.shop.name }}</td>
-              <td class="price text-right"> Διεύθυνση: {{ price.shop.address }}</td>
-              <td class="price text-right"> Τιμή: {{ price.price }}&euro;</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <div class="text-center"><a href="/addprice/?productId={{ product.id }}">Προσθήκη νέας τιμής</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
+
+  <!-- REVIEWS AND QUESTIONS AND PRICES-->
 
 
-  <!-- REVIEWS AND QUESTIONS -->
 
-  <div class="row"  style="padding-bottom: 6rem;">
-    <div class="col col-12">
+  <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+  <div class="card card-body full-card">
     <div class="container-fluid d-flex">
 
       <div class="card my-auto fullw">
         <div class="card-header">
           <ul class="nav nav-tabs card-header-tabs pull-right"  id="myTab" role="tablist">
+
             <li class="nav-item">
               <a class="nav-link active" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="true">Κριτικές</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="questions-tab" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Ερωτήσεις</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="prices-tab" data-toggle="tab" href="#prices" role="tab" aria-controls="prices" aria-selected="false">Πού θα το βρώ</a>
+            </li>
+
 
           </ul>
         </div>
         <div class="card-body">
           <div class="tab-content" id="myTabContent">
+
             <div class="tab-pane fade show active" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
               <!-- Reviews -->
 
-              <div class="container">
+              <div class="card card-body full-card">
 
                 <h2>Αξιολογήσεις Προϊόντος</h2>
 
@@ -188,14 +172,20 @@
                     </div>
 
                     <div class="col">
-                      <button type="submit" class="btn btn-default fullw"><i class="fas fa-comment"></i> &nbsp; Δημοσίευση Κριτικής</button>
+                      <button type="submit" class="btn btn-google fullw"><i class="fas fa-comment"></i> &nbsp; Δημοσίευση Κριτικής</button>
                     </div>
                   </div>
                 </form>
 
+                {% if product.numof_ratings != 0 %}
                 <blockquote class="blockquote">
                   <p class="mb-0">Δείτε τι έγραψαν άλλοι χρήστες για αυτό το προϊόν</p>
                 </blockquote>
+                {% else %}
+                <blockquote class="blockquote">
+                  <p class="mb-0">Δεν υπάρχουν κριτικές για αυτό το προϊόν</p>
+                </blockquote>
+                {%endif%}
 
                 {% for rating in product.ratings %}
                 <div class="card" style="padding-bottom: 1.5rem;">
@@ -223,7 +213,7 @@
             <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
               <!-- Questions -->
 
-              <div class="container">
+              <div class="card card-body full-card">
                 <h2>Ερωτήσεις για το προϊόν</h2>
 
                 <blockquote class="blockquote">
@@ -237,47 +227,44 @@
                   </div>
 
                   <div class="form-group text-center fullw">
-                    <button type="submit" class="btn btn-default fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση ερώτησης</button>
+                    <button type="submit" class="btn btn-google fullw"><i class="fas fa-pen"></i> &nbsp; Δημοσίευση ερώτησης</button>
                   </div>
                 </form>
 
+                {% if product.numof_questions != 0 %}
                 <blockquote class="blockquote">
                   <p class="mb-0">Δείτε τι ρώτησαν άλλοι χρήστες για αυτό το προϊόν</p>
                 </blockquote>
+                {% else %}
+                <blockquote class="blockquote">
+                  <p class="mb-0">Δεν υπάρχουν ερωτήσεις για αυτό το προϊόν</p>
+                </blockquote>
+                {%endif%}
 
                 {% for question in product.questions %}
                 <div class="card">
                   <div class="card-body">
-                    <p class="card-text">{{ question }}</p>
-
-                    <div class="container">
-                      <div class="row">
-                        <div class="col">
-
-
-                        </div>
-
-
+                    <div class="row half-pad">
+                      <div class="col-12 col-12 text-left">
+                        <button type="button" class="btn btn-primary">
+                          Aπό {{ question.volunteer.first_name }} {{ question.volunteer.last_name }}:
+                        </button>
+                        &nbsp; {{ question }}
                       </div>
                     </div>
 
+
                     <div class="container">
                       <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
-                        <div class="col col-12">
-
-                        <a href="/answer/?productId={{ product.id }}&questionId={{ question.id }}">Δημοσίευση Απάντησης</a>
-
-                    </div>
-                    </div>
-
-
+                          <a href="/answer/?productId={{ product.id }}&questionId={{ question.id }}">Δημοσίευση Απάντησης</a>
+                      </div>
                       <div class="row" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
                         <div class="col-12 text-center">
                           <a href="javascript:toggleAnswers()" class="card-link"><i class="fas fa-caret-down"></i> &nbsp; Δείτε τις {{ question.answers | length }} απαντήσεις</a>
                         </div>
-
                       </div>
                     </div>
+
                     <div class="container" id="collapse" style="display: none;">
                       {% for answer in question.answers %}
 
@@ -285,18 +272,12 @@
                         <div class="container">
                           <div class="card card-body card-text text-justify">
                             <div class="row half-pad">
-                              <div class="col">
-                                {{ answer }}
-                              </div>
-                            </div>
-                            <div class="row half-pad">
-                              <div class="col-12 col-12 text-center">
+                              <div class="col-12 col-12 text-left">
                                 <button type="button" class="btn btn-primary">
-                                  από {{ answer.volunteer.first_name }} {{ answer.volunteer.last_name }}
+                                  {{ answer.volunteer.first_name }} {{ answer.volunteer.last_name }}:
                                 </button>
+                                &nbsp; {{ answer }}
                               </div>
-
-
                             </div>
                           </div>
 
@@ -310,40 +291,50 @@
 
 
                   </div>
-                  <div class="card-footer text-muted">
-                    <div class="container">
-                      <div class="row">
-                        <div class="col-6 col-lg-4 text-center text-lg-left">
-                          <button type="button" class="btn btn-primary">
-                            {{ question.volunteer.first_name }} {{ question.volunteer.last_name }}
-                            <span class="sr-only"></span>
-                          </button>
-                        </div>
+                  </div>
+                  {% endfor %}
+                </div>
+            </div>
 
+            <div class="tab-pane fade" id="prices" role="tabpanel" aria-labelledby="prices-tab">
+              <!-- Prices -->
 
-                        </div>
+              <div class="card card-body full-card">
+
+                <h4>To συγκεκριμένο προϊόν βρίσκεται στα ακόλουθα καταστήματα:</h4>
+
+                <div class="row" style="padding-bottom: 3rem;">
+                  <div class="col-12">
+                    <div class="container-fluid">
+                      <div class="card my-auto fullw">
+                      <table class="table table-hover">
+                        <tbody>
+                          <tr>
+                            <td class="price text-center"><h5><b> Κατάστημα </b></h5></td>
+                            <td class="price text-center"><h5><b> Διεύθυνση </b></h5></td>
+                            <td class="price text-center"><h5><b> Τιμή </b></h5></td>
+                          </tr>
+                          {% for price in product.prices %}
+                          <tr>
+                            <td class="price text-center"> {{ price.shop.name }}</td>
+                            <td class="price text-center"> {{ price.shop.address }}</td>
+                            <td class="price text-center"> {{ price.price }}&euro;</td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
                       </div>
                     </div>
                   </div>
-                  {% endfor %}
-
                 </div>
-
-
+              </div>
             </div>
           </div>
         </div>
-
-
       </div>
-
     </div>
   </div>
-
-
-
   </div>
-
   </div>
 </div>
 

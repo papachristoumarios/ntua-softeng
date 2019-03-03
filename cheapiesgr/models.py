@@ -164,8 +164,16 @@ class Registration(models.Model):
         return self.rating_set.all().order_by('-stars')
 
     @property
+    def numof_ratings(self):
+        return self.rating_set.all().count()
+
+    @property
     def questions(self):
         return self.question_set.all()
+
+    @property
+    def numof_questions(self):
+        return self.question_set.all().count()
 
     class Meta:
         verbose_name = _('registration')
