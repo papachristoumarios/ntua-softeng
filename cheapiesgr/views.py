@@ -391,7 +391,8 @@ def addproduct(request):
                 date_from = date_of_registration.strftime('%Y-%m-%d'),
                 date_to = date_of_registration.replace(year = date_of_registration.year + 1).strftime('%Y-%m-%d'),
                 shop=shop,
-                registration=new_product
+                registration=new_product,
+                volunteer=request.user
             )
             new_price.save()
 
@@ -440,7 +441,8 @@ def addprice(request):
                 date_from = date_of_registration.strftime('%Y-%m-%d'),
                 date_to = date_of_registration.replace(year = date_of_registration.year + 1).strftime('%Y-%m-%d'),
                 shop=shop,
-                registration=product
+                registration=product,
+                volunteer=request.user
             )
             new_price.save()
 
@@ -521,7 +523,7 @@ def signin(request):
 
 def profile(request):
     user = request.user
-    registered_products =  user.registration_set.all()
+    registered_products =  user.registrationprice_set.all()
     user_questions =  user.question_set.all()
     user_answers = user.answer_set.all()
     user_favorites = user.favorite_set.all()

@@ -187,6 +187,7 @@ class RegistrationPrice(models.Model):
     date_to = models.DateField(verbose_name=_('dateto'))
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name=_('shop'))
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE, verbose_name=_('registration'))
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('volunteer'))
 
     def serialize_interval(self, point=None, date_from=None, date_to=None):
         if date_from == None and date_to == None:
