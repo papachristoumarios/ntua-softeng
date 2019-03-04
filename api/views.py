@@ -2,6 +2,7 @@ import ast
 import datetime
 import json
 from django.contrib.gis.measure import D
+from geopy.distance import distance as geopy_distance
 from django.contrib.gis.db.models.functions import Distance
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -16,6 +17,10 @@ from django.http import QueryDict
 
 
 AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
+
+def ddistance(a, b):
+	meters = geopy_distance(a, b).meters
+	return meters / 1000
 
 
 def parse_withdrawn(data):
@@ -91,7 +96,6 @@ def query_shops_and_products(request, objects, list_label):
 	count = int(request.GET.get('count', 20))
 	status = request.GET.get('status', 'ACTIVE')
 	sort = request.GET.get('sort', 'id|DESC')
-	total = objects.count()
 
 	if start < 0:
 		return unicode_response({'message': 'Invalid start'}, status=400)
@@ -132,7 +136,7 @@ def query_shops_and_products(request, objects, list_label):
 	data = {
 		'start': start,
 		'count': count,
-		'total': total,
+		'total': len(result),
 		list_label: build_list_from_queryset(result)
 	}
 	return data
@@ -217,7 +221,7 @@ def parse_date(date_str):
 		return -1
 	else:
 		format_str = '%Y-%m-%d'
-		return datetime.datetime.strptime(date_str, format_str)
+		return datetime.datetime.strptime(date_str, format_str).date()
 
 
 def create_price(request):
@@ -293,25 +297,26 @@ def query_prices(request):
 	prices = RegistrationPrice.objects
 
 	# Filter date
-	date_filtered = prices.filter(
-		date_from__gte=date_from,
-		date_to__lte=date_to)
+	if shops != []:
+		shops_filtered = prices.filter(shop_id__in=shops)
+	else:
+		shops_filtered = prices
+
+	if products != []:
+		products_filtered = shops_filtered.filter(registration_id__in=products)
+	else:
+		products_filtered = shops_filtered
+
 
 	date_to = date_to - datetime.timedelta(days=1)
 
-
-	# Filter distance
-	if location_point is not None:
-		degrees = dist * 1 / 111.325
-		distance_filtered = date_filtered.filter(
-			shop__location__distance_lte=(
-				location_point, degrees))
-
-	# Filter products
-	products_filtered = date_filtered.filter(registration_id__in=products)
-
-	# Filter shops
-	shops_filtered = products_filtered.filter(shop_id__in=shops)
+	# # DOES NOT WORK in WSG84 Filter distance
+	# 	degrees = dist * 1 / 111.325
+	# 	distance_filtered = products_filtered.filter(
+	# 		shop__location__distance_lt=(
+	# 			location_point, D(km=dist)))
+	# else:
+	# 	distance_filtered = products_filtered
 
 	# Filter tags
 	if tags != '':
@@ -322,6 +327,7 @@ def query_prices(request):
 		tags_filtered = products_filtered
 
 	sort_result = tags_filtered
+
 	for sort in sort_criteria:
 		# Sorting
 		if sort == 'price|ASC':
@@ -341,6 +347,9 @@ def query_prices(request):
 					"shop__location",
 					location_point)).order_by('-distance')
 
+	if location_point is not None:
+		sort_result = filter(lambda x: ddistance(location_point, x.shop.location) < dist, sort_result)
+
 	list_result = build_list_from_price_queryset(sort_result, location_point, date_from, date_to)
 
 	# Paginate
@@ -350,12 +359,12 @@ def query_prices(request):
 	except BaseException:
 		return unicode_response({'message': 'Invalid pagination'}, status=400)
 
-
+	# import pdb; pdb.set_trace()
 	# Response
 	data = {
 		'start': start,
 		'count': count,
-		'total': sort_result.count(),
+		'total': len(result),
 		'prices': list(result)
 
 	}

@@ -195,6 +195,9 @@ class RegistrationPrice(models.Model):
             date_to = self.date_to
         data = self.serialize(point=point)
 
+        date_from = max(date_from, self.date_from)
+        date_to = min(date_to, self.date_to)
+
         result = []
 
         for date in daterange(date_from, date_to):
