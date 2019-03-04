@@ -19,9 +19,7 @@ from django.http import QueryDict
 AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
 
 def ddistance(a, b):
-	meters = geopy_distance(a, b).meters
-	return meters / 1000
-
+ 	d = geopy_distance(a, b).kilometers; print(d); return d
 
 def parse_withdrawn(data):
 	if data.get('withdrawn', False) in [True, 'true']:
@@ -274,7 +272,7 @@ def query_prices(request):
 	start = int(request.GET.get('start', 0))
 	count = int(request.GET.get('count', 20))
 	date_from = parse_date(request.GET.get('dateFrom', '1969-01-01'))
-	date_to = parse_date(request.GET.get('dateTo', '2300-01-01')) + datetime.timedelta(days=1)
+	date_to = parse_date(request.GET.get('dateTo', '2300-01-01'))
 	sort_criteria = request.GET.getlist('sort', ['price|ASC'])
 	shops = [int(x) for x in request.GET.getlist('shops', [])]
 	products = [int(x) for x in request.GET.getlist('products', [])]
@@ -296,11 +294,13 @@ def query_prices(request):
 
 	prices = RegistrationPrice.objects
 
+	date_filtered = prices.filter(date_from__lte=date_to, date_to__gte=date_from)
+
 	# Filter date
 	if shops != []:
-		shops_filtered = prices.filter(shop_id__in=shops)
+		shops_filtered = date_filtered.filter(shop_id__in=shops)
 	else:
-		shops_filtered = prices
+		shops_filtered = date_filtered
 
 	if products != []:
 		products_filtered = shops_filtered.filter(registration_id__in=products)
@@ -308,23 +308,23 @@ def query_prices(request):
 		products_filtered = shops_filtered
 
 
-	date_to = date_to - datetime.timedelta(days=1)
+	# date_to = date_to
 
-	# # DOES NOT WORK in WSG84 Filter distance
-	# 	degrees = dist * 1 / 111.325
-	# 	distance_filtered = products_filtered.filter(
-	# 		shop__location__distance_lt=(
-	# 			location_point, D(km=dist)))
-	# else:
-	# 	distance_filtered = products_filtered
+	if location_point is not None:
+		degrees = dist * 1 / 111.03
+		distance_filtered = products_filtered.filter(
+			shop__location__distance_lt=(
+				location_point, degrees))
+	else:
+		distance_filtered = products_filtered
 
 	# Filter tags
 	if tags != '':
-		tags_filtered = products_filtered.filter(
+		tags_filtered = distance_filtered.filter(
 			registration__tags__iregex=tags) | products_filtered.filter(
 			shop__tags__iregex=tags)
 	else:
-		tags_filtered = products_filtered
+		tags_filtered = distance_filtered
 
 	sort_result = tags_filtered
 
@@ -347,8 +347,6 @@ def query_prices(request):
 					"shop__location",
 					location_point)).order_by('-distance')
 
-	if location_point is not None:
-		sort_result = filter(lambda x: ddistance(location_point, x.shop.location) < dist, sort_result)
 
 	list_result = build_list_from_price_queryset(sort_result, location_point, date_from, date_to)
 
