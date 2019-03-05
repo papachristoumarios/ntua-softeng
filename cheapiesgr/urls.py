@@ -2,6 +2,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    url(r'updateproduct', views.updateproduct, name='updateproduct'),
     url(r'addproduct', views.addproduct, name='addproduct'),
     url(r'answer', views.answer, name='answer'),
     url(r'map', views.default_map, name='map'),
@@ -16,5 +17,6 @@ urlpatterns = [
     url(r'report', views.report, name='report'),
     url(r'userauthentication', views.user_auth, name='userauthentication'),
     url(r'addprice', views.addprice, name='addprice'),
+    url(r'updateprice', views.updateprice, name='updateprice'),
     url(r'', views.index, name='index'),
 ]

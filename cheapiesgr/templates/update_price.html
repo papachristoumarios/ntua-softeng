@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container h-100 d-flex">
+
+
+  <div class="card my-auto fullw">
+    <div class="card-header my-auto text-center">
+      <h1>Ανανέωση τιμής</h1>
+    </div>
+    <div class="card-body padded-card" style="">
+      <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="price"><i class="fas fa-euro-sign"></i> &nbsp; Τιμή</label>
+          {% if form.price.errors %}
+          <div class="alert alert-danger">
+              <strong>{{ form.price.errors  | striptags}}</strong>
+          </div>
+          {% endif %}
+          {{ form.price }}
+        </div>
+        <div class="form-group">
+          <label for="location"><i class="fas fa-globe-americas"></i>&nbsp; Τοποθεσία</label>
+          {% if form.new_location.errors %}
+          <div class="alert alert-danger">
+              <strong>{{ form.new_location.errors  | striptags}}</strong>
+          </div>
+          {% endif %}
+          {{ form.location }}
+          <button class="collapsible" type="button"> &nbsp; Καταχώρηση νέου καταστήματος</button>
+          <div class="content">
+           {{ form.new_shop_name }}
+           {{ form.new_shop_city }}
+           {{ form.new_shop_street }}
+           {{ form.new_shop_number }}
+          </div>
+          {% if correct_address == False %}
+          <div class="alert alert-danger text-center">
+              <strong>Παρακαλώ εισάγετε έγκυρη διεύθυνση.</strong>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group text-center fullw"  style="padding-bottom: 2rem;">
+          <button type="submit" class="btn btn-default fullw"><i class="far fa-save"></i> &nbsp; Υποβολή Καταχώρησης</button>
+        </div>
+
+        <hr>
+    </form>
+
+  </div>
+</div>
+
+</div>
+
+{% load static %}
+<script src="{% static 'js/addprice.js' %}"></script>
+
+{% endblock %}

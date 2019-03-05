@@ -64,6 +64,9 @@
         <li class="nav-item">
           <a class="nav-link" id="favorites-tab" data-toggle="tab" href="#favorites" role="tab" aria-controls="favorites" aria-selected="false">Τα αγαπημένα μου</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" id="prices-tab" data-toggle="tab" href="#prices" role="tab" aria-controls="prices" aria-selected="false">Οι τιμές μου</a>
+        </li>
       </ul>
     </div>
     <div class="card-body">
@@ -89,9 +92,11 @@
                 </div>
                 <div class="card-text" style="padding-top: 1rem;">
                   <div class="text center">
-                    {{ p.registration.product_description}}
+                    {{ p.registration.name }}
                   </div>
                 </div>
+                <a class="text-center" href="/updateproduct/?productId={{ p.registration.id }}"><i class="fas fa-pencil"></i>Επεξεργασία Καταχώρησης</button>
+
               </div>
             </div>
             {% endfor %}
@@ -185,6 +190,32 @@
           </div>
         </div>
 
+        <div class="tab-pane fade" id="prices" role="tabpanel" aria-labelledby="prices-tab">
+          <div class="container">
+            {% for price in prices %}
+            <div class="card" style="padding-bottom: 1.5rem;">
+              <div class="card-body">
+                <div class="gallery text-center">
+                  <a href='/product/?productId={{ price.registration.id }}'>
+                    {% if price.registration.image_url != '' %}
+                      {% load static %}
+                      <td class="image"><img style="width: 30%;" src="{% static '' %}{{ price.registration.image_url }}"></td>
+                    {% else %}
+                      <td class="image"><img style="width: 30%;" src="https://vignette.wikia.nocookie.net/feud8622/images/7/75/No_image_available.png/revision/latest?cb=20170116005915"></td>
+                    {% endif %}
+                  </a>
+                </div>
+                <div class="card-text" style="padding-top: 1rem;">
+                  <div class="text center">
+                    Τιμή: {{ price.price }} &euro;
+                  </div>
+                </div>
+                    <a class="text-center" href="/updateprice/?priceId={{ price.id }}"><i class="fas fa-pencil"></i>Επεξεργασία Τιμής</button>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
 
 
       </div>

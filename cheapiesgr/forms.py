@@ -5,6 +5,10 @@ from .models import Category, Shop, Volunteer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
+TRUE_FALSE_CHOICES = (
+    (True, 'Ναι'),
+    (False, 'Όχι')
+)
 
 def get_categories():
     iterable = Category.objects.all().order_by('category_name')
@@ -217,6 +221,38 @@ class AddProductForm(forms.Form):
         queryset=Category.objects.all(),
         initial=0
     )
+
+
+class UpdateProductForm(forms.Form):
+
+    name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Πληκτρολογήστε μια όνομα για το προϊόν','class' : 'form-control','id': 'name'}),
+    )
+
+    description = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'placeholder': 'Πληκτρολογήστε μια περιγραφή για το προϊόν','class' : 'form-control','id': 'description'}),
+    )
+
+    withdrawn = forms.ChoiceField(
+        required=False,
+        choices=TRUE_FALSE_CHOICES,
+        widget=forms.Select(attrs={'class' : 'form-control','id': 'withdrawn'}),
+    )
+
+    tags = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'Δώστε ετικέτες για το προϊόν, χωρισμένες με κόμμα','class' : 'form-control','id': 'tags'}),
+    )
+
+    category = forms.ModelChoiceField(
+        required=True,
+        widget=forms.Select(attrs={'class' : 'form-control','id': 'category'}),
+        queryset=Category.objects.all(),
+        initial=0
+    )
+
 
 class ReviewForm(forms.Form):
 

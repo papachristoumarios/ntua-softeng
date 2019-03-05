@@ -30,8 +30,9 @@ nom = Nominatim()
 def handle_uploaded_file(f, category_name):
     category_name = category_name.replace(' ', '-')
     fname = '{}_{}'.format(random.randint(0, 100), str(f))
-    dest = 'media/supermarket_crawlers/{}/images/{}'.format(
-        category_name, fname)
+    directory = 'media/supermarket_crawlers/{}/images'.format(category_name)
+    dest = '{}/{}'.format(directory, fname)
+    os.system('mkdir -p {}'.format(os.path.join(settings.MEDIA_ROOT, directory)))
     with open(os.path.join(settings.MEDIA_ROOT, dest), 'wb+') as g:
         g.write(f.read())
 
@@ -407,6 +408,45 @@ def addproduct(request):
         f = AddProductForm()
     return render(request, 'addproduct.html', {'form': f})
 
+@login_required(login_url='/signin')
+def updateproduct(request):
+    product_id = int(request.GET.get('productId'))
+    registration_model = Registration.objects.get(pk=product_id)
+
+    if request.user != registration_model.volunteer:
+        return redirect('/index')
+
+    if request.method == 'POST':
+        f = UpdateProductForm(request.POST, request.FILES)
+        f.initial['name'] = registration_model.name
+        f.initial['description'] = registration_model.product_description
+        f.initial['category'] = registration_model.category
+        f.initial['tags'] = ', '.join(json.loads(registration_model.tags))
+        f.initial['withdrawn'] = registration_model.withdrawn
+
+        if f.is_valid():
+            registration_model.name = f.cleaned_data['name']
+            registration_model.product_description = f.cleaned_data['description']
+            # Handle tags input
+            tags_string = f.cleaned_data['tags']
+            tags_list = tags_string.replace(" ","").split(",")
+            registration_model.tags = json.dumps(tags_list,ensure_ascii=False)
+            registration_model.withdrawn = f.cleaned_data['withdrawn']
+            registration_model.category = f.cleaned_data['category']
+
+
+            registration_model.save()
+            messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
+            return render(request, 'index.html', {})
+    else:
+        f = UpdateProductForm()
+        f.initial['name'] = registration_model.name
+        f.initial['description'] = registration_model.product_description
+        f.initial['category'] = registration_model.category
+        f.initial['tags'] = ', '.join(json.loads(registration_model.tags))
+        f.initial['withdrawn'] = registration_model.withdrawn
+    return render(request, 'update_product.html', {'form': f})
+
 
 @login_required(login_url='/signin')
 def addprice(request):
@@ -456,6 +496,60 @@ def addprice(request):
     else:
         f = AddPriceForm()
     return render(request, 'addprice.html', {'form': f})
+
+@login_required(login_url='/signin')
+def updateprice(request):
+
+    print('price')
+    price_id = int(request.GET.get('priceId'))
+    price_model = RegistrationPrice.objects.get(pk=price_id)
+
+
+    if price_model.volunteer != request.user:
+        return redirect('/index')
+
+    if request.method == 'POST':
+        f = AddPriceForm(request.POST, request.FILES)
+        f.initial['price'] = price_model.price
+        f.initial['location'] = price_model.shop
+        if f.is_valid():
+            price = f.cleaned_data['price']
+            new_shop_name = f.cleaned_data['new_shop_name']
+            new_shop_city = f.cleaned_data['new_shop_city']
+            new_shop_street = f.cleaned_data['new_shop_street']
+            new_shop_number = f.cleaned_data['new_shop_number']
+            date_of_registration = datetime.datetime.today()
+
+            # Check if a new shop was added
+            if len(new_shop_name) > 0:
+                print('Adding a new shop named', new_shop_name)
+                geolocator = geonom(user_agent="cheapiesgr")
+                location = geolocator.geocode(new_shop_street+" "+new_shop_number+" "+new_shop_city)
+                if str(type(location)) == "<class 'NoneType'>":
+                    print('Μη έγκυρη διεύθυνση.')
+                    return render(request, 'addprice.html',{'form':f, 'correct_address': False})
+                shop = Shop(
+                    name=new_shop_name,
+                    address=new_shop_street+" "+new_shop_number,
+                    city=new_shop_city,
+                    location='POINT({} {})'.format(location.longitude, location.latitude),
+                )
+                shop.save()
+            else:
+                shop = f.cleaned_data['location']
+
+            price_model.price = price
+            price_model.shop = shop
+
+            price_model.save()
+
+            messages.success(request, 'Η καταχώρηση ήταν επιτυχής')
+            return render(request, 'index.html', {})
+    else:
+        f = AddPriceForm()
+        f.initial['price'] = price_model.price
+        f.initial['location'] = price_model.shop
+    return render(request, 'update_price.html', {'form': f})
 
 
 def user_auth(request):
@@ -532,6 +626,7 @@ def profile(request):
     user_questions =  user.question_set.all()
     user_answers = user.answer_set.all()
     user_favorites = user.favorite_set.all()
+    user_prices = user.registrationprice_set.all()
     if request.method == 'POST':
         f = UserProfileForm(request.POST, username = user.username)
         if f.is_valid():
@@ -556,5 +651,6 @@ def profile(request):
                                             'products' : registered_products,
                                             'questions' : user_questions,
                                             'answers' : user_answers,
-                                            'favorites' : user_favorites
+                                            'favorites' : user_favorites,
+                                            'prices' : user_prices
                                             })
