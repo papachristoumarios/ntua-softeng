@@ -12,31 +12,3 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
-
-const video = document.querySelector("#videoElement");
-const screenshotButton = document.querySelector('#screenshot-button');
-const img = document.querySelector('#screenshot');
-const canvas = document.createElement('canvas');
-const img_field = document.getElementById('img');
-var shot = false;
-
-if (navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({video: true})
-  .then(function(stream) {
-    video.srcObject = stream;
-  })
-  .catch(function(err0r) {
-    console.log("Something went wrong!");
-  });
-}
-
-screenshotButton.onclick = video.onclick = function() {
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  // Other browsers will fall back to image/png
-  img.src = canvas.toDataURL('image/png');
-
-  shot = true;
-
-};

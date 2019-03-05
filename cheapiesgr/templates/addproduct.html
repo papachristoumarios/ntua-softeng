@@ -45,6 +45,11 @@
               <strong>{{ form.new_location.errors  | striptags}}</strong>
           </div>
           {% endif %}
+          {% if given_shop == False %}
+          <div class="alert alert-danger text-center">
+              <strong>Παρακαλώ εισάγετε κάποιο κατάστημα.</strong>
+          </div>
+          {% endif %}
           {{ form.location }}
           <button class="collapsible" type="button"> &nbsp; Καταχώρηση νέου καταστήματος</button>
           <div class="content">
@@ -69,15 +74,6 @@
         <div class="form-group">
           <label for="new-pwd"><i class="fas fa-camera"></i> &nbsp; Ανεβάστε φωτογραφία </label>
           {{ form.img }}
-          <div class="textbox"> &nbsp; Ή τραβήξτε φωτογραφία </div>
-          <div>
-            <div id="container">
-              <video autoplay="true" id="videoElement"></video>
-            </div>
-            <button id="screenshot-button" type="button"><i class="fa fa-camera"></i> &nbsp; Τράβα!</button>
-            <img id="screenshot"></img>
-            <canvas style="display:none;"></canvas>
-          </div>
         </div>
 
 

@@ -200,19 +200,9 @@ class AddProductForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Αριθμός','class' : 'form-control fullw','style' : ' style="padding-top: 1rem;"','id': 'new_shop_number'})
     )
 
-    shot = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(attrs={'id':'shot'})
-    )
-
     img = forms.FileField(
-        required=False,
+        required=True,
         widget=forms.FileInput(attrs={'accept':'image/*;capture=camera'})
-    )
-
-    img_url = forms.URLField(
-        required=False,
-        widget=forms.URLInput(attrs={'id':'img_url'})
     )
 
     category = forms.ModelChoiceField(
