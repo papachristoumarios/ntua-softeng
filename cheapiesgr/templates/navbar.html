@@ -41,7 +41,7 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           {% for c in request.session.categories %}
-            <a class="dropdown-item" href="/search/?categoryId={{ forloop.counter }}">{{ c.category_description }}</a>
+            <a class="dropdown-item" href="/search/?categoryId={{ forloop.counter }}">{{ c.category_name }}</a>
           {% endfor %}
         </div>
       </li>

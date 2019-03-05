@@ -300,15 +300,16 @@
                       <table class="table table-hover">
                         <tbody>
                           <tr>
-                            <td class="price text-center"><h5><b> Κατάστημα </b></h5></td>
-                            <td class="price text-center"><h5><b> Διεύθυνση </b></h5></td>
-                            <td class="price text-center"><h5><b> Τιμή </b></h5></td>
+                            <td class="price text-center"><h5><b>Κατάστημα</b></h5></td>
+                            <td class="price text-center"><h5><b>Διεύθυνση</b></h5></td>
+                            <td class="price text-center"><h5><b>Τιμή</b></h5></td>
                           </tr>
-                          {% for price in product.prices %}
+                          {% for price in annotated_prices %}
                           <tr>
                             <td class="price text-center"> {{ price.shop.name }}</td>
                             <td class="price text-center"> {{ price.shop.address }}</td>
                             <td class="price text-center"> {{ price.price }}&euro;</td>
+
                           </tr>
                           {% endfor %}
                         </tbody>

@@ -113,6 +113,7 @@ def product(request):
         q = QuestionForm()
         h = FavoritesForm()
 
+    annotated_prices = registration.annotated_prices(client_loc)
 
     return render(request, 'product.html', {
         'lat': lat,
@@ -120,7 +121,8 @@ def product(request):
         'product': registration,
         'form' : f,
         'qform' : q,
-        'favform' : h
+        'favform' : h,
+        'annotated_prices' : annotated_prices
     })
 
 

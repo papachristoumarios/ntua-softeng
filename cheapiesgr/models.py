@@ -3,6 +3,7 @@ import datetime
 import ast
 import copy
 from django.db import models
+from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Manager as GeoManager
 from django.utils.translation import gettext_lazy as _
@@ -122,6 +123,10 @@ class Registration(models.Model):
     @property
     def prices(self):
         return self.registrationprice_set.all()
+
+    def annotated_prices(self, location_point):
+        return self.registrationprice_set.all().annotate(distance=Distance(
+            "shop__location", location_point)).order_by('distance')
 
     @property
     def num_of_prices(self):
