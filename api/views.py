@@ -18,8 +18,6 @@ from django.http import QueryDict
 
 AUTH_TOKEN_LABEL = 'HTTP_X_OBSERVATORY_AUTH'
 
-def ddistance(a, b):
- 	d = geopy_distance(a, b).kilometers; print(d); return d
 
 def parse_withdrawn(data):
 	if data.get('withdrawn', False) in [True, 'true']:

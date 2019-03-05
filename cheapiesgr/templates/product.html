@@ -303,12 +303,14 @@
                             <td class="price text-center"><h5><b>Κατάστημα</b></h5></td>
                             <td class="price text-center"><h5><b>Διεύθυνση</b></h5></td>
                             <td class="price text-center"><h5><b>Τιμή</b></h5></td>
+                            <td class="price text-center"><h5><b>Απόσταση</b></h5></td>
                           </tr>
                           {% for price in annotated_prices %}
                           <tr>
-                            <td class="price text-center"> {{ price.shop.name }}</td>
-                            <td class="price text-center"> {{ price.shop.address }}</td>
-                            <td class="price text-center"> {{ price.price }}&euro;</td>
+                            <td class="price text-center"> {{ price.0.shop.name }}</td>
+                            <td class="price text-center"> {{ price.0.shop.address }}</td>
+                            <td class="price text-center"> {{ price.0.price }}&euro;</td>
+                            <td class="price text-center"> {{ price.1 | floatformat:-2 }} km</td>
 
                           </tr>
                           {% endfor %}

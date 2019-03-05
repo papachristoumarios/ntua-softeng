@@ -113,7 +113,10 @@ def product(request):
         q = QuestionForm()
         h = FavoritesForm()
 
-    annotated_prices = registration.annotated_prices(client_loc)
+    prices = registration.prices
+    distances = [distance(client_loc, x.shop.location) for x in prices]
+
+    annotated_prices = zip(prices, distances)
 
     return render(request, 'product.html', {
         'lat': lat,

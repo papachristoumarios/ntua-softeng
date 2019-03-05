@@ -126,7 +126,7 @@ class Registration(models.Model):
 
     def annotated_prices(self, location_point):
         return self.registrationprice_set.all().annotate(distance=Distance(
-            "shop__location", location_point)).order_by('distance')
+            "shop__location", location_point) * 111.03).order_by('distance')
 
     @property
     def num_of_prices(self):
