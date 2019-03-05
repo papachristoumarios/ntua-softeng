@@ -351,14 +351,7 @@ def addproduct(request):
             category = f.cleaned_data['category']
             date_of_registration = datetime.datetime.today()
 
-            took_photo = f.cleaned_data['shot']
-            if (took_photo):
-                img_url = f.cleaned_data['img_url']
-                url_decoded = decode_base64(img_url.encode())
-                content = ContentFile(url_decoded)
-                image_url = handle_uploaded_file(content,category.category_name)
-            else:
-                image_url = handle_uploaded_file(request.FILES['img'], category.category_name)
+            image_url = handle_uploaded_file(request.FILES['img'], category.category_name)
 
             # Check if a new shop was added
             if len(new_shop_name) > 0:
@@ -377,6 +370,8 @@ def addproduct(request):
                 shop.save()
             else:
                 shop = f.cleaned_data['location']
+                if str(shop)=="None":
+                    return render(request, 'addproduct.html',{'form':f, 'given_shop': False})
 
 
             new_product = Registration(

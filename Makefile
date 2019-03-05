@@ -5,7 +5,7 @@ GEN_DATA=etc/fixtures/generate_data.py
 SHELL := /bin/bash
 DOCKER_COMPOSE=docker-compose
 APT=apt-get install -y
-PYTHON=python
+PYTHON=python3
 MANAGE=$(PYTHON) manage.py
 PIP=pip3
 
