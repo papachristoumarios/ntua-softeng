@@ -132,7 +132,7 @@ def query_shops_and_products(request, objects, list_label):
 	data = {
 		'start': start,
 		'count': count,
-		'total': len(result),
+		'total': sort_result.count(),
 		list_label: build_list_from_queryset(result)
 	}
 	return data
@@ -360,7 +360,7 @@ def query_prices(request):
 	data = {
 		'start': start,
 		'count': count,
-		'total': len(result),
+		'total': len(list_result),
 		'prices': list(result)
 
 	}
