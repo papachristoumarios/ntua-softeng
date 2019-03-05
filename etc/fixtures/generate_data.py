@@ -107,8 +107,8 @@ def generate_shop_data(n, d):
             'model' : 'cheapiesgr.shop',
             'pk' : i + 1,
             'fields' : {
-                'address' : r['display_name'],
-                'name' : r['display_name'],
+                'address' : r['display_name'][:500],
+                'name' : r['display_name'][:500],
                 'city' : r['display_name'],
                 'location' : 'POINT({} {})'.format(r['lon'], r['lat'])
                 }

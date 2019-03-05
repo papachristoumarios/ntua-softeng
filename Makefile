@@ -77,7 +77,7 @@ certificate_gen:
 runsslserver:
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
 
-exam:
+softeng18b_tests:
 	@echo "Resetting DB"
 	$(PYTHON) manage.py reset_db
 	@echo "Migrations"
@@ -85,4 +85,15 @@ exam:
 	@echo "Create Superuser"
 	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', '1234')" | $(PYTHON) manage.py shell
 	@echo "Start web application"
+	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
+
+softeng18b_demo:
+	@echo "Preparing DB"
+	$(PYTHON) manage.py reset_db
+	$(PYTHON) manage.py makemigrations
+	$(PYTHON) manage.py migrate
+	@echo "Filling DB with data"
+	$(MAKE) populate_db
+	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', '1234')" | $(PYTHON) manage.py shell
+	@echo "Run functional tests"
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
