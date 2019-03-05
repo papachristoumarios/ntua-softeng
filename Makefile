@@ -61,7 +61,6 @@ deploy:
 	$(MAKE) py_deps
 	$(MAKE) test_db
 	$(MAKE) migrate
-	$(MAKE) data
 
 dockerize: Dockerfile docker-compose.yml
 	$(DOCKER_COMPOSE) build
