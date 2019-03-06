@@ -94,5 +94,5 @@ softeng18b_demo:
 	@echo "Filling DB with data"
 	$(MAKE) data
 	echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', '1234')" | $(PYTHON) manage.py shell
-	@echo "Run functional tests"
+	@echo "Run demo"
 	$(PYTHON) manage.py runsslserver --certificate server.crt --key server.key
